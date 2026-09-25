@@ -6,3 +6,4 @@
 *.exe binary
 *.dll binary
 plugin/TAGLIB-LICENSE -whitespace
+promo/** -linguist-detectable

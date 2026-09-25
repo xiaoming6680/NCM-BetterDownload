@@ -76,12 +76,20 @@ D:/CloudMusic/VipSongsDownload/歌手/歌曲.ncm
 
 ## 安装
 
-1. 在 BetterNCM 插件商店搜索 **BetterDownload** 安装；也可以从 [Releases](https://github.com/xiaoming6680/BetterDownload/releases) 下载 `.plugin` 文件手动安装。
-2. 重启网易云音乐。插件默认启用，之后正常下载歌曲即可。
+BetterDownload 是一个 BetterNCM 插件。BetterNCM 是网易云音乐 PC 版的开源插件管理器，装上后网易云里会多出一个插件商店。已经装过 BetterNCM，从第 3 步开始。
 
-需要 Windows、BetterNCM 1.3.4 或更新版本、网易云音乐 3.x。转换程序使用 .NET Framework 4.6.2 或更新版本，Windows 10 / 11 已自带。
+1. **安装 BetterNCM**：下载并运行 [BetterNCM 安装器](https://github.com/std-microblock/BetterNCM-Installer/releases)，点“安装”。
+2. **打开插件商店**：重启网易云，点右上角设置图标右边的 BetterNCM 图标。第一次打开会显示欢迎页，点“开始使用 BetterNCM”。
+3. **安装 BetterDownload**：在插件商店搜索 **BetterDownload**，点卡片右侧的下载按钮，再点底部的“重启”。插件默认启用，之后正常下载歌曲即可。
+
+商店里的版本可能比 Releases 晚几天。想马上用最新版，从 [Releases](https://github.com/xiaoming6680/BetterDownload/releases) 下载 `.plugin` 文件，放进 BetterNCM 的插件文件夹（默认 `C:\betterncm\plugins`），再重启网易云。
+
+需要 Windows、BetterNCM 1.3.4 或更新版本、网易云音乐 3.x。转换程序使用 .NET Framework 4.6.2 或更新版本，Windows 10 / 11 已自带。实测网易云 3.1.37 + BetterNCM 1.3.4 可用，更新的网易云还没测过；现在能用的话，建议先别升级网易云。
 
 ## 常见问题
+
+**装了 BetterNCM 后网易云打不开？**
+重新运行 BetterNCM 安装器，点“卸载”，网易云就能恢复正常。也可以直接删除网易云安装目录里的 `msimg32.dll`。
 
 **下载完成后没有出现卡片？**
 这首歌可能本来就是普通 FLAC / MP3，不需要解锁；也可能弹出时机被设成了“仅出错”或“不显示”。
@@ -118,6 +126,14 @@ npm test        # 转换、下载事件与后台处理测试
 npm install --no-save playwright
 $env:NBD_BROWSER_CHANNEL = 'msedge'
 node scripts/ui-check.cjs
+```
+
+宣传视频和封面的源文件在 `promo/`，同样用 Playwright 渲染，结果写入 `build/promo/`。另外需要 ffmpeg（可以 `pip install imageio-ffmpeg`）；配乐由 `promo/music.py` 合成，需要 Python 和 numpy、scipy、soundfile。
+
+```powershell
+node promo/render.cjs             # 横屏视频
+node promo/render.cjs --vertical  # 竖屏视频
+node promo/render.cjs --cover     # B站和抖音封面
 ```
 
 | 文件 | 作用 |

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>BetterDownload B站封面</title>
+<style>
+/* 1920 × 1080. The message stays inside the middle 1440 × 1080 (the 4:3 crop) and clear of the
+   bottom strip where video cards show play count and duration; the album walls at the sides are decoration. */
+@font-face{font-family:PF;src:local("PingFang SC Medium"),local("PingFangSC-Medium");font-weight:500}
+@font-face{font-family:PF;src:local("PingFang SC Semibold"),local("PingFangSC-Semibold"),local("PingFang SC Bold");font-weight:600}
+@font-face{font-family:PF;src:local("PingFang SC Bold"),local("PingFangSC-Semibold");font-weight:700}
+@font-face{font-family:PF;src:local("PingFang SC Heavy"),local("PingFang SC Bold");font-weight:800}
+:root{--font:PF,"Noto Sans SC","Microsoft YaHei UI",sans-serif;--ui:"Segoe UI Variable Text","Segoe UI","Microsoft YaHei UI",sans-serif;--brand:linear-gradient(135deg,#f39bc4,#9a8bff 52%,#5eaefc)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{position:relative;width:1920px;height:1080px;overflow:hidden;background:#000;color:#f5f5f7;font-family:var(--font);-webkit-font-smoothing:antialiased}
+.glow{position:absolute;border-radius:50%}
+.wall{position:absolute;top:-60px;display:grid;grid-template-columns:repeat(2,190px);gap:34px;opacity:.55}
+.wall i{width:190px;height:190px;border-radius:40px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.row{position:absolute;left:0;right:0;text-align:center;white-space:nowrap}
+.title{font-size:124px;font-weight:800;line-height:1.1}
+.grad{background:linear-gradient(90deg,#f7a6cf,#a796ff 48%,#68b4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand{position:absolute;left:0;right:0;top:78px;display:flex;align-items:center;justify-content:center;gap:20px;font-size:44px;font-weight:700}
+.icon{width:64px;height:64px;border-radius:16px;display:grid;place-items:center;background:var(--brand);box-shadow:inset 0 2px 1px rgba(255,255,255,.55),0 12px 30px -10px rgba(122,104,255,.95)}
+.icon svg{width:38px;height:38px}
+.by{margin-left:14px;font:600 24px/1 var(--ui);letter-spacing:.3em;color:#a1a1a6}
+.tile{position:absolute;top:510px;width:240px}
+.art{position:relative;width:240px;height:240px;border-radius:36px;overflow:hidden;background:radial-gradient(circle at 66% 34%,#ffe3ad 0 15%,#ffe3ad00 15.6%),radial-gradient(70% 55% at 66% 34%,#ffe3ad66,#ffe3ad00 70%),linear-gradient(#5a1e4a00 69%,#5a1e4a 69.4%),linear-gradient(165deg,#ffb07a,#d94a82);box-shadow:inset 0 0 0 2px rgba(255,255,255,.14),0 34px 70px -28px #000}
+.before .art{filter:grayscale(1) brightness(.45) contrast(.92)}
+.after .art{box-shadow:inset 0 0 0 2px rgba(255,255,255,.2),0 0 0 5px rgba(190,180,255,.45),0 34px 80px -18px rgba(154,139,255,.95)}
+.badge{position:absolute;right:-16px;top:-16px;width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:#1e1e22;box-shadow:inset 0 0 0 2px rgba(255,255,255,.16),0 8px 20px rgba(0,0,0,.6)}
+.badge.ok{background:#34c759}
+.badge svg{width:36px;height:36px}
+.fmt{position:absolute;left:16px;bottom:18px;font:800 22px/34px var(--ui);letter-spacing:.08em;padding:0 12px;border-radius:10px;color:#fff;background:rgba(0,0,0,.34);box-shadow:inset 0 0 0 2px rgba(255,255,255,.4)}
+.name{margin-top:20px;text-align:center;font-size:30px;font-weight:600;white-space:nowrap}
+.before .name{color:#86868b}
+.pill{position:absolute;left:50%;top:846px;transform:translateX(-50%);padding:0 48px;height:96px;border-radius:48px;display:flex;align-items:center;font-size:44px;font-weight:700;color:#fff;background:var(--brand);box-shadow:0 24px 60px -20px rgba(154,139,255,.95),inset 0 2px 0 rgba(255,255,255,.4);white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="glow" style="left:180px;top:420px;width:1000px;height:1000px;background:radial-gradient(closest-side,rgba(217,74,130,.4),transparent)"></div>
+<div class="glow" style="left:780px;top:340px;width:1000px;height:1000px;background:radial-gradient(closest-side,rgba(80,130,250,.36),transparent)"></div>
+<div class="glow" style="left:560px;top:-300px;width:800px;height:800px;background:radial-gradient(closest-side,rgba(154,139,255,.3),transparent)"></div>
+<div class="wall" id="wall-l" style="left:-120px;-webkit-mask-image:linear-gradient(90deg,#000 10%,transparent 95%)"></div>
+<div class="wall" id="wall-r" style="right:-120px;-webkit-mask-image:linear-gradient(270deg,#000 10%,transparent 95%)"></div>
+
+<div class="brand"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4.5v10M6 10.5l4 4 4-4M5 19.5h11"/><rect x="15.2" y="6.6" width="6.4" height="5" rx="1.3" fill="#fff" stroke="none"/><path d="M16.7 6.6V5a1.8 1.8 0 0 1 3.5-.6" stroke-width="1.5"/></svg></span>BetterDownload<span class="by">BY XIAOMING6680</span></div>
+<div class="row title" style="top:170px">下载完就自动转好</div>
+<div class="row title grad" style="top:320px">NCM → FLAC / MP3</div>
+
+<div class="tile before" style="left:600px"><div class="art"></div>
+  <div class="badge"><svg viewBox="0 0 24 24"><rect x="6" y="10.8" width="12" height="9.4" rx="2.4" fill="#fff"/><path d="M8.9 10.8V8.1a3.1 3.1 0 0 1 6.2 0v2.7" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/></svg></div>
+  <div class="name">夜间来信.ncm</div></div>
+<svg style="position:absolute;left:908px;top:596px" width="104" height="72" viewBox="0 0 104 72" fill="none" stroke="#a796ff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 36h84M64 12l28 24-28 24"/></svg>
+<div class="tile after" style="left:1080px"><div class="art"><div class="fmt">FLAC</div></div>
+  <div class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></div>
+  <div class="name">夜间来信.flac</div></div>
+
+<div class="pill">开源插件 · 附 BetterNCM 安装教程</div>
+
+<script>
+// Illustrative covers, the same sky-sun-horizon drawings the film uses.
+const pal = [['#8fd8ff', '#3b6fe0', '#eef8ff', '#1d2f78'], ['#ffd27a', '#f08a3e', '#fff3d6', '#8c3a1c'], ['#ff9f9f', '#a24fd6', '#ffe0b0', '#40205c'], ['#9be7ff', '#2c7be5', '#e0f7ff', '#0b2e6b'], ['#fbc2eb', '#a18cd1', '#fde2ff', '#5f4b8b'], ['#d4fc79', '#43c6ac', '#fcffe0', '#1d6b5f'], ['#f093fb', '#f5576c', '#ffe1f0', '#6a1b4d'], ['#4facfe', '#1e3c72', '#c9e8ff', '#0b1a3a'], ['#f6d365', '#fda085', '#fffbe6', '#6b3e26'], ['#a8edea', '#f3a9c4', '#ffffff', '#4f8a99']];
+const sun = ([a, b, s, g]) => `radial-gradient(circle at 66% 34%,${s} 0 15%,${s}00 15.6%),linear-gradient(${g}00 69%,${g} 69.4%),linear-gradient(165deg,${a},${b})`;
+const moon = ([a, b, s, g]) => `radial-gradient(circle at 30% 30%,${s} 0 10%,${s}00 10.6%),linear-gradient(32deg,${g} 0 33%,${g}00 33.4%),linear-gradient(175deg,${b},${a})`;
+for (const [id, offset] of [['wall-l', 0], ['wall-r', 5]]) {
+  const wall = document.getElementById(id);
+  for (let i = 0; i < 10; i++) { const tile = document.createElement('i'); const p = pal[(i + offset) % pal.length]; tile.style.background = (i % 3 ? sun : moon)(p); wall.appendChild(tile); }
+}
+</script>
+</body>
+</html>

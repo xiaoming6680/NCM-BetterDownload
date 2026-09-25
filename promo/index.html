@@ -1,0 +1,1306 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>BetterDownload 宣传片</title>
+<style>
+/* PingFang is looked up on the machine; Noto Sans SC is the freely licensed fallback. */
+@font-face{font-family:PF;src:local("PingFang SC Light"),local("PingFangSC-Light");font-weight:300}
+@font-face{font-family:PF;src:local("PingFang SC Regular"),local("PingFangSC-Regular");font-weight:400}
+@font-face{font-family:PF;src:local("PingFang SC Medium"),local("PingFangSC-Medium");font-weight:500}
+@font-face{font-family:PF;src:local("PingFang SC Semibold"),local("PingFangSC-Semibold"),local("PingFang SC Bold");font-weight:600}
+@font-face{font-family:PF;src:local("PingFang SC Bold"),local("PingFangSC-Semibold");font-weight:700}
+@font-face{font-family:PF;src:local("PingFang SC Heavy"),local("PingFang SC Bold");font-weight:800}
+:root{
+  --font:PF,"Noto Sans SC","Microsoft YaHei UI",sans-serif;
+  --ui:"Segoe UI Variable Text","Segoe UI","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+  --ink:#f5f5f7;--dim:#a1a1a6;--mute:#6e6e73;
+  --brand:linear-gradient(135deg,#f39bc4,#9a8bff 52%,#5eaefc);
+  --text-grad:linear-gradient(90deg,#f7a6cf,#a796ff 25%,#68b4ff 50%,#a796ff 75%,#f7a6cf);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;overflow:hidden}
+[hidden]{display:none!important}
+#viewport{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+#stage{position:absolute;inset:0;overflow:hidden;background:#000;color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;font-kerning:normal}
+.scene{position:absolute;inset:0;display:none;overflow:hidden}
+.abs{position:absolute}
+.t{position:absolute;left:0;right:0;text-align:center;white-space:nowrap}
+.h1{font-size:196px;font-weight:700;line-height:1.1}
+.h2{font-size:128px;font-weight:700;line-height:1.14}
+.h3{font-size:92px;font-weight:700;line-height:1.22}
+.sub{font-size:42px;font-weight:500;line-height:1.45;color:var(--dim)}
+.cap{font-size:34px;font-weight:500;color:var(--dim)}
+.ch{display:inline-block;white-space:pre}
+.grad .ch,.gradfill{background-image:var(--text-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ncm{color:#86868b}
+.cam{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:960px 540px}
+#grain{position:absolute;inset:0;pointer-events:none;opacity:.035;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* Album tiles */
+.grid{position:absolute;left:175px;top:155px;width:1570px;height:770px}
+.tile{position:absolute;width:190px;height:234px}
+.tile .glow{position:absolute;left:-26px;top:-26px;width:242px;height:242px;border-radius:50%;background:radial-gradient(closest-side,rgba(176,156,255,.95),rgba(243,155,196,.4) 55%,transparent);opacity:0}
+.tile .art{position:absolute;left:0;top:0;width:190px;height:190px;border-radius:28px;overflow:hidden;box-shadow:0 22px 40px -20px rgba(0,0,0,.95)}
+.tile .art::after,.cover-frame::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.22)}
+.tile .badge{position:absolute;right:-13px;top:-13px;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:rgba(30,30,34,.9);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 8px 18px rgba(0,0,0,.55)}
+.tile .badge svg{width:28px;height:28px;overflow:visible}
+.tile .fmt{position:absolute;left:12px;top:150px;font:700 15px/26px var(--ui);letter-spacing:.08em;padding:0 9px;border-radius:8px;color:#fff;background:rgba(0,0,0,.32);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);opacity:0}
+.tile .name{position:absolute;left:-20px;right:-20px;top:204px;height:32px;text-align:center;font-size:22px;font-weight:500;line-height:32px;white-space:nowrap;color:#8e8e93}
+.tile .ext{position:relative;display:inline-block;vertical-align:top;height:32px;overflow:hidden;text-align:left}
+.tile .ext i{position:absolute;left:0;top:0;font-style:normal}
+
+/* Brand icon */
+.halo{position:absolute;width:1100px;height:1100px;border-radius:50%;left:960px;top:470px;background:radial-gradient(closest-side,rgba(158,140,255,.6),rgba(140,130,255,.22) 34%,rgba(100,150,255,.08) 60%,rgba(100,150,255,0));opacity:0}
+.icon{position:absolute;width:280px;height:280px;border-radius:66px;background:var(--brand);overflow:hidden;box-shadow:inset 0 2px 1px rgba(255,255,255,.55),inset 0 0 0 1.5px rgba(255,255,255,.22),inset 0 -26px 50px rgba(70,40,170,.3),0 60px 110px -40px rgba(122,104,255,.95),0 24px 44px -24px rgba(0,0,0,.9)}
+.icon .gloss{position:absolute;inset:0;background:radial-gradient(120% 70% at 28% -4%,rgba(255,255,255,.45),transparent 58%)}
+.icon .shine{position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 44%,rgba(255,255,255,.62) 50%,transparent 56%);transform:translateX(-75%)}
+.icon .mark{position:absolute;left:50%;top:50%;width:158px;height:158px;margin:-79px 0 0 -79px;overflow:visible;filter:drop-shadow(0 6px 10px rgba(60,30,150,.35))}
+.word{font-size:132px;font-weight:600;letter-spacing:-.018em;line-height:1.1}
+
+/* Progress card, as in plugin/progress-card.js */
+.nbd{position:absolute;width:270px;font:12px/1.45 var(--ui);color:#f4f6fa;-webkit-font-smoothing:antialiased;transform-origin:0 0}
+.nbd *{box-sizing:border-box}
+.nbd .card{position:relative;overflow:hidden;padding:13px 14px 12px;border-radius:14px;background:linear-gradient(160deg,#ffffff10,#ffffff00 58%),rgba(15,19,29,.68);box-shadow:0 18px 40px -14px #000a,0 3px 10px #0003;backdrop-filter:blur(28px) saturate(150%)}
+.nbd .card::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' d='M0 0h160v160H0z'/%3E%3C/svg%3E")}
+.nbd .card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;background:linear-gradient(155deg,#ffffff6b,#ffffff1a 34%,#ffffff0a 66%,#ffffff29);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.nbd .tint{position:absolute;inset:0;pointer-events:none;background-color:rgb(150,124,255);opacity:.45;-webkit-mask-image:radial-gradient(120% 130% at 0 0,#000,#0008 32%,#0000 70%)}
+.nbd .row,.nbd .bottom{position:relative}.nbd .row{display:flex;gap:12px;align-items:flex-start}
+.nbd .art{position:relative;flex:none;width:44px;height:44px;border-radius:10px;overflow:hidden;display:grid;place-items:center;background:var(--brand);box-shadow:0 6px 14px -6px #000c}
+.nbd .art .cover{position:absolute;inset:0}
+.nbd .art::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px #ffffff26,inset 0 1px 0 #ffffff33;pointer-events:none}
+.nbd .body{flex:1;min-width:0}.nbd .head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:1px 0 2px}
+.nbd .body,.nbd .summary,.nbd .percent{text-shadow:0 1px 2px #0003}
+.nbd .label{font-size:10px;font-weight:600;letter-spacing:.3px;color:#e3e9f4c2}
+.nbd .state{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;color:#dce4f2;white-space:nowrap}
+.nbd .state i{width:6px;height:6px;border-radius:50%;background:#8fb0ff;box-shadow:0 0 0 3px #8fb0ff2e}
+.nbd .card[data-phase=success] .state{color:#a6ecc9}.nbd .card[data-phase=success] .state i{background:#5fd49a;box-shadow:0 0 0 3px #5fd49a33}
+.nbd .song{font-size:13.5px;font-weight:600;line-height:1.4;letter-spacing:.1px;color:#f7f9fc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nbd .detail{display:flex;align-items:center;gap:6px;min-height:16px;margin-top:1px;font-size:11px;color:#e6ecf5e6;white-space:nowrap}.nbd .detail-text{overflow:hidden;text-overflow:ellipsis}
+.nbd .format{flex:none;font-size:9px;font-weight:700;letter-spacing:.6px;line-height:14px;padding:0 5px;border-radius:4px;color:#ece8ff;background:#9a8bff40;box-shadow:inset 0 0 0 1px #beb4ff47}.nbd .format:empty{display:none}
+.nbd .bottom{display:flex;align-items:center;gap:10px;margin-top:11px;min-height:22px}
+.nbd .line{flex:1;height:3px;border-radius:3px;background:#ffffff24;overflow:hidden}
+.nbd .bar{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#f39bc4,#9a8bff 55%,#62b0ff);box-shadow:0 0 10px #9a8bff99}
+.nbd .percent{min-width:30px;text-align:right;font-size:10.5px;font-weight:600;color:#e6ecf5d9;font-variant-numeric:tabular-nums}
+.nbd .summary{flex:1;min-width:0;font-size:11px;color:#e6ecf5cc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nbd .summary:empty{display:none}
+.nbd .open{margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:4px 9px 4px 7px;border:0;border-radius:7px;font:inherit;font-size:11px;font-weight:600;color:#eef2ff;background:#ffffff17;box-shadow:inset 0 0 0 1px #ffffff21}
+.nbd .card[data-style=compact]{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;column-gap:10px;align-items:center;padding:9px 12px}
+.nbd .card[data-style=compact] .row,.nbd .card[data-style=compact] .body,.nbd .card[data-style=compact] .head,.nbd .card[data-style=compact] .bottom{display:contents}
+.nbd .card[data-style=compact] .art{grid-area:1/1;width:30px;height:30px;border-radius:8px}
+.nbd .card[data-style=compact] .song{grid-area:1/2;font-size:12.5px}.nbd .card[data-style=compact] .state{grid-area:1/3}
+.nbd .card[data-style=compact] .open{grid-area:1/4;width:26px;height:24px;padding:0;justify-content:center}.nbd .card[data-style=compact] .open span{display:none}
+.nbd .card[data-style=compact] .line{position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:0;background:#ffffff14}
+.nbd .card[data-style=compact] .label,.nbd .card[data-style=compact] .detail,.nbd .card[data-style=compact] .percent,.nbd .card[data-style=compact] .summary{display:none}
+
+/* Music client stand-in for the card demo */
+.world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.win{position:absolute;left:180px;top:100px;width:1560px;height:880px;border-radius:16px;overflow:hidden;background:#15171c;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 90px -30px rgba(0,0,0,.9);font-family:var(--ui);color:#e8e9ed}
+.win-side{position:absolute;left:0;top:0;bottom:80px;width:220px;background:#101216;padding:28px 22px}
+.win-side .brand{display:flex;align-items:center;gap:12px;margin-bottom:34px}
+.win-side .brand i{width:30px;height:30px;border-radius:50%;background:#2a2d35}.win-side .brand b{width:84px;height:12px;border-radius:6px;background:#2a2d35}
+.win-side .it{height:38px;margin:0 -8px 6px;border-radius:9px;display:flex;align-items:center;gap:12px;padding:0 10px}
+.win-side .it i{width:16px;height:16px;border-radius:5px;background:#2a2d35}.win-side .it b{height:10px;border-radius:5px;background:#262930}
+.win-side .it.on{background:#1f2229}.win-side .it.on i,.win-side .it.on b{background:#3a3e48}
+.win-side .sec{height:9px;width:60px;border-radius:5px;background:#1f2228;margin:26px 0 14px}
+.win-main{position:absolute;left:220px;top:0;right:0;bottom:80px;padding:26px 44px}
+.win-top{display:flex;justify-content:space-between;align-items:center;height:36px;margin-bottom:34px}
+.win-top .search{width:260px;height:34px;border-radius:17px;background:#1e2027}
+.win-top .dots{display:flex;gap:18px}.win-top .dots i{width:16px;height:16px;border-radius:50%;background:#262930}
+.win-title{font-size:30px;font-weight:700;letter-spacing:.3px}
+.win-tabs{display:flex;gap:30px;margin:18px 0 22px;font-size:15px;color:#8b909a}
+.win-tabs .on{color:#f2f3f5;font-weight:600;position:relative}.win-tabs .on::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:3px;border-radius:2px;background:#f2f3f5}
+.win-head,.win-row{display:grid;grid-template-columns:54px 50px 1fr 230px 230px 110px 170px;align-items:center;column-gap:10px}
+.win-head{height:34px;font-size:13px;color:#6c717b;border-bottom:1px solid #1f2228}
+.win-row{height:58px;font-size:15px;color:#c9ccd3;border-bottom:1px solid #1a1c21}
+.win-row .ix{color:#5f636c;font-size:14px;padding-left:6px}
+.win-row .th{width:40px;height:40px;border-radius:7px;position:relative;overflow:hidden}
+.win-row .ti{color:#eef0f3;font-weight:500}
+.win-row .sm{color:#8b909a}
+.win-row .st{display:flex;align-items:center;gap:10px;color:#8b909a;font-size:13px}
+.win-row .st .ln{position:relative;width:90px;height:4px;border-radius:2px;background:#2a2d35;overflow:hidden}.win-row .st .ln i{position:absolute;left:0;top:0;bottom:0;background:#d8dbe2;border-radius:2px}
+.win-row .st .ok{display:inline-flex;align-items:center;gap:6px;color:#9aa0aa}
+.win-player{position:absolute;left:0;right:0;bottom:0;height:80px;background:#121418;border-top:1px solid #1f2228;display:flex;align-items:center;padding:0 24px;gap:14px}
+.win-player .pc{width:48px;height:48px;border-radius:8px;position:relative;overflow:hidden}
+.win-player .pm b{display:block;font-size:14px;font-weight:600}.win-player .pm small{font-size:12px;color:#7d828c}
+.win-player .ctl{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:28px}
+.win-player .ctl i{width:18px;height:18px;border-radius:50%;background:#2c2f37}.win-player .ctl i.big{width:40px;height:40px;background:#e9ebef}
+.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.86),rgba(0,0,0,.6) 38%,rgba(0,0,0,0) 62%);opacity:0}
+
+/* Feature scenes */
+.bars{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.bars i{position:absolute;width:12px;border-radius:6px}
+.chip{display:inline-flex;align-items:center;gap:14px;padding:0 30px;height:66px;border-radius:33px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-size:30px;font-weight:600;color:#e8e8ed}
+.chip b{font:700 26px/1 var(--ui);letter-spacing:.06em;color:#fff}
+.chip em{font-style:normal;color:#86868b;font-weight:500}
+.cover-frame{position:absolute;border-radius:36px;overflow:hidden;box-shadow:0 50px 90px -40px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.06)}
+.panel{position:absolute;border-radius:30px;background:rgba(255,255,255,.055);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 40px 80px -40px rgba(0,0,0,.9);backdrop-filter:blur(30px)}
+.info-row{position:absolute;left:44px;right:44px;height:88px;display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);font-size:34px}
+.info-row:last-child{border-bottom:0}
+.info-row .k{width:130px;color:#86868b;font-weight:500}
+.info-row .v{flex:1;color:#f5f5f7;font-weight:600;display:flex;align-items:center;gap:16px}
+.info-row .ok{width:40px;height:40px;border-radius:50%;background:var(--brand);display:grid;place-items:center;box-shadow:0 6px 18px -6px rgba(154,139,255,.9)}
+.mini-cover{width:48px;height:48px;border-radius:10px;position:relative;overflow:hidden}
+.odo{position:absolute;left:0;right:0;top:300px;height:400px;overflow:hidden;text-align:center}
+.odo .strip{position:absolute;left:0;right:0;top:0;font-size:400px;font-weight:800;line-height:400px;letter-spacing:-.02em}
+.tree-row{position:absolute;left:40px;right:40px;height:76px;display:flex;align-items:center;gap:18px;font-size:32px;font-weight:500;color:#e8e8ed}
+.tree-row svg{flex:none;width:36px;height:36px}
+.tree-row .tag{margin-left:auto;font-size:24px;font-weight:600;padding:6px 18px;border-radius:20px}
+.tree-row .keep{color:#c7c7cc;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.tree-row .new{color:#fff;background:var(--brand);box-shadow:0 8px 22px -8px rgba(154,139,255,.9)}
+.tree-hi{position:absolute;left:14px;right:14px;height:76px;border-radius:18px;background:linear-gradient(90deg,rgba(243,155,196,.22),rgba(154,139,255,.2) 50%,rgba(94,174,252,.18));box-shadow:inset 0 0 0 1px rgba(190,180,255,.28);opacity:0}
+.graph-label{position:absolute;font-size:28px;font-weight:600;color:#d2d2d7;white-space:nowrap;transform:translateX(-50%)}
+.graph-label small{display:block;font-size:22px;font-weight:500;color:#86868b;text-align:center}
+.blob{position:absolute;border-radius:50%}
+
+/* Settings page, as in plugin/main.js */
+.setwin{position:absolute;border-radius:24px;overflow:hidden;background:radial-gradient(70% 60% at 100% 100%,rgba(94,140,200,.28),transparent 70%),radial-gradient(60% 55% at 0 0,rgba(150,90,140,.3),transparent 70%),#181a21;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 50px 100px -40px rgba(0,0,0,.95)}
+.nbd-settings{position:absolute;left:0;top:0;width:680px;font:14px/1.6 var(--ui);padding:32px;color:#eceef2;transform-origin:0 0}
+.nbd-settings .nbd-head{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.nbd-settings .nbd-logo{position:relative;overflow:hidden;flex:none;width:52px;height:52px;border-radius:15px;display:grid;place-items:center;background:var(--brand);box-shadow:0 10px 24px -10px rgba(122,104,255,.75),inset 0 1px 0 rgba(255,255,255,.45),inset 0 0 0 1px rgba(255,255,255,.18)}
+.nbd-settings .nbd-logo svg{width:28px;height:28px}
+.nbd-settings h2{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:600;letter-spacing:-.3px;line-height:1.3}
+.nbd-settings .nbd-version{font-size:11px;font-weight:600;letter-spacing:.3px;padding:1px 8px;border-radius:999px;border:1px solid rgba(136,136,136,.35);opacity:.7}
+.nbd-settings .nbd-head p{margin:3px 0 0;font-size:13px;opacity:.62}
+.nbd-settings .nbd-panel{border:1px solid rgba(136,136,136,.2);border-radius:14px;background:rgba(136,136,136,.06);overflow:hidden}
+.nbd-settings .nbd-row{display:flex;align-items:center;gap:14px;padding:16px 18px}.nbd-settings .nbd-row+.nbd-row{border-top:1px solid rgba(136,136,136,.16)}
+.nbd-settings .nbd-copy{flex:1;min-width:0}.nbd-settings .nbd-copy>div{font-weight:600}
+.nbd-settings small{display:block;margin-top:1px;font-size:12px;opacity:.6}
+.nbd-settings .dot,.nbd-settings .glyph{flex:none;align-self:flex-start;width:14px;height:22px;display:grid;place-items:center}.nbd-settings .glyph{opacity:.6}
+.nbd-settings .dot::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c,#2fbf71);box-shadow:0 0 0 var(--r,4px) var(--g,rgba(47,191,113,.18))}
+.nbd-settings .toggle{position:relative;overflow:hidden;flex:none;width:44px;height:24px;border-radius:999px;background:var(--brand)}
+.nbd-settings .toggle span{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transform:translateX(20px)}
+.nbd-settings .scan{flex:none;font-size:13px;font-weight:600;padding:7px 14px;border-radius:9px;border:1px solid rgba(136,136,136,.35);background:rgba(136,136,136,.1);white-space:nowrap;display:inline-flex;align-items:center;color:inherit}
+.nbd-settings .spin{display:inline-block;width:10px;height:10px;margin-right:7px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent}
+.nbd-settings .section{margin:26px 0 10px;font-size:12px;font-weight:600;letter-spacing:.4px;opacity:.55}
+.nbd-settings .segment{position:relative;flex:none;display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:3px;border-radius:10px;background:rgba(136,136,136,.14)}
+.nbd-settings .segment .thumb{position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px) / 3);border-radius:7px;background:var(--brand);box-shadow:0 2px 8px -3px rgba(122,104,255,.8)}
+.nbd-settings .segment b{position:relative;padding:5px 12px;font-size:12.5px;font-weight:600;white-space:nowrap;opacity:.7}.nbd-settings .segment b.on{opacity:1;color:#fff}
+.cursor{position:absolute;left:0;top:0;width:46px;height:46px;transform-origin:4px 3px}
+.ripple{position:absolute;width:80px;height:80px;margin:-40px 0 0 -40px;border-radius:50%;border:2px solid rgba(255,255,255,.7);opacity:0}
+
+/* Getting BetterNCM, after its installer, manager and plugin market */
+.kicker{position:absolute;left:0;right:0;top:100px;text-align:center;font-size:32px;font-weight:600;color:#86868b}
+.foot{position:absolute;left:0;right:0;top:1008px;text-align:center;font-size:24px;font-weight:500;color:#6e6e73}
+.eq{position:absolute;top:470px;width:360px;margin-left:-180px;text-align:center}
+.eq .big{position:relative;width:190px;height:190px;margin:0 auto;border-radius:46px;display:grid;place-items:center}
+.eq b{display:block;margin-top:26px;font-size:36px;font-weight:700;color:#f5f5f7;white-space:nowrap}
+.eq small{display:block;margin-top:6px;font-size:26px;font-weight:500;color:#86868b;white-space:nowrap}
+.op{position:absolute;top:518px;width:80px;margin-left:-40px;text-align:center;font-size:96px;font-weight:300;line-height:96px;color:#6e6e73}
+.app-tile{background:linear-gradient(160deg,#41444e,#1d1f25);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.08),0 30px 60px -30px #000}
+.bncm-tile{color:#fff;background:radial-gradient(120% 120% at 30% 8%,#5a4db0,#221d47 72%);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 0 0 1px rgba(190,180,255,.32),0 34px 70px -30px rgba(122,104,255,.95)}
+.eq .big svg{width:104px;height:104px}
+.plug-grid{position:relative;width:190px;height:190px;margin:0 auto}
+.plug-grid i{position:absolute;width:84px;height:84px;border-radius:22px;display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 16px 30px -16px #000}
+.plug-grid i svg{width:44px;height:44px}
+.panel2{position:absolute;border-radius:30px;background:rgba(255,255,255,.055);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 40px 80px -40px rgba(0,0,0,.9)}
+.dl-row{position:absolute;left:44px;top:48px;right:30px;display:flex;align-items:center;gap:24px}
+.dl-row .file{flex:none;width:84px;height:84px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(160deg,#3b3f4a,#23252c);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.dl-row .file svg{width:44px;height:44px}
+.dl-row b{display:block;font:700 34px/1.25 var(--ui);color:#f5f5f7}
+.dl-row small{display:block;margin-top:6px;font:500 22px/1.3 var(--ui);color:#86868b}
+.inst-btn{position:absolute;left:44px;bottom:44px;height:76px;padding:0 44px;border-radius:20px;display:flex;align-items:center;gap:12px;font-size:32px;font-weight:700;color:#0b0b0f;background:#f5f5f7}
+.inst-btn svg{width:30px;height:30px;display:block}
+.toolbar{position:absolute;left:36px;right:36px;top:64px;height:92px;border-radius:18px;background:#15171c;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);display:flex;align-items:center;gap:18px;padding:0 24px;color:#a1a1a6}
+.toolbar .srch{width:90px;height:40px;border-radius:20px;background:#22252c;margin-right:auto}
+.toolbar .ava{width:40px;height:40px;border-radius:50%;background:#2c3038}
+.toolbar svg{width:32px;height:32px;flex:none}
+.toolbar .sep{width:1px;height:34px;background:#2c3038}
+.toolbar .bn{position:relative;flex:none;color:#fff;display:grid;place-items:center;width:52px;height:52px;border-radius:14px}
+.toolbar .bn svg{width:38px;height:38px}
+.tip{position:absolute;left:0;top:0;padding:12px 22px;border-radius:14px;background:#f5f5f7;color:#0b0b0f;font:700 26px/1 var(--ui);white-space:nowrap}
+.tip::before{content:"";position:absolute;left:50%;top:-10px;margin-left:-10px;border:10px solid transparent;border-top:0;border-bottom-color:#f5f5f7}
+.mgr{position:absolute;border-radius:14px;overflow:hidden;background:#1d1f24;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 50px 100px -40px #000;font-family:var(--ui);color:#e9eaee}
+.mgr-head{position:absolute;left:0;right:0;top:0;height:92px;display:flex;align-items:center;gap:18px;padding:0 26px;border-bottom:1px solid #8883}
+.mgr-logo{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff;background:radial-gradient(120% 120% at 30% 8%,#5a4db0,#221d47 72%)}
+.mgr-logo svg{width:40px;height:40px}
+.mgr-head h4{font-size:24px;font-weight:700}.mgr-head h4 small{font-size:16px;font-weight:600;opacity:.8}
+.mgr-btns{display:flex;gap:10px;margin-top:6px}.mgr-btns span{font-size:13px;padding:3px 12px;border-radius:6px;border:1px solid #8886;color:#cfd1d6}
+.mgr-side{position:absolute;left:0;top:92px;bottom:0;width:230px;border-right:1px solid #8885;padding:14px 12px}
+.mgr-side div{height:40px;border-radius:8px;display:flex;align-items:center;padding:0 14px;font-size:15px;color:#c9cbd1;margin-bottom:4px}
+.mgr-side div.on{background:#ffffff14;color:#fff;font-weight:600}
+.mgr-side b{height:10px;border-radius:5px;background:#34373f}
+.mgr-main{position:absolute;left:230px;right:0;top:92px;bottom:0}
+.welcome{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:0 120px}
+.welcome h5{font-size:30px;font-weight:700;color:#fff}.welcome p{font-size:16px;line-height:1.6;color:#b8bac0}
+.welcome span{margin-top:10px;font-size:16px;font-weight:600;padding:9px 22px;border-radius:8px;background:#ffffff1c;color:#fff}
+.market{position:absolute;inset:0}
+.mk-filters{position:absolute;left:24px;right:24px;top:18px;height:40px;display:flex;align-items:center;gap:8px}
+.mk-filters .cat{font-size:14px;padding:6px 14px;border-radius:6px;color:#cfd1d6;background:#ffffff0d}.mk-filters .cat.on{background:#ffffff26;color:#fff}
+.mk-search{margin-left:auto;display:flex;align-items:center;gap:8px;height:34px;width:260px;padding:0 12px;border-radius:6px;border:1px solid #ffffff2e;font-size:15px;color:#fff}
+.mk-search svg{width:16px;height:16px;fill:#fff;flex:none}
+.mk-search .ph{color:#ffffff66}
+.mk-search .caret{width:2px;height:18px;background:#fff;margin-left:-6px}
+.mk-grid{position:absolute;left:24px;right:24px;top:76px;bottom:0}
+.mk-card,.mk-skel{position:absolute;width:264px;height:150px;border-radius:6px;overflow:hidden;background:#1b1b1b;box-shadow:0 15px 35px rgba(50,50,50,.1),0 5px 15px rgba(0,0,0,.07)}
+.mk-prev{position:absolute;inset:0;background-size:cover;background-position:center}
+.mk-shade{position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(transparent,rgba(0,0,0,.78))}
+.mk-body{position:absolute;left:0;right:0;top:0;height:150px;transform:translateY(85px);z-index:2}
+.mk-hbg{position:absolute;left:0;top:0;bottom:0;width:calc(100% - 35px);z-index:-1;background-size:cover;background-position:center;-webkit-mask-image:linear-gradient(90deg,#000,transparent);opacity:0}
+.mk-info{padding:15px 15px 12px;max-width:calc(100% - 26px)}
+.mk-title{font-size:18px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.75);margin-bottom:6px;white-space:nowrap}
+.mk-author{font-size:14px;margin-bottom:10px;color:#b3e4ff;text-shadow:0 1px 3px rgba(0,0,0,.75)}
+.mk-desc{font-size:14px;line-height:1.2;color:hsla(0,0%,100%,.658)}
+.mk-meta{margin-top:6px;font-size:13px;color:hsla(0,0%,100%,.658)}
+.mk-actions{position:absolute;z-index:3;right:0;top:0;bottom:0;width:10px;display:grid;place-items:center;background:#ffffff12;overflow:hidden}
+.mk-actions svg{width:20px;height:20px;fill:#ccc;display:block}
+.mk-state{position:absolute;z-index:1;left:8px;top:8px;width:24px;height:24px;border-radius:50%;background:#35c46a;display:grid;place-items:center;opacity:0}
+.mk-state svg{width:15px;height:15px}
+.mk-skel b{position:absolute;left:15px;height:10px;border-radius:5px;background:#ffffff40}
+.mk-notice{position:absolute;left:242px;right:12px;bottom:12px;height:50px;border-radius:4px;background:#444;display:flex;align-items:center;padding-left:25px;font-size:18px;color:#eee;box-shadow:0 -15px 35px rgba(50,50,50,.2),0 -5px 15px rgba(0,0,0,.15);opacity:0}
+.mk-restart{margin-left:auto;margin-right:25px;height:30px;display:flex;align-items:center;gap:8px;padding:0 14px;border-radius:100px;background:#ec4141;border:1px solid hsla(0,0%,100%,.15);color:hsla(0,0%,100%,.9);font-size:15px}
+.mk-restart svg{width:16px;height:16px;fill:hsla(0,0%,100%,.85)}
+.byline{position:absolute;left:0;right:0;text-align:center;font:600 30px/1 var(--ui);letter-spacing:.3em;color:#c7c7cc}
+
+/* Finale */
+.pill{position:absolute;left:50%;height:84px;border-radius:42px;display:flex;align-items:center;gap:18px;padding:0 34px 0 30px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 30px 60px -30px rgba(0,0,0,.9);font-size:38px;font-weight:600;color:#f5f5f7;transform:translateX(-50%)}
+.pill .caret{display:inline-block;width:3px;height:40px;margin-left:3px;border-radius:2px;background:#a796ff;vertical-align:middle}
+
+/* Vertical cut, 1080 × 1920. Content stays clear of a phone feed's overlays:
+   the top tabs, the caption block along the bottom and the button column on the right. */
+.vb{display:none}.v .vb{display:inline}.v .hb{display:none}
+.v #viewport{width:1080px;height:1920px}
+.v .cam{width:1080px;height:1920px;transform-origin:540px 960px}
+.v .h1{font-size:140px}.v .h2{font-size:116px}.v .h3{font-size:86px}.v .sub{font-size:40px}.v .word{font-size:108px}
+.v .halo{left:540px}
+.v .grid{left:215px;top:307px;width:650px;height:1306px}
+.v #A-l1{top:740px!important}.v #A-l2{top:852px!important}.v #A-cap{top:1432px!important}
+.v #B-halo{top:840px}.v #B-now{top:790px!important}.v #B-iconbox{left:400px!important;top:700px!important}
+.v #B-word{top:890px!important}.v #B-desc{top:1030px!important}.v #B-tag{top:860px!important}
+.v #D-h{top:300px!important}.v #D-s{top:462px!important}
+.v #D-beam{width:220px!important;height:1500px!important;margin:0!important}
+.v #W-h,.v #W-s,.v #G-h1,.v #G-h2,.v #T2-c1,.v #T2-c2{left:0!important;right:0!important;width:auto!important;text-align:center!important}
+.v #W-h{top:1120px!important}.v #W-s{top:1246px!important}
+.v .shade{background:linear-gradient(rgba(0,0,0,0) 52%,rgba(0,0,0,.86) 62%)}
+.v #E1-h{top:330px!important}.v #E1-s{top:500px!important}.v #E1-chips{top:1160px!important}
+.v #E2-h{top:300px!important}.v #E2-s{top:456px!important}
+.v #E2-coverbox{left:380px!important;top:640px!important;width:320px!important;height:320px!important}
+.v #E2-cover{width:320px!important;height:320px!important}
+.v #E2-panel{left:110px!important;top:1000px!important;width:860px!important;height:460px!important}
+.v #E3-h{top:330px!important}.v .odo{top:620px}.v #E3-cap{top:1040px!important}.v #E3-s{top:1150px!important}
+.v #E4-h{top:280px!important}.v #E4-s{top:560px!important}.v #E4-panel{left:110px!important;top:720px!important;width:860px!important}
+.v #E5-h{top:330px!important}.v #E5-s{top:500px!important}
+.v #E5-graph{transform:translate(-94px,560px) scale(.66);transform-origin:0 0}
+.v .graph-label{font-size:40px}.v .graph-label small{font-size:32px}.v #E5-l1{top:404px!important}.v #E5-l2{top:672px!important}
+.v #F1-h{top:300px!important}.v #F1-s{top:470px!important}.v #F1-space{width:1080px!important;height:1920px!important}
+.v #F1-b1{left:-420px!important;top:700px!important}.v #F1-b2{left:260px!important;top:560px!important}.v #F1-b3{left:0!important;top:1100px!important}
+.v #F2-h{top:330px!important}.v #F2-b1{left:-280px!important;top:560px!important}.v #F2-b2{left:220px!important;top:480px!important}
+.v #G-h1{top:300px!important}.v #G-h2{top:410px!important}.v #G-win{left:100px!important;top:600px!important;width:880px!important}
+.v .eq{top:760px}.v .op{top:808px}.v #T1-row{transform:scale(.8);transform-origin:540px 860px}
+.v #T1-h{top:280px!important}.v #T1-s{top:560px!important}.v #T1-cap{top:1260px!important}
+.v #T1-a{left:190px!important}.v #T1-p{left:365px!important}.v #T1-b{left:540px!important}.v #T1-e{left:715px!important}.v #T1-g{left:890px!important}
+.v .kicker{top:250px}.v #T2-h,.v #T3-h,.v #T3-h2{top:292px!important}
+.v #T2-l{left:190px!important;top:460px!important}.v #T2-c1{top:806px!important}.v #T2-arrow{left:508px!important;top:875px!important}
+.v #T2-r{left:190px!important;top:945px!important}.v #T2-c2{top:1290px!important}
+.v .foot{top:1392px;line-height:1.5}
+.v #T3-view{-webkit-mask-image:linear-gradient(transparent 500px,#000 560px)!important}
+.v #T3-b1{left:-280px!important;top:560px!important}.v #T3-b2{left:220px!important;top:480px!important}.v #T3-done{top:1250px!important}
+.v #H-halo{top:720px!important}.v #H-iconbox{left:420px!important;top:600px!important}
+.v #H-word{top:880px!important;font-size:100px!important}.v #H-tag,.v #H-pill{top:1020px!important}
+.v #H-cap{top:1136px!important}.v #H-by{top:1236px!important}.v #H-legal{top:1330px!important}
+
+/* Preview controls, hidden while rendering */
+#controls{position:fixed;left:0;right:0;bottom:0;height:52px;display:flex;align-items:center;gap:14px;padding:0 18px;background:rgba(20,20,22,.92);color:#ddd;font:13px/1 system-ui,sans-serif;z-index:10}
+#controls button{width:34px;height:30px;border:0;border-radius:6px;background:#333;color:#fff;font-size:14px;cursor:pointer}
+#controls input{flex:1}
+#controls output{min-width:120px;font-variant-numeric:tabular-nums}
+body.render #controls{display:none}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<section class="scene" id="A">
+  <div class="cam" id="A-cam"><div class="grid" id="A-grid"></div></div>
+  <div class="t h3 split trim" id="A-l1" style="top:382px">你下载的 VIP 歌曲，</div>
+  <div class="t h3 split trim" id="A-l2" style="top:500px">都被锁在 <span class="ncm">.ncm</span> 里。</div>
+  <div class="t cap" id="A-cap" style="top:914px">只能在网易云里播放。</div>
+</section>
+
+<section class="scene" id="B">
+  <div class="halo" id="B-halo"></div>
+  <div class="t h3 split trim" id="B-now" style="top:470px">现在，</div>
+  <div class="abs" id="B-iconbox" style="left:820px;top:330px;width:280px;height:280px"></div>
+  <div class="t word" id="B-word" style="top:548px">BetterDownload</div>
+  <div class="t sub" id="B-desc" style="top:714px">网易云音乐 PC 版 · BetterNCM 插件</div>
+  <div class="t h1 split grad trim" id="B-tag" style="top:420px">下载即解锁。</div>
+</section>
+
+<section class="scene" id="D">
+  <div class="cam" id="D-cam"><div class="grid" id="D-grid"></div></div>
+  <div class="abs" id="D-beam" style="top:330px;width:260px;height:720px;margin-left:-130px;mix-blend-mode:screen;background:linear-gradient(90deg,rgba(154,139,255,0),rgba(154,139,255,.2) 32%,rgba(255,255,255,.62) 50%,rgba(94,174,252,.2) 68%,rgba(94,174,252,0));-webkit-mask-image:linear-gradient(transparent,#000 20%,#000 80%,transparent)"></div>
+  <div class="t h2 split trim" id="D-h" style="top:118px">全自动。</div>
+  <div class="t sub" id="D-s" style="top:282px">下载完成的那一刻，歌曲就已解锁。</div>
+</section>
+
+<section class="scene" id="W">
+  <div class="world" id="W-world">
+    <div class="blob" style="left:-120px;top:-160px;width:1300px;height:1100px;background:radial-gradient(closest-side,rgba(150,110,230,.34),transparent)"></div>
+    <div class="blob" style="left:900px;top:300px;width:1300px;height:1100px;background:radial-gradient(closest-side,rgba(70,120,230,.3),transparent)"></div>
+    <div class="win" id="W-win">
+      <div class="win-side">
+        <div class="brand"><i></i><b></b></div>
+        <div class="it"><i></i><b style="width:70px"></b></div>
+        <div class="it"><i></i><b style="width:56px"></b></div>
+        <div class="it"><i></i><b style="width:82px"></b></div>
+        <div class="sec"></div>
+        <div class="it"><i></i><b style="width:64px"></b></div>
+        <div class="it on"><i></i><b style="width:76px"></b></div>
+        <div class="it"><i></i><b style="width:50px"></b></div>
+        <div class="sec"></div>
+        <div class="it"><i></i><b style="width:88px"></b></div>
+        <div class="it"><i></i><b style="width:60px"></b></div>
+      </div>
+      <div class="win-main">
+        <div class="win-top"><div class="search"></div><div class="dots"><i></i><i></i><i></i><i></i></div></div>
+        <div class="win-title">下载管理</div>
+        <div class="win-tabs"><span class="on">已下载单曲</span><span>下载中</span><span>本地音乐</span></div>
+        <div class="win-head"><span></span><span></span><span>音乐标题</span><span>歌手</span><span>专辑</span><span>大小</span><span>状态</span></div>
+        <div id="W-list"></div>
+      </div>
+      <div class="win-player"><div class="pc" id="W-pc"></div><div class="pm"><b>清晨</b><small>林间</small></div><div class="ctl"><i></i><i class="big"></i><i></i></div></div>
+    </div>
+  </div>
+  <div class="shade" id="W-shade"></div>
+  <div class="t h3 split trim" id="W-h" style="left:150px;right:auto;text-align:left;top:436px">什么都不用做。</div>
+  <div class="t sub" id="W-s" style="left:154px;right:auto;text-align:left;top:560px">下载完成，转换就自动开始。</div>
+</section>
+
+<section class="scene" id="E1">
+  <div class="bars" id="E1-bars"></div>
+  <div class="t h2 split grad trim" id="E1-h" style="top:110px">原音质。</div>
+  <div class="t sub" id="E1-s" style="top:268px">直接取出原始音频，不重新编码。</div>
+  <div class="t" id="E1-chips" style="top:872px"><span class="chip" id="E1-c1"><b>FLAC</b><em>还是</em><b>FLAC</b></span><span style="display:inline-block;width:26px"></span><span class="chip" id="E1-c2"><b>MP3</b><em>还是</em><b>MP3</b></span></div>
+</section>
+
+<section class="scene" id="E2">
+  <div class="t h2 split trim" id="E2-h" style="top:92px">信息完整。</div>
+  <div class="t sub" id="E2-s" style="top:250px">封面、标题、歌手、专辑与曲目号，<br class="vb">一并写入文件。</div>
+  <div class="abs" id="E2-coverbox" style="left:290px;top:380px;width:470px;height:470px;perspective:1400px"><div class="cover-frame" id="E2-cover" style="left:0;top:0;width:470px;height:470px"></div></div>
+  <div class="panel" id="E2-panel" style="left:850px;top:380px;width:780px;height:470px"></div>
+</section>
+
+<section class="scene" id="E3">
+  <div class="t h2 split trim" id="E3-h" style="top:92px">完全本地。</div>
+  <div class="odo" id="E3-odo"><div class="strip gradfill" id="E3-strip"></div></div>
+  <div class="t" id="E3-cap" style="top:716px;font-size:50px;font-weight:600">个文件离开你的电脑</div>
+  <div class="t sub" id="E3-s" style="top:842px">转换在本机完成。<br class="vb">不联网，不依赖第三方网站。</div>
+</section>
+
+<section class="scene" id="E4">
+  <div class="t h2 split trim" id="E4-h" style="top:92px">原文件，<br class="vb">原样保留。</div>
+  <div class="t sub" id="E4-s" style="top:250px">解锁的歌曲存进 unlock 文件夹，<br class="vb">不覆盖你已有的文件。</div>
+  <div class="panel" id="E4-panel" style="left:480px;top:372px;width:960px;height:520px"></div>
+</section>
+
+<section class="scene" id="E5">
+  <div class="t h2 split trim" id="E5-h" style="top:110px">轻巧。</div>
+  <div class="t sub" id="E5-s" style="top:268px">有下载才启动，空闲一分钟后自动退出。</div>
+  <div class="abs" id="E5-graph" style="left:0;top:0;width:1920px;height:1080px">
+  <svg class="abs" id="E5-svg" style="left:0;top:0" width="1920" height="1080" viewBox="0 0 1920 1080" fill="none"></svg>
+  <div id="E5-labels"></div>
+  </div>
+</section>
+
+<section class="scene" id="F1">
+  <div class="blob" id="F1-b1" style="left:-260px;top:420px;width:1000px;height:900px;background:radial-gradient(closest-side,rgba(217,74,130,.42),transparent)"></div>
+  <div class="blob" id="F1-b2" style="left:760px;top:260px;width:1100px;height:900px;background:radial-gradient(closest-side,rgba(59,111,224,.4),transparent)"></div>
+  <div class="blob" id="F1-b3" style="left:300px;top:640px;width:900px;height:700px;background:radial-gradient(closest-side,rgba(240,138,62,.3),transparent)"></div>
+  <div class="t h2 split trim" id="F1-h" style="top:88px">进度卡片。</div>
+  <div class="t sub" id="F1-s" style="top:244px">封面、格式与进度，一眼看清。</div>
+  <div class="abs" id="F1-space" style="left:0;top:0;width:1920px;height:1080px;perspective:2400px;perspective-origin:50% 45%"></div>
+</section>
+
+<section class="scene" id="F2">
+  <div class="blob" id="F2-b1" style="left:260px;top:280px;width:1000px;height:900px"></div>
+  <div class="blob" id="F2-b2" style="left:760px;top:180px;width:1000px;height:900px"></div>
+  <div class="t h3 split trim" id="F2-h" style="top:128px">玻璃底色，<br class="vb">随封面而变。</div>
+  <div class="abs" id="F2-slot" style="left:0;top:0;width:1920px;height:1080px"></div>
+</section>
+
+<section class="scene" id="G">
+  <div class="t h3 split trim" id="G-h1" style="left:150px;right:auto;text-align:left;top:372px">以前下载的，</div>
+  <div class="t h3 split trim" id="G-h2" style="left:150px;right:auto;text-align:left;top:486px">也能一键转换。</div>
+  <div class="setwin" id="G-win" style="left:900px;top:190px;width:900px;height:700px">
+    <div class="nbd-settings" id="G-set" style="transform:scale(1.25)">
+      <div class="nbd-head"><div class="nbd-logo" id="G-logo"></div><div><h2>BetterDownload<span class="nbd-version">v0.5.0</span></h2><p>自动解锁下载的 VIP 歌曲，保留原音质。</p></div></div>
+      <div class="nbd-panel">
+        <div class="nbd-row"><span class="dot" id="G-dot"></span><div class="nbd-copy"><div id="G-status">已启用 · 下载完成后自动转换</div><small id="G-count">封面与歌曲信息直接写入音频文件</small></div><span class="toggle"><span></span></span></div>
+        <div class="nbd-row"><span class="glyph" id="G-search"></span><div class="nbd-copy"><div>转换已有下载</div><small id="G-note">找出下载目录里还没有转换的 NCM</small></div><span class="scan" id="G-scan"><span class="spin" id="G-spin" hidden></span><span id="G-scantext">查找并转换</span></span></div>
+      </div>
+      <div class="section">进度卡片</div>
+      <div class="nbd-panel" style="-webkit-mask-image:linear-gradient(#000 30%,transparent 95%)">
+        <div class="nbd-row"><span class="glyph" id="G-bell"></span><div class="nbd-copy"><div>弹出时机</div><small>每首歌转换时在右下角提示</small></div><span class="segment"><span class="thumb"></span><b class="on">每首歌</b><b>仅出错</b><b>不显示</b></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="ripple" id="G-ripple"></div>
+  <svg class="cursor" id="G-cursor" viewBox="0 0 24 24"><path d="M4.2 2.6v17.1l4.3-4.1 2.9 6.6 2.9-1.3-2.9-6.5h6.1z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
+  <div class="abs" id="G-slot" style="left:0;top:0;width:1920px;height:1080px"></div>
+</section>
+
+<section class="scene" id="T1">
+  <div class="t h2 split trim" id="T1-h" style="top:112px">它是一个<span class="hb"> </span><br class="vb">BetterNCM 插件。</div>
+  <div class="t sub" id="T1-s" style="top:280px">BetterNCM 是网易云音乐 PC 版的<br class="vb">插件管理器，开源、免费。</div>
+  <div class="abs" id="T1-row" style="left:0;top:0;width:100%;height:100%">
+  <div class="eq" id="T1-a" style="left:610px"><div class="big app-tile"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5.5l11-2V16"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></div><b>网易云音乐</b><small>PC 版</small></div>
+  <div class="op" id="T1-p" style="left:785px">+</div>
+  <div class="eq" id="T1-b" style="left:960px"><div class="big bncm-tile"><svg viewBox="0 0 29 29" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3707 22.342C16.9214 22.342 19.3998 21.0048 20.6842 18.9345C22.2492 16.4133 21.8458 13.1462 19.7247 11.1649C18.8879 10.3829 17.7719 9.89053 16.5779 9.77494L16.5289 9.58894L16.517 9.54384C16.4653 9.34756 16.4077 9.12931 16.3596 8.9496C16.2977 8.72364 16.2901 8.51814 16.3377 8.35497C16.351 8.30693 16.3724 8.26316 16.4019 8.20846C16.5123 8.00343 16.7197 7.85739 16.9561 7.81838C17.0603 7.80078 17.1697 7.80601 17.2729 7.83313C17.379 7.86167 17.4837 7.91305 17.575 7.98155C17.6341 8.02647 17.6857 8.07986 17.74 8.1361L17.741 8.1371C17.7462 8.14245 17.7514 8.14782 17.7566 8.15318C17.7851 8.18261 17.8136 8.21201 17.8438 8.23938C18.0126 8.39778 18.2334 8.48484 18.4646 8.48484C18.9669 8.48484 19.3755 8.07573 19.3755 7.5734C19.3755 7.42831 19.3417 7.28893 19.2756 7.15906C19.2699 7.14764 19.2637 7.1367 19.2575 7.12624L19.2461 7.10531C19.1605 6.96165 19.0382 6.82369 18.8608 6.67147C18.5892 6.43838 18.26 6.25571 17.9099 6.14392C17.7453 6.09111 17.5759 6.05449 17.4075 6.03546C17.0336 5.99264 16.6469 6.03213 16.2892 6.14963C14.8754 6.61676 14.197 7.93398 14.6019 9.4272L14.7256 9.89481C14.4487 9.9576 14.1752 10.0413 13.9112 10.1431C12.5464 10.6683 11.4632 11.8361 11.0841 13.1905C10.949 13.6728 10.9028 14.1728 10.9466 14.6765C11.0417 15.7683 11.624 16.7849 12.5045 17.3971C13.3346 17.9736 14.3283 18.1434 15.3031 17.8747C15.9933 17.6839 16.6069 17.2739 17.0308 16.7202C17.7006 15.8449 17.9004 14.697 17.594 13.4868C17.4861 13.0607 17.3511 12.589 17.2201 12.1315L17.213 12.1068C17.1759 11.9779 17.1388 11.8485 17.1021 11.7201C17.6259 11.8732 18.1006 12.1401 18.4817 12.4964C19.9449 13.8631 20.2265 16.2178 19.1367 17.9741C18.1768 19.5211 16.3058 20.521 14.3707 20.521C11.106 20.521 8.45012 17.8652 8.45012 14.6004C8.45012 14.3107 8.47248 14.0177 8.51672 13.729C8.55239 13.4978 8.60234 13.2661 8.66561 13.0401C8.72793 12.818 8.80451 12.5973 8.89204 12.3846C8.98052 12.1725 9.08137 11.9641 9.19269 11.7662C9.3021 11.5702 9.42578 11.3766 9.5604 11.1906C9.68979 11.0108 9.83488 10.8329 9.99043 10.6626C10.1436 10.4961 10.3082 10.3363 10.479 10.1883C10.6507 10.0394 10.8324 9.89957 11.0189 9.77303C11.2058 9.64554 11.4033 9.52757 11.6059 9.42149C11.7167 9.36393 11.83 9.30922 11.9418 9.25975C12.0031 9.23264 12.065 9.20647 12.1268 9.18174C12.3528 9.09183 12.5302 8.91915 12.6263 8.69557C12.7224 8.47199 12.7257 8.22463 12.6358 7.99867C12.5454 7.77224 12.3727 7.5948 12.1487 7.49871C11.9256 7.40262 11.6782 7.39976 11.4523 7.49015C11.37 7.5225 11.2881 7.55722 11.2044 7.59385C11.0536 7.66092 10.9047 7.73275 10.763 7.80696C10.4999 7.94397 10.2411 8.09904 9.99376 8.26744C9.7483 8.43441 9.51045 8.61708 9.28687 8.81117C9.06187 9.00573 8.84685 9.21456 8.64848 9.43196C8.44774 9.6503 8.25793 9.88292 8.0843 10.1227C7.90972 10.3643 7.74751 10.6179 7.6029 10.8767C7.4559 11.1388 7.32366 11.4118 7.20949 11.6877C7.0939 11.967 6.99352 12.2562 6.9117 12.5483C6.82941 12.8418 6.76376 13.1462 6.71619 13.4526C6.65816 13.8327 6.62866 14.2189 6.62866 14.6004C6.62866 18.8694 10.1017 22.342 14.3707 22.342ZM15.1929 11.6583C15.2781 11.9694 15.3699 12.291 15.4617 12.6107C15.5911 13.0602 15.7243 13.5245 15.8285 13.9355C15.9464 14.4017 15.9997 15.0715 15.5844 15.6142H15.584C15.4003 15.8549 15.1282 16.0348 14.8181 16.1204C14.2501 16.2769 13.811 16.0885 13.5437 15.903C13.1027 15.5962 12.8102 15.0791 12.7612 14.5201C12.7364 14.2352 12.7621 13.9536 12.8377 13.6834C13.0647 12.8718 13.7268 12.1673 14.5655 11.8443C14.77 11.7658 14.9808 11.703 15.1929 11.6583Z" fill="currentColor"/></svg></div><b>BetterNCM</b><small>插件管理器</small></div>
+  <div class="op" id="T1-e" style="left:1135px">=</div>
+  <div class="eq" id="T1-g" style="left:1310px"><div class="plug-grid">
+    <i style="left:0;top:0;background:linear-gradient(135deg,#36d1c4,#1e6fd9)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1 0 1.5-.7 1.5-1.5 0-.8-.6-1.2-.6-2 0-.9.7-1.5 1.5-1.5h2.1a4 4 0 0 0 4-4c0-4.4-3.8-8-8.5-8z"/><circle cx="7.8" cy="11" r=".9" fill="#fff"/><circle cx="10.5" cy="7.4" r=".9" fill="#fff"/><circle cx="15" cy="7.6" r=".9" fill="#fff"/></svg></i>
+    <i style="left:106px;top:0;background:linear-gradient(135deg,#f7b267,#f25c54)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h12"/></svg></i>
+    <i style="left:0;top:106px;background:linear-gradient(135deg,#8e7cf0,#d66fc4)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M6 17v-5M10 17V7M14 17v-7M18 17V5"/></svg></i>
+    <i id="T1-bd" style="left:106px;top:106px;background:var(--brand)"></i></div><b>各种插件</b><small>BetterDownload<span class="hb"> </span><br class="vb">是其中之一</small></div>
+  </div>
+  <div class="t cap" id="T1-cap" style="top:890px">BetterDownload 就在它的插件商店里。</div>
+</section>
+
+<section class="scene" id="T2">
+  <div class="kicker" id="T2-k">第 1 步</div>
+  <div class="t h3 split" id="T2-h" style="top:146px;font-size:80px">安装 BetterNCM</div>
+  <div class="panel2" id="T2-l" style="left:210px;top:330px;width:700px;height:330px">
+    <div class="dl-row"><span class="file"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></svg></span><div><b>BetterNCM-Installer.exe</b><small>github.com/std-microblock/BetterNCM-Installer</small></div></div>
+    <div class="inst-btn" id="T2-btn"><span id="T2-ok" hidden><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></span><span id="T2-btntext">安装</span></div>
+  </div>
+  <svg class="abs" id="T2-arrow" style="left:928px;top:470px" width="64" height="50" viewBox="0 0 64 50" fill="none" stroke="#6e6e73" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 25h48M40 11l14 14-14 14"/></svg>
+  <div class="panel2" id="T2-r" style="left:1010px;top:330px;width:700px;height:330px">
+    <div class="toolbar"><span class="srch"></span><span class="ava"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M20.5 12h-2.2M5.7 12H3.5M18 6l-1.6 1.6M7.6 16.4 6 18M18 18l-1.6-1.6M7.6 7.6 6 6"/></svg>
+      <span class="bn" id="T2-bn"><svg viewBox="0 0 29 29" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3707 22.342C16.9214 22.342 19.3998 21.0048 20.6842 18.9345C22.2492 16.4133 21.8458 13.1462 19.7247 11.1649C18.8879 10.3829 17.7719 9.89053 16.5779 9.77494L16.5289 9.58894L16.517 9.54384C16.4653 9.34756 16.4077 9.12931 16.3596 8.9496C16.2977 8.72364 16.2901 8.51814 16.3377 8.35497C16.351 8.30693 16.3724 8.26316 16.4019 8.20846C16.5123 8.00343 16.7197 7.85739 16.9561 7.81838C17.0603 7.80078 17.1697 7.80601 17.2729 7.83313C17.379 7.86167 17.4837 7.91305 17.575 7.98155C17.6341 8.02647 17.6857 8.07986 17.74 8.1361L17.741 8.1371C17.7462 8.14245 17.7514 8.14782 17.7566 8.15318C17.7851 8.18261 17.8136 8.21201 17.8438 8.23938C18.0126 8.39778 18.2334 8.48484 18.4646 8.48484C18.9669 8.48484 19.3755 8.07573 19.3755 7.5734C19.3755 7.42831 19.3417 7.28893 19.2756 7.15906C19.2699 7.14764 19.2637 7.1367 19.2575 7.12624L19.2461 7.10531C19.1605 6.96165 19.0382 6.82369 18.8608 6.67147C18.5892 6.43838 18.26 6.25571 17.9099 6.14392C17.7453 6.09111 17.5759 6.05449 17.4075 6.03546C17.0336 5.99264 16.6469 6.03213 16.2892 6.14963C14.8754 6.61676 14.197 7.93398 14.6019 9.4272L14.7256 9.89481C14.4487 9.9576 14.1752 10.0413 13.9112 10.1431C12.5464 10.6683 11.4632 11.8361 11.0841 13.1905C10.949 13.6728 10.9028 14.1728 10.9466 14.6765C11.0417 15.7683 11.624 16.7849 12.5045 17.3971C13.3346 17.9736 14.3283 18.1434 15.3031 17.8747C15.9933 17.6839 16.6069 17.2739 17.0308 16.7202C17.7006 15.8449 17.9004 14.697 17.594 13.4868C17.4861 13.0607 17.3511 12.589 17.2201 12.1315L17.213 12.1068C17.1759 11.9779 17.1388 11.8485 17.1021 11.7201C17.6259 11.8732 18.1006 12.1401 18.4817 12.4964C19.9449 13.8631 20.2265 16.2178 19.1367 17.9741C18.1768 19.5211 16.3058 20.521 14.3707 20.521C11.106 20.521 8.45012 17.8652 8.45012 14.6004C8.45012 14.3107 8.47248 14.0177 8.51672 13.729C8.55239 13.4978 8.60234 13.2661 8.66561 13.0401C8.72793 12.818 8.80451 12.5973 8.89204 12.3846C8.98052 12.1725 9.08137 11.9641 9.19269 11.7662C9.3021 11.5702 9.42578 11.3766 9.5604 11.1906C9.68979 11.0108 9.83488 10.8329 9.99043 10.6626C10.1436 10.4961 10.3082 10.3363 10.479 10.1883C10.6507 10.0394 10.8324 9.89957 11.0189 9.77303C11.2058 9.64554 11.4033 9.52757 11.6059 9.42149C11.7167 9.36393 11.83 9.30922 11.9418 9.25975C12.0031 9.23264 12.065 9.20647 12.1268 9.18174C12.3528 9.09183 12.5302 8.91915 12.6263 8.69557C12.7224 8.47199 12.7257 8.22463 12.6358 7.99867C12.5454 7.77224 12.3727 7.5948 12.1487 7.49871C11.9256 7.40262 11.6782 7.39976 11.4523 7.49015C11.37 7.5225 11.2881 7.55722 11.2044 7.59385C11.0536 7.66092 10.9047 7.73275 10.763 7.80696C10.4999 7.94397 10.2411 8.09904 9.99376 8.26744C9.7483 8.43441 9.51045 8.61708 9.28687 8.81117C9.06187 9.00573 8.84685 9.21456 8.64848 9.43196C8.44774 9.6503 8.25793 9.88292 8.0843 10.1227C7.90972 10.3643 7.74751 10.6179 7.6029 10.8767C7.4559 11.1388 7.32366 11.4118 7.20949 11.6877C7.0939 11.967 6.99352 12.2562 6.9117 12.5483C6.82941 12.8418 6.76376 13.1462 6.71619 13.4526C6.65816 13.8327 6.62866 14.2189 6.62866 14.6004C6.62866 18.8694 10.1017 22.342 14.3707 22.342ZM15.1929 11.6583C15.2781 11.9694 15.3699 12.291 15.4617 12.6107C15.5911 13.0602 15.7243 13.5245 15.8285 13.9355C15.9464 14.4017 15.9997 15.0715 15.5844 15.6142H15.584C15.4003 15.8549 15.1282 16.0348 14.8181 16.1204C14.2501 16.2769 13.811 16.0885 13.5437 15.903C13.1027 15.5962 12.8102 15.0791 12.7612 14.5201C12.7364 14.2352 12.7621 13.9536 12.8377 13.6834C13.0647 12.8718 13.7268 12.1673 14.5655 11.8443C14.77 11.7658 14.9808 11.703 15.1929 11.6583Z" fill="currentColor"/></svg></span><span class="sep"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round"><path d="M6 12h12"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round"><path d="m7 7 10 10M17 7 7 17"/></svg></div>
+  </div>
+  <div class="tip" id="T2-tip">BetterNCM</div>
+  <div class="t sub" id="T2-c1" style="left:210px;right:auto;width:700px;top:686px;font-size:34px">下载并运行安装器，点「安装」</div>
+  <div class="t sub" id="T2-c2" style="left:1010px;right:auto;width:700px;top:686px;font-size:34px">重启网易云，点设置右边的新图标</div>
+  <div class="ripple" id="T2-ripple"></div>
+  <svg class="cursor" id="T2-cursor" viewBox="0 0 24 24"><path d="M4.2 2.6v17.1l4.3-4.1 2.9 6.6 2.9-1.3-2.9-6.5h6.1z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
+  <div class="foot" id="T2-foot">需要 Windows 版网易云音乐 3.x<span class="hb"> · </span><br class="vb">实测网易云 3.1.37 + BetterNCM 1.3.4 · 链接见简介</div>
+</section>
+
+<section class="scene" id="T3">
+  <div class="blob" id="T3-b1" style="left:260px;top:260px;width:1000px;height:900px;background:radial-gradient(closest-side,rgba(217,74,130,.5),transparent);opacity:0"></div>
+  <div class="blob" id="T3-b2" style="left:760px;top:160px;width:1000px;height:900px;background:radial-gradient(closest-side,rgba(255,176,122,.36),transparent);opacity:0"></div>
+  <div class="abs" id="T3-view" style="left:0;top:0;width:1920px;height:1080px;-webkit-mask-image:linear-gradient(transparent 250px,#000 304px)">
+  <div class="world" id="T3-world">
+    <div class="mgr" style="left:260px;top:318px;width:1400px;height:640px">
+      <div class="mgr-head"><span class="mgr-logo"><svg viewBox="0 0 29 29" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3707 22.342C16.9214 22.342 19.3998 21.0048 20.6842 18.9345C22.2492 16.4133 21.8458 13.1462 19.7247 11.1649C18.8879 10.3829 17.7719 9.89053 16.5779 9.77494L16.5289 9.58894L16.517 9.54384C16.4653 9.34756 16.4077 9.12931 16.3596 8.9496C16.2977 8.72364 16.2901 8.51814 16.3377 8.35497C16.351 8.30693 16.3724 8.26316 16.4019 8.20846C16.5123 8.00343 16.7197 7.85739 16.9561 7.81838C17.0603 7.80078 17.1697 7.80601 17.2729 7.83313C17.379 7.86167 17.4837 7.91305 17.575 7.98155C17.6341 8.02647 17.6857 8.07986 17.74 8.1361L17.741 8.1371C17.7462 8.14245 17.7514 8.14782 17.7566 8.15318C17.7851 8.18261 17.8136 8.21201 17.8438 8.23938C18.0126 8.39778 18.2334 8.48484 18.4646 8.48484C18.9669 8.48484 19.3755 8.07573 19.3755 7.5734C19.3755 7.42831 19.3417 7.28893 19.2756 7.15906C19.2699 7.14764 19.2637 7.1367 19.2575 7.12624L19.2461 7.10531C19.1605 6.96165 19.0382 6.82369 18.8608 6.67147C18.5892 6.43838 18.26 6.25571 17.9099 6.14392C17.7453 6.09111 17.5759 6.05449 17.4075 6.03546C17.0336 5.99264 16.6469 6.03213 16.2892 6.14963C14.8754 6.61676 14.197 7.93398 14.6019 9.4272L14.7256 9.89481C14.4487 9.9576 14.1752 10.0413 13.9112 10.1431C12.5464 10.6683 11.4632 11.8361 11.0841 13.1905C10.949 13.6728 10.9028 14.1728 10.9466 14.6765C11.0417 15.7683 11.624 16.7849 12.5045 17.3971C13.3346 17.9736 14.3283 18.1434 15.3031 17.8747C15.9933 17.6839 16.6069 17.2739 17.0308 16.7202C17.7006 15.8449 17.9004 14.697 17.594 13.4868C17.4861 13.0607 17.3511 12.589 17.2201 12.1315L17.213 12.1068C17.1759 11.9779 17.1388 11.8485 17.1021 11.7201C17.6259 11.8732 18.1006 12.1401 18.4817 12.4964C19.9449 13.8631 20.2265 16.2178 19.1367 17.9741C18.1768 19.5211 16.3058 20.521 14.3707 20.521C11.106 20.521 8.45012 17.8652 8.45012 14.6004C8.45012 14.3107 8.47248 14.0177 8.51672 13.729C8.55239 13.4978 8.60234 13.2661 8.66561 13.0401C8.72793 12.818 8.80451 12.5973 8.89204 12.3846C8.98052 12.1725 9.08137 11.9641 9.19269 11.7662C9.3021 11.5702 9.42578 11.3766 9.5604 11.1906C9.68979 11.0108 9.83488 10.8329 9.99043 10.6626C10.1436 10.4961 10.3082 10.3363 10.479 10.1883C10.6507 10.0394 10.8324 9.89957 11.0189 9.77303C11.2058 9.64554 11.4033 9.52757 11.6059 9.42149C11.7167 9.36393 11.83 9.30922 11.9418 9.25975C12.0031 9.23264 12.065 9.20647 12.1268 9.18174C12.3528 9.09183 12.5302 8.91915 12.6263 8.69557C12.7224 8.47199 12.7257 8.22463 12.6358 7.99867C12.5454 7.77224 12.3727 7.5948 12.1487 7.49871C11.9256 7.40262 11.6782 7.39976 11.4523 7.49015C11.37 7.5225 11.2881 7.55722 11.2044 7.59385C11.0536 7.66092 10.9047 7.73275 10.763 7.80696C10.4999 7.94397 10.2411 8.09904 9.99376 8.26744C9.7483 8.43441 9.51045 8.61708 9.28687 8.81117C9.06187 9.00573 8.84685 9.21456 8.64848 9.43196C8.44774 9.6503 8.25793 9.88292 8.0843 10.1227C7.90972 10.3643 7.74751 10.6179 7.6029 10.8767C7.4559 11.1388 7.32366 11.4118 7.20949 11.6877C7.0939 11.967 6.99352 12.2562 6.9117 12.5483C6.82941 12.8418 6.76376 13.1462 6.71619 13.4526C6.65816 13.8327 6.62866 14.2189 6.62866 14.6004C6.62866 18.8694 10.1017 22.342 14.3707 22.342ZM15.1929 11.6583C15.2781 11.9694 15.3699 12.291 15.4617 12.6107C15.5911 13.0602 15.7243 13.5245 15.8285 13.9355C15.9464 14.4017 15.9997 15.0715 15.5844 15.6142H15.584C15.4003 15.8549 15.1282 16.0348 14.8181 16.1204C14.2501 16.2769 13.811 16.0885 13.5437 15.903C13.1027 15.5962 12.8102 15.0791 12.7612 14.5201C12.7364 14.2352 12.7621 13.9536 12.8377 13.6834C13.0647 12.8718 13.7268 12.1673 14.5655 11.8443C14.77 11.7658 14.9808 11.703 15.1929 11.6583Z" fill="currentColor"/></svg></span><div><h4>BetterNCM <small>1.3.4</small></h4><div class="mgr-btns"><span>打开插件文件夹</span><span>打开控制台</span></div></div></div>
+      <div class="mgr-side"><div class="on">插件商店</div><div><b style="width:120px"></b></div><div><b style="width:90px"></b></div><div><b style="width:132px"></b></div><div><b style="width:76px"></b></div></div>
+      <div class="mgr-main">
+        <div class="welcome" id="T3-welcome"><h5>欢迎使用 BetterNCM！</h5><p>BetterNCM 是一个由一群热爱网易云音乐的云村村友开发的 PC 版网易云音乐扩展工具……</p><span id="T3-start">开始使用 BetterNCM</span></div>
+        <div class="market" id="T3-market">
+          <div class="mk-filters"><span class="cat on">全部</span><span class="cat">扩展</span><span class="cat">主题</span><span class="cat">已安装</span>
+            <div class="mk-search"><svg viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7l126.6 126.7c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg><span class="ph" id="T3-ph">搜索...</span><span id="T3-typed"></span><i class="caret" id="T3-caret"></i></div></div>
+          <div class="mk-grid" id="T3-grid">
+            <div class="mk-card" id="T3-card" style="left:286px;top:168px"><div class="mk-prev" style="background-image:url(../plugin/preview.jpg)"></div><div class="mk-shade" id="T3-shade"></div>
+              <div class="mk-body" id="T3-body"><div class="mk-hbg" id="T3-hbg" style="background-image:url(../plugin/preview.jpg)"></div><div class="mk-info"><div class="mk-title">BetterDownload</div><div class="mk-author">XIAOMING6680</div><div class="mk-desc">自动解锁下载的 VIP 歌曲，保留原音质，内嵌封面与歌曲信息。</div><div class="mk-meta">0.5.0</div></div></div>
+              <div class="mk-actions" id="T3-actions"><span id="T3-dl"><svg viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32v242.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64v-32c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64z"/></svg></span><span id="T3-spin" hidden><svg viewBox="0 0 512 512"><path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg></span><span id="T3-del" hidden><svg viewBox="0 0 448 512"><path d="M135.2 17.7 128 32H32C14.3 32 0 46.3 0 64s14.3 32 32 32h384c17.7 0 32-14.3 32-32s-14.3-32-32-32h-96l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32l21.2 339c1.6 25.3 22.6 45 47.9 45h245.8c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg></span></div>
+              <div class="mk-state" id="T3-state"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="mk-notice" id="T3-notice"><span>插件的更改需要重启以生效</span><span class="mk-restart" id="T3-restart"><svg viewBox="0 0 512 512"><path d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5z"/></svg>重启</span></div>
+    </div>
+    <div class="ripple" id="T3-ripple"></div>
+    <svg class="cursor" id="T3-cursor" viewBox="0 0 24 24"><path d="M4.2 2.6v17.1l4.3-4.1 2.9 6.6 2.9-1.3-2.9-6.5h6.1z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
+  </div>
+  </div>
+  <div class="kicker" id="T3-k">第 2 步</div>
+  <div class="t h3 split" id="T3-h" style="top:146px;font-size:80px">在插件商店搜索<span class="hb"> </span><br class="vb">BetterDownload</div>
+  <div class="kicker" id="T3-k2">第 3 步</div>
+  <div class="t h3 split" id="T3-h2" style="top:146px;font-size:80px">重启网易云</div>
+  <div class="abs" id="T3-slot" style="left:0;top:0;width:1920px;height:1080px"></div>
+  <div class="t sub" id="T3-done" style="top:830px">之后照常下载，歌曲会自动解锁。</div>
+  <div class="foot" id="T3-foot">需要 Windows 版网易云音乐 3.x<span class="hb"> · </span><br class="vb">实测网易云 3.1.37 + BetterNCM 1.3.4 · 链接见简介</div>
+</section>
+
+<section class="scene" id="H">
+  <div class="halo" id="H-halo" style="top:360px"></div>
+  <div class="abs" id="H-iconbox" style="left:840px;top:240px;width:240px;height:240px"></div>
+  <div class="t word" id="H-word" style="top:520px;font-size:112px">BetterDownload</div>
+  <div class="t" id="H-tag" style="top:668px;font-size:54px;font-weight:600"><span class="gradfill" id="H-taggrad">下载即解锁。</span></div>
+  <div class="pill" id="H-pill" style="top:668px"><svg width="34" height="34" viewBox="0 0 16 16" fill="none" stroke="#a1a1a6" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.4 10.4 14 14"/></svg><span id="H-typed"></span><span class="caret" id="H-caret"></span></div>
+  <div class="t cap" id="H-cap" style="top:784px">在 BetterNCM 插件商店搜索</div>
+  <div class="byline" id="H-by" style="top:888px">BY XIAOMING6680</div>
+  <div class="t" id="H-legal" style="top:980px;font-size:24px;font-weight:500;color:#6e6e73">免费 · 开源 · GPL-3.0</div>
+</section>
+
+<div id="grain"></div>
+</div></div>
+
+<div id="controls"><button id="play" title="播放 / 暂停（空格）">▶</button><output id="clock">0.00 s</output><input id="scrub" type="range" min="0" max="85" step="0.01" value="0"></div>
+
+<script>
+'use strict';
+const DURATION = 85, FPS = 60;
+// ?v renders the vertical cut for phone feeds; timeline and soundtrack are shared with the wide one.
+const V = new URLSearchParams(location.search).has('v');
+const SW = V ? 1080 : 1920, SH = V ? 1920 : 1080, CX = SW / 2, CY = SH / 2;
+if (V) document.documentElement.classList.add('v');
+const $ = id => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, p) => a + (b - a) * p;
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const bump = p => Math.sin(Math.PI * clamp(p));
+const E = {
+  out2: p => 1 - (1 - p) ** 2,
+  out3: p => 1 - (1 - p) ** 3,
+  out4: p => 1 - (1 - p) ** 4,
+  out5: p => 1 - (1 - p) ** 5,
+  in2: p => p * p,
+  in3: p => p ** 3,
+  io2: p => p < .5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2,
+  io3: p => p < .5 ? 4 * p ** 3 : 1 - (-2 * p + 2) ** 3 / 2,
+  io4: p => p < .5 ? 8 * p ** 4 : 1 - (-2 * p + 2) ** 4 / 2,
+  expo: p => p >= 1 ? 1 : 1 - 2 ** (-10 * p),
+  back: p => { const c = 2.2, d = c + 1; return 1 + d * (p - 1) ** 3 + c * (p - 1) ** 2; },
+  spring: p => p >= 1 ? 1 : 1 - Math.exp(-6.5 * p) * Math.cos(10.5 * p),
+};
+// cubic-bezier(.2,.8,.2,1), the curve the plugin itself uses for the card.
+const snappy = (() => {
+  const x1 = .2, y1 = .8, x2 = .2, y2 = 1;
+  const f = (s, a, b) => 3 * a * s * (1 - s) ** 2 + 3 * b * s * s * (1 - s) + s ** 3;
+  return p => { let lo = 0, hi = 1; for (let i = 0; i < 30; i++) { const m = (lo + hi) / 2; if (f(m, x1, x2) < p) lo = m; else hi = m; } return f((lo + hi) / 2, y1, y2); };
+})();
+const blur = px => px > .05 ? `blur(${px.toFixed(2)}px)` : 'none';
+const fx = n => n.toFixed(3);
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, p) => { const x = hex(a), y = hex(b); return `rgb(${x.map((v, i) => Math.round(lerp(v, y[i], p))).join(',')})`; };
+function setText(el, v) { if (el.textContent !== v) el.textContent = v; }
+
+// Fades an element in at `a` and out at `b`: it rises, sharpens and brightens, keynote style.
+function show(el, t, a, b = Infinity, o = {}) {
+  const din = o.din ?? .9, dout = o.dout ?? .4, y = o.y ?? 26, bl = o.blur ?? 10, s0 = o.scale ?? 1;
+  const pi = (o.ease || E.out4)(prog(t, a, a + din)), po = b === Infinity ? 0 : E.in2(prog(t, b - dout, b));
+  el.style.opacity = fx(pi * (1 - po));
+  el.style.transform = `translate3d(${o.x || 0}px,${fx(lerp(y, 0, pi) - 10 * po)}px,0) scale(${(lerp(s0, 1, pi) * (1 + (o.grow || 0) * po)).toFixed(4)})`;
+  el.style.filter = blur((1 - pi) * bl + po * bl * .6);
+  return pi * (1 - po);
+}
+// The same, one character after another.
+function rise(el, t, a, b = Infinity, o = {}) {
+  const per = o.per ?? .05, dur = o.dur ?? .95, y = o.y ?? .42, bl = o.blur ?? 12, dout = o.dout ?? .4;
+  const po = b === Infinity ? 0 : E.in2(prog(t, b - dout, b));
+  el.style.opacity = fx(1 - po);
+  el.style.transform = po > 0 ? `translateY(${fx(-12 * po)}px) scale(${(1 + (o.grow || 0) * po).toFixed(4)})` : '';
+  el.style.filter = blur(po * 8);
+  el._chars.forEach((c, i) => {
+    const p = E.out4(prog(t, a + i * per, a + i * per + dur));
+    c.style.opacity = fx(p);
+    c.style.transform = p < 1 ? `translateY(${fx((1 - p) * y)}em)` : '';
+    c.style.filter = blur((1 - p) * bl);
+  });
+  if (el._grad) {
+    const w = el._w * 2, s = (o.shift ?? t * .09) * el._w;
+    el._chars.forEach((c, i) => { c.style.backgroundSize = `${w}px 100%`; c.style.backgroundPosition = `${fx(-el._x[i] - s)}px 0`; });
+  }
+}
+function split(el) {
+  const out = [];
+  (function walk(node) {
+    for (const child of [...node.childNodes]) {
+      if (child.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        for (const ch of child.textContent) { const s = document.createElement('span'); s.className = 'ch'; s.textContent = ch; frag.appendChild(s); out.push(s); }
+        node.replaceChild(frag, child);
+      } else if (child.nodeType === 1) walk(child);
+    }
+  })(el);
+  // Full-width punctuation leaves half an em of air at the end of a centered line.
+  if (el.classList.contains('trim') && /[，。]/.test(out[out.length - 1].textContent)) out[out.length - 1].style.marginRight = '-.5em';
+  if (V) out.forEach(c => { if (/[，。]/.test(c.textContent) && c.nextElementSibling?.matches('br.vb')) c.style.marginRight = '-.5em'; });
+  el._chars = out; el._grad = el.classList.contains('grad');
+}
+
+/* ---------- artwork ---------- */
+// Illustrative covers: sky, sun or moon and horizon, drawn with gradients like the ones in the README.
+function art(kind, [a, b, s, g]) {
+  switch (kind) {
+    case 'sun': return `radial-gradient(circle at 66% 34%,${s} 0 15%,${s}00 15.6%),radial-gradient(70% 55% at 66% 34%,${s}66,${s}00 70%),linear-gradient(${g}00 69%,${g} 69.4%),linear-gradient(165deg,${a},${b})`;
+    case 'moon': return `radial-gradient(circle at 30% 30%,${s} 0 10%,${s}00 10.6%),linear-gradient(32deg,${g} 0 33%,${g}00 33.4%),linear-gradient(-26deg,${g}00 60%,${g}cc 60.4%),linear-gradient(175deg,${b},${a})`;
+    case 'rings': return `radial-gradient(circle at 50% 58%,${s} 0 7%,${s}00 7.6%),radial-gradient(circle at 50% 58%,${g}00 30%,${g}dd 78%),repeating-radial-gradient(circle at 50% 58%,${a} 0 8%,${b} 8.4% 16%,${a} 16.4%)`;
+    case 'blob': return `radial-gradient(55% 55% at 28% 30%,${s},${s}00 72%),radial-gradient(62% 62% at 78% 74%,${a},${a}00 72%),linear-gradient(135deg,${b},${g})`;
+    case 'wave': return `radial-gradient(130% 56% at 28% 100%,${g} 0 48%,${g}00 48.5%),radial-gradient(120% 62% at 82% 100%,${b} 0 57%,${b}00 57.5%),radial-gradient(circle at 70% 28%,${s} 0 9%,${s}00 9.6%),linear-gradient(${a},${s})`;
+    case 'split': return `radial-gradient(circle at 50% 50%,${s} 0 21%,${s}00 21.6%),radial-gradient(circle at 50% 50%,${g}00 28%,${g}55 29%,${g}00 36%),linear-gradient(135deg,${a} 0 50%,${b} 50.3%)`;
+  }
+}
+const SONGS = [
+  ['夜间来信', 'flac', 'sun', ['#ffb07a', '#d94a82', '#ffe3ad', '#5a1e4a']],
+  ['清晨', 'flac', 'moon', ['#8fd8ff', '#3b6fe0', '#eef8ff', '#1d2f78']],
+  ['潮汐', 'flac', 'sun', ['#ffd27a', '#f08a3e', '#fff3d6', '#8c3a1c']],
+  ['萤火', 'mp3', 'sun', ['#ff9f9f', '#a24fd6', '#ffe0b0', '#40205c']],
+  ['远航', 'flac', 'wave', ['#9be7ff', '#2c7be5', '#e0f7ff', '#0b2e6b']],
+  ['晚风', 'mp3', 'blob', ['#ffc3a0', '#ff6f91', '#ffd6e0', '#845ec2']],
+  ['星轨', 'flac', 'rings', ['#26348f', '#4a5de0', '#d3dcff', '#0b1033']],
+  ['白昼', 'flac', 'split', ['#fff1c1', '#ffb347', '#ffffff', '#ff7b54']],
+  ['山海', 'flac', 'moon', ['#a1c4fd', '#5e7ce2', '#f0f4ff', '#2b3a67']],
+  ['微光', 'mp3', 'blob', ['#fbc2eb', '#a18cd1', '#fde2ff', '#5f4b8b']],
+  ['雨季', 'flac', 'wave', ['#89f7fe', '#66a6ff', '#e6fbff', '#274b8a']],
+  ['长夜', 'flac', 'rings', ['#3a1a6e', '#7597de', '#d0d9ff', '#140a2e']],
+  ['初夏', 'mp3', 'sun', ['#d4fc79', '#43c6ac', '#fcffe0', '#1d6b5f']],
+  ['回声', 'flac', 'split', ['#f093fb', '#f5576c', '#ffe1f0', '#6a1b4d']],
+  ['流云', 'flac', 'blob', ['#e0c3fc', '#8ec5fc', '#ffffff', '#4a5fc1']],
+  ['深蓝', 'flac', 'wave', ['#4facfe', '#1e3c72', '#c9e8ff', '#0b1a3a']],
+  ['春日', 'mp3', 'moon', ['#fddb92', '#f6a5c0', '#fff7e6', '#b25e8a']],
+  ['旷野', 'flac', 'sun', ['#f6d365', '#fda085', '#fffbe6', '#6b3e26']],
+  ['月台', 'flac', 'rings', ['#4b5563', '#8e9eab', '#e0e6ea', '#1f1f1f']],
+  ['灯塔', 'mp3', 'split', ['#30cfd0', '#330867', '#e6fffb', '#16032e']],
+  ['海岸线', 'flac', 'wave', ['#a8edea', '#f3a9c4', '#ffffff', '#4f8a99']],
+].map(([name, ext, kind, pal]) => ({ name, ext, kind, pal, art: art(kind, pal) }));
+const COVER = { night: SONGS[0], dawn: SONGS[1], tide: SONGS[2], ember: SONGS[3] };
+// The glass tint the card derives from each cover's average color.
+const TINT = { night: '#d2587f', dawn: '#4f86e6', tide: '#e8923e', ember: '#b060c8' };
+
+/* ---------- marks ---------- */
+const SHACKLE = p => `M16.7 6.6V${fx(5 - .25 * p)}a1.75 1.75 0 0 1 3.5 ${fx(-.6 * p)}v${fx(Math.max(0, 1.6 * (1 - p)))}`;
+const BADGE_SHACKLE = p => `M8.9 10.8V${fx(8.1 - .5 * p)}a3.1 3.1 0 0 1 6.2 ${fx(-1.2 * p)}v${fx(Math.max(0, 2.7 * (1 - p)))}`;
+const MARK = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4.5v10M6 10.5l4 4 4-4M5 19.5h11"/><rect x="15.2" y="6.6" width="6.4" height="5" rx="1.3" fill="#fff" stroke="none"/><path d="M16.7 6.6V5a1.8 1.8 0 0 1 3.5-.6" stroke-width="1.5"/></svg>';
+const FOLDER = '<svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M2 4.6A1.6 1.6 0 0 1 3.6 3h2.5l1.5 1.6h4.8A1.6 1.6 0 0 1 14 6.2v5.2a1.6 1.6 0 0 1-1.6 1.6H3.6A1.6 1.6 0 0 1 2 11.4z"/></svg>';
+const CHECK = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg>';
+function makeIcon(box) {
+  box.innerHTML = `<div class="icon" style="left:0;top:0;width:100%;height:100%;border-radius:23.5%"><div class="gloss"></div><div class="shine"></div>
+    <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:56%;height:56%;margin:-28% 0 0 -28%">
+      <path class="arrow" d="M10 4.5v10M6 10.5l4 4 4-4"/><path class="tray" d="M5 19.5h11" pathLength="1" stroke-dasharray="1"/>
+      <g class="lock"><rect x="15.2" y="6.6" width="6.4" height="5" rx="1.3" fill="#fff" stroke="none"/><path class="shackle" stroke-width="1.5" d="${SHACKLE(1)}"/></g>
+    </svg></div>`;
+  const q = s => box.querySelector(s);
+  return { box, icon: q('.icon'), arrow: q('.arrow'), tray: q('.tray'), lock: q('.lock'), shackle: q('.shackle'), shine: q('.shine') };
+}
+
+/* ---------- album grid ---------- */
+function buildGrid(host) {
+  const cols = V ? 3 : 7;
+  return SONGS.slice(0, V ? 15 : 21).map((s, i) => {
+    const el = document.createElement('div'); el.className = 'tile';
+    const c = i % cols, r = (i / cols) | 0;
+    el.style.left = c * 230 + 'px'; el.style.top = r * 268 + 'px';
+    el.innerHTML = `<div class="glow"></div><div class="art" style="background:${s.art}"></div><div class="fmt">${s.ext.toUpperCase()}</div>
+      <div class="badge"><svg viewBox="0 0 24 24"><rect x="6" y="10.8" width="12" height="9.4" rx="2.4" fill="#fff"/><path d="${BADGE_SHACKLE(0)}" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/></svg></div>
+      <div class="name"><span>${s.name}</span><span class="ext"><i>.ncm</i><i>.${s.ext}</i></span></div>`;
+    host.appendChild(el);
+    const q = x => el.querySelector(x);
+    const [e0, e1] = el.querySelectorAll('.ext i');
+    return { el, c, r, i, art: q('.art'), glow: q('.glow'), badge: q('.badge'), shackle: q('.badge path'), fmt: q('.fmt'), name: q('.name'), ext: q('.ext'), e0, e1 };
+  });
+}
+// dt: seconds since this tile was unlocked; negative while it is still an encrypted .ncm.
+function tileAt(tl, t, dt) {
+  const p = E.out3(prog(dt, 0, .7));
+  tl.art.style.filter = p >= 1 ? 'none' : `grayscale(${fx(1 - p)}) brightness(${fx(lerp(.42, 1, p))}) contrast(${fx(lerp(.92, 1, p))})`;
+  tl.shackle.setAttribute('d', BADGE_SHACKLE(dt < 0 ? 0 : Math.min(1.12, E.spring(prog(dt, 0, .55)))));
+  const bo = E.in3(prog(dt, .28, .6));
+  tl.badge.style.opacity = fx(1 - bo); tl.badge.style.transform = `scale(${fx(1 - .5 * bo)})`;
+  const float = dt > 0 ? Math.sin(t * 1.3 + tl.i * .9) * 3.5 * p : 0;
+  tl.el.style.transform = `translateY(${fx(float)}px) scale(${(1 + .07 * bump(prog(dt, 0, .5))).toFixed(4)})`;
+  tl.glow.style.opacity = dt >= 0 ? fx(E.out2(prog(dt, 0, .15)) * (1 - prog(dt, .15, 1.2)) * .85) : '0';
+  const pn = E.io2(prog(dt, .12, .5));
+  tl.ext.style.width = fx(lerp(tl.w0, tl.w1, pn)) + 'px';
+  tl.e0.style.transform = `translateY(${fx(-32 * pn)}px)`; tl.e0.style.opacity = fx(1 - pn);
+  tl.e1.style.transform = `translateY(${fx(32 * (1 - pn))}px)`; tl.e1.style.opacity = fx(pn);
+  tl.name.style.color = pn > 0 ? mix('#8e8e93', '#e8e8ed', pn) : '';
+  const pf = E.out3(prog(dt, .35, .8));
+  tl.fmt.style.opacity = fx(pf); tl.fmt.style.transform = `translateY(${fx((1 - pf) * 8)}px)`;
+}
+
+/* ---------- progress card ---------- */
+function makeCard(parent, x, y, scale = 1, compact = false) {
+  const host = document.createElement('div'); host.className = 'nbd';
+  host.innerHTML = `<section class="card" data-phase="converting" data-style="${compact ? 'compact' : 'standard'}"><div class="tint"></div>
+    <div class="row"><div class="art">${MARK}<div class="cover"></div></div><div class="body"><div class="head"><span class="label">BetterDownload</span><span class="state"><i></i><span class="state-text"></span></span></div><div class="song"></div><div class="detail"><span class="format"></span><span class="detail-text"></span></div></div></div>
+    <div class="bottom"><div class="line"><div class="bar"></div></div><span class="percent"></span><span class="summary"></span><span class="open" hidden>${FOLDER}<span>打开文件夹</span></span></div></section>`;
+  host.style.left = x + 'px'; host.style.top = y + 'px';
+  parent.appendChild(host);
+  const q = s => host.querySelector(s);
+  const c = { host, scale, card: q('.card'), tint: q('.tint'), cover: q('.cover'), song: q('.song'), fmt: q('.format'), detail: q('.detail-text'), state: q('.state-text'), dot: q('.state i'), line: q('.line'), bar: q('.bar'), pct: q('.percent'), sum: q('.summary'), open: q('.open') };
+  // s: { phase, song, format, detail, percent (null while waiting), t, cover, tint, open, summary }
+  c.set = s => {
+    const done = s.phase === 'success', waiting = !done && s.percent == null;
+    c.card.dataset.phase = done ? 'success' : 'converting';
+    setText(c.state, done ? '已完成' : '转换中');
+    setText(c.song, s.song); setText(c.fmt, s.format || ''); setText(c.sum, s.summary || '');
+    setText(c.detail, done ? '原音质已保留 · 音乐已就绪' : s.detail || '正在整理音频与封面');
+    c.cover.style.background = s.cover; c.tint.style.backgroundColor = s.tint;
+    c.line.hidden = done; c.pct.hidden = done || waiting; c.open.hidden = !(done && s.open);
+    c.bar.style.width = waiting ? '36%' : fx(done ? 100 : s.percent) + '%';
+    c.bar.style.transform = waiting ? `translateX(${fx(lerp(-100, 280, E.io2((s.t / 1.25) % 1)))}%)` : '';
+    setText(c.pct, Math.round(s.percent || 0) + '%');
+    const pulse = done ? 0 : bump((s.t / 1.4) % 1);
+    c.dot.style.boxShadow = done ? '' : `0 0 0 ${fx(3 + 2 * pulse)}px rgba(143,176,255,${fx(.18 * (1 - pulse))})`;
+  };
+  c.place = (dx = 0, dy = 0, extra = 1, rest = '') => { host.style.transform = `translate(${fx(dx)}px,${fx(dy)}px) ${rest} scale(${(c.scale * extra).toFixed(4)})`; };
+  return c;
+}
+const covered = s => `${s.art}`;
+
+/* ---------- scenes ---------- */
+const A = {}, B = {}, D = {}, Wd = {}, E1 = {}, E2 = {}, E3 = {}, E4 = {}, E5 = {}, F1 = {}, F2 = {}, G = {}, T1 = {}, T2 = {}, T3 = {}, H = {};
+
+function buildAll() {
+  document.querySelectorAll('.split').forEach(split);
+  // A: the locked library
+  Object.assign(A, { cam: $('A-cam'), l1: $('A-l1'), l2: $('A-l2'), cap: $('A-cap') });
+  A.tiles = buildGrid($('A-grid'));
+  // B: the reveal
+  Object.assign(B, { halo: $('B-halo'), now: $('B-now'), word: $('B-word'), desc: $('B-desc'), tag: $('B-tag') }, { ic: makeIcon($('B-iconbox')) });
+  // D: the library unlocks
+  Object.assign(D, { cam: $('D-cam'), beam: $('D-beam'), h: $('D-h'), s: $('D-s') });
+  D.tiles = buildGrid($('D-grid'));
+  // W: the client, a download finishing and the card at work
+  Object.assign(Wd, { world: $('W-world'), win: $('W-win'), shade: $('W-shade'), h: $('W-h'), s: $('W-s') });
+  const rows = [['夜间来信', '夜航乐队', '夜航', '36.8 MB', 0], ['清晨', '林间', '白日梦', '28.1 MB', 1], ['潮汐', '北岸', '潮汐', '41.2 MB', 2], ['萤火', '盛夏', '萤火', '24.6 MB', 3], ['远航', '北岸', '远航', '33.9 MB', 4], ['晚风', '林间', '晚风', '9.4 MB', 5], ['星轨', '夜航乐队', '星轨', '38.3 MB', 6], ['白昼', '盛夏', '白昼', '30.7 MB', 7], ['山海', '北岸', '山海', '44.0 MB', 8]];
+  $('W-list').innerHTML = rows.map(([ti, ar, al, sz, k], i) => `<div class="win-row"><span class="ix">${String(i + 1).padStart(2, '0')}</span><span class="th" style="background:${SONGS[k].art}"></span><span class="ti">${ti}</span><span class="sm">${ar}</span><span class="sm">${al}</span><span class="sm">${sz}</span><span class="st">${i ? '' : '<span class="ln"><i id="W-dl"></i></span><span id="W-dlp"></span>'}</span></div>`).join('');
+  $('W-pc').style.background = SONGS[1].art;
+  Wd.dl = $('W-dl'); Wd.dlp = $('W-dlp'); Wd.st = Wd.dl.parentNode.parentNode;
+  Wd.card = makeCard(Wd.world, 1452, 778);
+  // E1: original quality
+  Object.assign(E1, { h: $('E1-h'), s: $('E1-s'), c1: $('E1-c1'), c2: $('E1-c2'), bars: [] });
+  const bars = V ? 40 : 64;
+  for (let i = 0; i < bars; i++) {
+    const b = document.createElement('i'), x = i / (bars - 1);
+    b.style.left = ((SW - bars * 22 + 10) / 2 + i * 22) + 'px';
+    const stop = x < .55 ? mix('#f39bc4', '#9a8bff', x / .55) : mix('#9a8bff', '#62b0ff', (x - .55) / .45);
+    b.style.background = stop; b.style.boxShadow = `0 0 24px ${stop.replace('rgb', 'rgba').replace(')', ',.45)')}`;
+    $('E1-bars').appendChild(b); E1.bars.push(b);
+  }
+  // E2: tags and cover
+  Object.assign(E2, { h: $('E2-h'), s: $('E2-s'), cover: $('E2-cover'), panel: $('E2-panel') });
+  E2.cover.style.background = COVER.night.art;
+  const info = [['标题', '夜间来信'], ['歌手', '夜航乐队'], ['专辑', '夜航'], ['曲目', '3 / 12'], ['封面', `<span class="mini-cover" style="background:${COVER.night.art}"></span>已写入`]];
+  E2.panel.innerHTML = info.map(([k, v], i) => `<div class="info-row" style="top:${14 + i * 88}px"><span class="k">${k}</span><span class="v">${v}</span><span class="ok">${CHECK}</span></div>`).join('');
+  E2.rows = [...E2.panel.querySelectorAll('.info-row')]; E2.oks = [...E2.panel.querySelectorAll('.ok')];
+  // E3: nothing leaves the machine
+  Object.assign(E3, { h: $('E3-h'), odo: $('E3-odo'), strip: $('E3-strip'), cap: $('E3-cap'), s: $('E3-s') });
+  E3.strip.innerHTML = '9<br>7<br>5<br>3<br>2<br>1<br>0';
+  // E4: the folder tree
+  Object.assign(E4, { h: $('E4-h'), s: $('E4-s'), panel: $('E4-panel') });
+  const folder = '<svg viewBox="0 0 24 24" fill="none" stroke="#a1a1a6" stroke-width="1.6" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
+  const folderHi = folder.replace('#a1a1a6', 'url(#fg)').replace('<path', '<defs><linearGradient id="fg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f39bc4"/><stop offset=".52" stop-color="#9a8bff"/><stop offset="1" stop-color="#5eaefc"/></linearGradient></defs><path');
+  const lock = '<svg viewBox="0 0 24 24"><rect x="6" y="10.8" width="12" height="9.4" rx="2.4" fill="#86868b"/><path d="M8.9 10.8V8.1a3.1 3.1 0 0 1 6.2 0v2.7" fill="none" stroke="#86868b" stroke-width="2.1" stroke-linecap="round"/></svg>';
+  const note = '<svg viewBox="0 0 24 24" fill="none" stroke="url(#ng)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="ng" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f39bc4"/><stop offset=".52" stop-color="#9a8bff"/><stop offset="1" stop-color="#5eaefc"/></linearGradient></defs><path d="M9 18V5.5l11-2V16"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>';
+  const tree = [[0, folder, 'VipSongsDownload', ''], [1, folder, '夜航乐队', ''], [2, lock, '夜间来信.ncm', '<span class="tag keep">原样保留</span>'], [1, folderHi, '<b style="font-weight:600">unlock</b>', ''], [2, folder, '夜航乐队', ''], [3, note, '<b style="font-weight:600">夜间来信.flac</b>', '<span class="tag new">新</span>']];
+  E4.panel.innerHTML = '<div class="tree-hi" id="E4-hi1"></div><div class="tree-hi" id="E4-hi2"></div>' + tree.map(([d, ic, label, tag], i) => `<div class="tree-row" style="top:${34 + i * 76}px;padding-left:${d * 50}px">${ic}<span>${label}</span>${tag}</div>`).join('');
+  E4.rows = [...E4.panel.querySelectorAll('.tree-row')]; E4.hi1 = $('E4-hi1'); E4.hi2 = $('E4-hi2');
+  E4.hi1.style.top = 34 + 3 * 76 + 'px'; E4.hi2.style.top = 34 + 5 * 76 + 'px';
+  E4.tags = [...E4.panel.querySelectorAll('.tag')];
+  // E5: activity over time
+  Object.assign(E5, { h: $('E5-h'), s: $('E5-s'), svg: $('E5-svg'), labels: $('E5-labels') });
+  E5.svg.innerHTML = `<defs><linearGradient id="lg" x1="300" y1="0" x2="1620" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f39bc4"/><stop offset=".5" stop-color="#9a8bff"/><stop offset="1" stop-color="#5eaefc"/></linearGradient>
+    <linearGradient id="af" x1="0" y1="540" x2="0" y2="814" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#9a8bff" stop-opacity=".32"/><stop offset="1" stop-color="#9a8bff" stop-opacity="0"/></linearGradient>
+    <clipPath id="ac"><rect id="E5-clip" x="0" y="0" width="0" height="1080"/></clipPath></defs>
+    <path d="M300 814H1620" stroke="#2c2c2e" stroke-width="2"/>
+    <path id="E5-area" clip-path="url(#ac)" fill="url(#af)" d=""/>
+    <path id="E5-line" stroke="url(#lg)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="" pathLength="1" stroke-dasharray="1"/>
+    <path id="E5-idle" d="M980 742V762M980 752H1540M1540 742V762" stroke="#6e6e73" stroke-width="2" opacity="0"/>
+    <circle id="E5-head" r="11" fill="#fff"/><circle id="E5-end" cx="1540" cy="800" r="10" fill="#000" stroke="#a1a1a6" stroke-width="3" opacity="0"/>`;
+  // Activity: the converter starts with a download, three songs push the line up, then it idles a minute and exits.
+  const pts = [], bursts = [[520, 250, 68], [690, 185, 58], [830, 225, 62]];
+  for (let x = 380; x <= 1540; x += 5) {
+    let y = 800;
+    for (const [cx, hgt, w] of bursts) y -= hgt * Math.exp(-(((x - cx) / w) ** 2));
+    pts.push([x, y]);
+  }
+  const d = 'M' + pts.map(([x, y]) => `${x} ${fx(y)}`).join('L');
+  $('E5-line').setAttribute('d', d);
+  $('E5-area').setAttribute('d', d + 'L1540 814L380 814Z');
+  Object.assign(E5, { line: $('E5-line'), clip: $('E5-clip'), head: $('E5-head'), idle: $('E5-idle'), end: $('E5-end') });
+  E5.len = E5.line.getTotalLength();
+  E5.labels.innerHTML = `<div class="graph-label" id="E5-l1" style="left:520px;top:448px">下载完成<small>启动转换</small></div>
+    <div class="graph-label" id="E5-l2" style="left:1260px;top:690px">空闲 1 分钟</div>
+    <div class="graph-label" id="E5-l3" style="left:1540px;top:836px">自动退出</div>`;
+  E5.l = [$('E5-l1'), $('E5-l2'), $('E5-l3')];
+  // F1: every flavour of card
+  Object.assign(F1, { h: $('F1-h'), s: $('F1-s'), space: $('F1-space') });
+  const at = V ? [[70, 640, -6, 4], [470, 850, 6, 3], [90, 1070, -5, -3], [470, 1310, 5, -4]] : [[250, 408, -9, 4], [1110, 372, 8, 3], [560, 700, -6, -3], [1240, 760, 7, -4]];
+  F1.cards = [
+    [makeCard(F1.space, 0, 0, 1.9), ...at[0], { phase: 'converting', song: '夜间来信', format: 'FLAC', percent: 58, cover: COVER.night.art, tint: TINT.night }],
+    [makeCard(F1.space, 0, 0, 1.9), ...at[1], { phase: 'success', song: '清晨', format: 'FLAC', open: true, cover: COVER.dawn.art, tint: TINT.dawn }],
+    [makeCard(F1.space, 0, 0, 1.9), ...at[2], { phase: 'converting', song: '潮汐', format: 'FLAC', percent: 34, detail: '第 2 首 · 还剩 1 首', cover: COVER.tide.art, tint: TINT.tide }],
+    [makeCard(F1.space, 0, 0, 1.9, true), ...at[3], { phase: 'success', song: '萤火', open: true, cover: COVER.ember.art, tint: TINT.ember }],
+  ];
+  // F2: the tint follows the cover
+  Object.assign(F2, { h: $('F2-h'), b1: $('F2-b1'), b2: $('F2-b2') });
+  F2.card = makeCard($('F2-slot'), 0, 0, 2.7);
+  // G: converting what was downloaded before
+  Object.assign(G, { h1: $('G-h1'), h2: $('G-h2'), win: $('G-win'), dot: $('G-dot'), status: $('G-status'), count: $('G-count'), note: $('G-note'), scan: $('G-scan'), spin: $('G-spin'), scantext: $('G-scantext'), cursor: $('G-cursor'), ripple: $('G-ripple') });
+  $('G-logo').innerHTML = MARK;
+  $('G-search').innerHTML = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.4 10.4 14 14"/></svg>';
+  $('G-bell').innerHTML = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5A3.5 3.5 0 0 0 4.5 6v2.4L3.2 10.8h9.6L11.5 8.4V6A3.5 3.5 0 0 0 8 2.5z"/><path d="M6.6 12.8a1.5 1.5 0 0 0 2.8 0"/></svg>';
+  G.card = makeCard($('G-slot'), V ? 470 : 1296, V ? 1110 : 668, 1.75);
+  // T1–T3: what BetterNCM is and how to get the plugin
+  $('T1-bd').innerHTML = MARK; $('T1-bd').querySelector('svg').setAttribute('style', 'width:46px;height:46px');
+  Object.assign(T1, { h: $('T1-h'), s: $('T1-s'), parts: ['T1-a', 'T1-p', 'T1-b', 'T1-e', 'T1-g'].map($), bd: $('T1-bd'), cap: $('T1-cap') });
+  Object.assign(T2, { k: $('T2-k'), h: $('T2-h'), l: $('T2-l'), r: $('T2-r'), arrow: $('T2-arrow'), btn: $('T2-btn'), ok: $('T2-ok'), btntext: $('T2-btntext'), bn: $('T2-bn'), tip: $('T2-tip'), c1: $('T2-c1'), c2: $('T2-c2'), cursor: $('T2-cursor'), ripple: $('T2-ripple'), foot: $('T2-foot'), btnPos: [0, 0], bnPos: [0, 0] });
+  Object.assign(T3, { k: $('T3-k'), h: $('T3-h'), k2: $('T3-k2'), h2: $('T3-h2'), world: $('T3-world'), welcome: $('T3-welcome'), start: $('T3-start'), market: $('T3-market'), ph: $('T3-ph'), typed: $('T3-typed'), caret: $('T3-caret'), card: $('T3-card'), shade: $('T3-shade'), body: $('T3-body'), hbg: $('T3-hbg'), actions: $('T3-actions'), dl: $('T3-dl'), spin: $('T3-spin'), del: $('T3-del'), state: $('T3-state'), notice: $('T3-notice'), restart: $('T3-restart'), cursor: $('T3-cursor'), ripple: $('T3-ripple'), done: $('T3-done'), foot: $('T3-foot'), b1: $('T3-b1'), b2: $('T3-b2') });
+  // Window coordinates of the card once it has moved to the first slot, and of its install button.
+  Object.assign(T3, { cardPos: [646, 561], installPos: [756, 561], startPos: [0, 0], restartPos: [0, 0] });
+  // Other plugins stay anonymous: gradient banners with blank titles.
+  const banners = ['linear-gradient(135deg,#2b5876,#4e4376)', 'linear-gradient(135deg,#355c7d,#c06c84)', 'linear-gradient(135deg,#134e5e,#71b280)', 'linear-gradient(135deg,#41295a,#2f0743)', 'linear-gradient(135deg,#232526,#414345)', 'linear-gradient(135deg,#3a1c71,#d76d77)', 'linear-gradient(135deg,#1f4037,#99f2c8)', 'linear-gradient(135deg,#373b44,#4286f4)', 'linear-gradient(135deg,#5f2c82,#49a09d)', 'linear-gradient(135deg,#0f2027,#2c5364)', 'linear-gradient(135deg,#614385,#516395)'];
+  T3.skel = [];
+  for (let i = 0, n = 0; i < 12; i++) {
+    if (i === 5) continue;
+    const el = document.createElement('div'); el.className = 'mk-skel';
+    el.style.left = (i % 4) * 286 + 'px'; el.style.top = ((i / 4) | 0) * 168 + 'px'; el.style.background = banners[n++ % banners.length];
+    el.innerHTML = `<div class="mk-shade"></div><b style="top:100px;width:${110 + (i * 37) % 70}px"></b><b style="top:124px;width:${60 + (i * 23) % 40}px;opacity:.55"></b>`;
+    $('T3-grid').insertBefore(el, T3.card); T3.skel.push(el);
+  }
+  T3.pc = makeCard($('T3-slot'), 0, 0, 2.6);
+  // H: the end card
+  Object.assign(H, { halo: $('H-halo'), word: $('H-word'), tag: $('H-tag'), grad: $('H-taggrad'), pill: $('H-pill'), typed: $('H-typed'), caret: $('H-caret'), cap: $('H-cap'), legal: $('H-legal'), by: $('H-by') }, { ic: makeIcon($('H-iconbox')) });
+}
+
+// Positions and widths that are only known after layout.
+function measure() {
+  for (const s of SCENES) s.el.style.display = 'block';
+  document.querySelectorAll('.split.grad').forEach(el => {
+    const r = el.getBoundingClientRect(), k = r.width / el.offsetWidth || 1;
+    const first = el._chars[0].getBoundingClientRect().left;
+    el._w = (el._chars[el._chars.length - 1].getBoundingClientRect().right - first) / k;
+    el._x = el._chars.map(c => (c.getBoundingClientRect().left - first) / k);
+  });
+  for (const tl of [...A.tiles, ...D.tiles]) { tl.w0 = tl.e0.offsetWidth; tl.w1 = tl.e1.offsetWidth; }
+  const stage = $('stage').getBoundingClientRect(), k = stage.width / SW;
+  const at = (el, px = .5, py = .5) => { const r = el.getBoundingClientRect(); return [(r.left + r.width * px - stage.left) / k, (r.top + r.height * py - stage.top) / k]; };
+  sceneT2(65); T2.btnPos = at(T2.btn, .5, .55);
+  sceneT2(67.2); T2.bnPos = at(T2.bn);
+  sceneT3(68.45); T3.startPos = at(T3.start, .5, .55);
+  sceneT3(72.5); T3.restartPos = at(T3.restart);
+  const b = G.scan.getBoundingClientRect();
+  G.target = [(b.left + b.width * .52 - stage.left) / k, (b.top + b.height * .55 - stage.top) / k];
+  for (const s of SCENES) s.el.style.display = 'none';
+}
+
+function iconAt(ic, o) {
+  ic.box.style.opacity = fx(o.opacity);
+  ic.box.style.transform = `translateY(${fx(o.y || 0)}px) scale(${(o.scale ?? 1).toFixed(4)})`;
+  ic.box.style.filter = blur(o.blur || 0);
+  if (o.reflect > .01) ic.icon.style.webkitBoxReflect = `below 30px linear-gradient(transparent 52%,rgba(255,255,255,${fx(o.reflect)}))`;
+  else ic.icon.style.removeProperty('-webkit-box-reflect');
+  ic.arrow.style.transform = `translateY(${fx(o.arrowY || 0)}px)`;
+  ic.arrow.style.opacity = fx(o.arrowO ?? 1);
+  ic.tray.style.strokeDashoffset = fx(1 - (o.tray ?? 1));
+  ic.shackle.setAttribute('d', SHACKLE(o.open ?? 1));
+  ic.lock.style.transform = `translateY(${fx(o.lockY || 0)}px)`;
+  ic.lock.style.opacity = fx(o.lockO ?? 1);
+  ic.shine.style.transform = `translateX(${fx(lerp(-75, 75, o.shine ?? 0))}%)`;
+}
+
+function sceneA(t) {
+  rise(A.l1, t, .45, 4.25);
+  rise(A.l2, t, 1.45, 4.25);
+  const gi = E.out4(prog(t, 4.2, 6)), go = E.in2(prog(t, 7.55, 8)), drift = prog(t, 4.2, 8);
+  A.cam.style.opacity = fx(gi * (1 - go));
+  A.cam.style.filter = blur((1 - gi) * 22 + go * 8);
+  const [dx, dy, base] = V ? [0, -40, .72] : [-26, -24, .9];
+  A.cam.style.transform = `translateX(${fx(dx * drift)}px) translateY(${dy}px) scale(${(base * lerp(1.14, 1, gi) * (1 - .03 * drift)).toFixed(4)})`;
+  show(A.cap, t, 5.4, 7.8);
+}
+
+function sceneB(t) {
+  rise(B.now, t, 8.15, 9.35, { per: .08, dur: .8 });
+  const hIn = E.out3(prog(t, 9.3, 11)), flash = t >= 12 ? Math.exp(-(t - 12) * 2.4) : 0;
+  const up = E.io4(prog(t, 12, 12.9)), outW = E.in2(prog(t, 13.72, 14));
+  B.halo.style.opacity = fx((hIn * .5 + flash * .5) * (1 - outW));
+  B.halo.style.transform = `translate(-50%,-50%) translateY(${fx(-110 * up)}px) scale(${(lerp(.6, 1, hIn) + .22 * flash).toFixed(4)})`;
+  const ii = E.out5(prog(t, 9.5, 11));
+  const ant = .04 * E.io2(prog(t, 10.9, 12)) * (1 - E.out3(prog(t, 12, 12.45)));
+  const hit = t >= 12 ? Math.exp(-(t - 12) * 7) * Math.sin((t - 12) * 24) * .025 : 0;
+  iconAt(B.ic, {
+    opacity: ii * (1 - outW), blur: (1 - ii) * 26 + outW * 10,
+    scale: lerp(.8, 1, ii) * (1 + ant + hit) * lerp(1, .72, up) * (1 + .04 * outW),
+    y: lerp(40, 0, ii) - 110 * up, reflect: .16 * ii * (1 - up),
+    arrowY: -7 * (1 - E.back(prog(t, 10.05, 10.75))), arrowO: E.out2(prog(t, 10.05, 10.35)),
+    tray: E.out3(prog(t, 10.45, 11)), open: Math.min(1.12, E.spring(prog(t, 11.45, 12.05))),
+    lockY: -.55 * bump(prog(t, 11.45, 11.72)), lockO: E.out2(prog(t, 9.9, 10.4)), shine: E.io2(prog(t, 11.85, 12.8)),
+  });
+  const wi = E.out4(prog(t, 12.3, 13.3));
+  B.word.style.opacity = fx(wi * (1 - outW));
+  B.word.style.letterSpacing = fx(lerp(.14, -.018, E.out4(prog(t, 12.3, 13.6)))) + 'em';
+  B.word.style.filter = blur((1 - wi) * 14 + outW * 8);
+  B.word.style.transform = `translateY(${fx(lerp(26, 0, wi))}px) scale(${(1 + .04 * outW).toFixed(4)})`;
+  show(B.desc, t, 12.85, 14, { y: 16, dout: .28 });
+  rise(B.tag, t, 14.02, 15.98, { per: .06, dur: .9, y: .3, blur: 18, shift: (t - 14) * .22, grow: .03 });
+  B.tag.style.transform = t < 14.9 ? `scale(${(1 + .06 * (1 - E.out4(prog(t, 14, 15.2)))).toFixed(4)})` : B.tag.style.transform;
+}
+
+function sceneD(t) {
+  rise(D.h, t, 16.15, 21.7);
+  show(D.s, t, 16.6, 21.7);
+  const gi = E.out3(prog(t, 16, 16.7)), go = E.in2(prog(t, 21.6, 22)), s = (V ? .6 : .72) * (1 + .04 * prog(t, 16, 22)), ty = V ? 100 : 150;
+  D.cam.style.opacity = fx(gi * (1 - go));
+  D.cam.style.transform = `translateY(${ty}px) scale(${s.toFixed(4)})`;
+  // A light sweep crosses the grid; each column (each diagonal, when vertical) unlocks as it passes.
+  const c0 = 17.3, per = .3, step = (t - c0) / per;
+  D.beam.style.opacity = fx(bump(prog(t, c0 - .4, c0 + 6 * per + .6)) * (1 - go));
+  if (V) {
+    const gx = lerp(310, 770, step / 6), gy = lerp(402, 1474, step / 6);
+    D.beam.style.left = fx(CX + (gx - CX) * s - 110) + 'px'; D.beam.style.top = fx(CY + ty + (gy - CY) * s - 750) + 'px';
+    D.beam.style.transform = 'rotate(45deg)';
+  } else D.beam.style.left = fx(960 + ((175 + step * 230 + 95) - 960) * s) + 'px';
+  for (const tl of D.tiles) tileAt(tl, t, t - (V ? c0 + (tl.r + tl.c) * per : c0 + tl.c * per + tl.r * .07));
+}
+
+const CARD_W = [1587, 829];
+function sceneW(t) {
+  const wi = E.out4(prog(t, 22, 22.7)), wo = E.in2(prog(t, 27.6, 28));
+  const p = E.io3(prog(t, 23.5, 26.2)), s = lerp(V ? .6 : 1, V ? 3 : 2.35, p) * lerp(.965, 1, wi);
+  const F = [lerp(960, CARD_W[0], p), lerp(540, CARD_W[1], p)], S = V ? [540, lerp(760, 820, p)] : [lerp(960, 1290, p), lerp(540, 556, p)];
+  Wd.world.style.opacity = fx(wi * (1 - wo));
+  Wd.world.style.transform = `translate(${fx(S[0] - F[0] * s)}px,${fx(S[1] - F[1] * s)}px) scale(${s.toFixed(4)})`;
+  Wd.win.style.filter = blur(p * 3.2);
+  Wd.shade.style.opacity = fx(E.out3(prog(t, 25.5, 26.4)) * (1 - wo));
+  // The download in the list finishes...
+  const dl = E.io2(prog(t, 22.05, 22.85));
+  Wd.dl.style.width = fx(lerp(74, 100, dl)) + '%';
+  const done = t >= 22.9;
+  Wd.dl.parentNode.hidden = done;
+  setText(Wd.dlp, done ? '' : Math.round(lerp(74, 100, dl)) + '%');
+  if (done !== !!Wd.st._done) { Wd.st._done = done; if (done) Wd.st.insertAdjacentHTML('beforeend', '<span class="ok">✓ 已下载</span>'); else Wd.st.querySelector('.ok')?.remove(); }
+  // ...and the card slides in from the right edge, converts, and completes.
+  const ci = snappy(prog(t, 22.9, 23.32));
+  Wd.card.host.style.opacity = fx(clamp((t - 22.9) / .32));
+  Wd.card.place(22 * (1 - ci), 0, lerp(.98, 1, ci));
+  Wd.card.host.style.transformOrigin = '100% 50%';
+  const keys = [[23.25, 0], [23.55, 9], [23.95, 26], [24.3, 43], [24.62, 61], [24.95, 77], [25.2, 90], [25.42, 100]];
+  let pct = null;
+  if (t >= 23.25) { for (let i = 1; i < keys.length; i++) if (t <= keys[i][0] || i === keys.length - 1) { pct = lerp(keys[i - 1][1], keys[i][1], E.io2(prog(t, keys[i - 1][0], keys[i][0]))); break; } }
+  Wd.card.set({ phase: t >= 25.5 ? 'success' : 'converting', song: '夜间来信', format: 'FLAC', percent: pct, t: t - 22.9, cover: COVER.night.art, tint: TINT.night, open: true });
+  rise(Wd.h, t, 26.05, 27.62, { per: .06 });
+  show(Wd.s, t, 26.5, 27.62);
+}
+
+function sceneE1(t) {
+  rise(E1.h, t, 28.1, 31.72, { per: .08, shift: t * .12 });
+  show(E1.s, t, 28.55, 31.72);
+  const go = E.in2(prog(t, 31.6, 32));
+  E1.bars.forEach((b, i) => {
+    const x = i / (E1.bars.length - 1), env = .22 + .78 * Math.sin(Math.PI * x) ** 1.4;
+    const n = Math.abs(.62 * Math.sin(i * .83 + t * 4.3) + .38 * Math.sin(i * .31 - t * 2.9 + 1.3));
+    const g = E.out4(prog(t, 28.35 + Math.abs(x - .5) * .9, 28.35 + Math.abs(x - .5) * .9 + .8));
+    const h = Math.max(12, g * (16 + 180 * env * (.25 + .75 * n)));
+    b.style.top = fx((V ? 880 : 640) - h) + 'px'; b.style.height = fx(2 * h) + 'px';
+    b.style.opacity = fx(Math.min(1, g * 1.4) * (1 - go));
+  });
+  show(E1.c1, t, 29.4, 31.72, { y: 18 });
+  show(E1.c2, t, 29.58, 31.72, { y: 18 });
+}
+
+function sceneE2(t) {
+  rise(E2.h, t, 32.1, 35.72);
+  show(E2.s, t, 32.5, 35.72);
+  const ci = E.out4(prog(t, 32.3, 33.4)), go = E.in2(prog(t, 35.6, 36));
+  E2.cover.style.opacity = fx(ci * (1 - go));
+  E2.cover.style.transform = `translateX(${fx(-60 * (1 - ci))}px) rotateY(${fx(26 * (1 - ci))}deg) scale(${fx(lerp(.9, 1, ci))})`;
+  E2.cover.style.filter = blur((1 - ci) * 16);
+  E2.cover.style.webkitBoxReflect = `below 26px linear-gradient(transparent 60%,rgba(255,255,255,${fx(.13 * ci)}))`;
+  show(E2.panel, t, 32.55, 35.72, { x: 0, y: 30 });
+  E2.rows.forEach((r, i) => {
+    const p = E.out4(prog(t, 32.95 + i * .2, 33.75 + i * .2));
+    r.style.opacity = fx(p); r.style.transform = `translateX(${fx(40 * (1 - p))}px)`;
+    const k = E.back(prog(t, 33.2 + i * .2, 33.65 + i * .2));
+    E2.oks[i].style.transform = `scale(${fx(Math.max(0, k))})`;
+  });
+}
+
+function sceneE3(t) {
+  rise(E3.h, t, 36.1, 39.72);
+  const oi = E.out4(prog(t, 36.3, 37.1)), go = E.in2(prog(t, 39.6, 40));
+  E3.odo.style.opacity = fx(oi * (1 - go));
+  E3.odo.style.filter = blur((1 - oi) * 20 + go * 8);
+  E3.odo.style.transform = `scale(${fx(lerp(1.22, 1, oi))})`;
+  E3.strip.style.transform = `translateY(${fx(-6 * 400 * E.expo(prog(t, 36.3, 37.5)))}px)`;
+  E3.strip.style.backgroundSize = '200% 100%';
+  E3.strip.style.backgroundPosition = `${fx(-(t - 36) * 30)}% 0`;
+  show(E3.cap, t, 37.2, 39.72, { y: 16 });
+  show(E3.s, t, 37.7, 39.72);
+}
+
+function sceneE4(t) {
+  rise(E4.h, t, 40.1, 43.72);
+  show(E4.s, t, 40.5, 43.72);
+  show(E4.panel, t, 40.45, 43.72, { y: 30 });
+  E4.rows.forEach((r, i) => {
+    const at = i < 3 ? 40.7 + i * .12 : 41.45 + (i - 3) * .2;
+    const p = E.out4(prog(t, at, at + .7));
+    r.style.opacity = fx(p); r.style.transform = `translateX(${fx((i < 3 ? 0 : 36) * (1 - p))}px) translateY(${fx((i < 3 ? 12 : 0) * (1 - p))}px)`;
+  });
+  E4.hi1.style.opacity = fx(E.out3(prog(t, 41.45, 41.9)) * (1 - E.in2(prog(t, 42.1, 42.6))) * .8);
+  E4.hi2.style.opacity = fx(E.out3(prog(t, 41.95, 42.5)));
+  E4.tags.forEach((g, i) => { const p = E.back(prog(t, 42.1 + i * .25, 42.55 + i * .25)); g.style.transform = `scale(${fx(Math.max(0, p))})`; g.style.opacity = fx(prog(t, 42.1 + i * .25, 42.3 + i * .25)); });
+}
+
+function sceneE5(t) {
+  rise(E5.h, t, 44.1, 47.72, { per: .08 });
+  show(E5.s, t, 44.5, 47.72);
+  const go = E.in2(prog(t, 47.6, 48)), p = E.io2(prog(t, 44.6, 46.9));
+  E5.svg.style.opacity = fx(E.out2(prog(t, 44.4, 44.8)) * (1 - go));
+  E5.line.style.strokeDashoffset = fx(1 - p);
+  const pt = E5.line.getPointAtLength(p * E5.len);
+  E5.clip.setAttribute('width', fx(pt.x));
+  E5.head.setAttribute('cx', fx(pt.x)); E5.head.setAttribute('cy', fx(pt.y));
+  E5.head.style.opacity = fx(prog(t, 44.6, 44.75) * (1 - prog(t, 46.85, 47.05)));
+  E5.head.style.filter = 'drop-shadow(0 0 14px rgba(170,150,255,.95))';
+  E5.idle.style.opacity = fx(prog(t, 46.0, 46.5));
+  E5.end.style.opacity = fx(prog(t, 46.85, 47.1));
+  const lab = [44.95, 46.05, 46.95];
+  // Labels are anchored at their centre; show() replaces the stylesheet's offset, so it is added back.
+  E5.l.forEach((el, i) => { show(el, t, lab[i], 47.72, { y: 14, din: .6 }); el.style.transform = 'translateX(-50%) ' + el.style.transform; });
+}
+
+function sceneF1(t) {
+  rise(F1.h, t, 48.1, 51.72);
+  show(F1.s, t, 48.5, 51.72);
+  const go = E.in2(prog(t, 51.6, 52));
+  F1.cards.forEach(([c, x, y, ry, rx, state], i) => {
+    const p = E.out4(prog(t, 48.4 + i * .16, 49.5 + i * .16));
+    const fl = Math.sin(t * .9 + i * 1.7) * 6;
+    c.host.style.opacity = fx(p * (1 - go));
+    c.host.style.filter = blur((1 - p) * 12);
+    c.host.style.transform = `translate3d(${x}px,${fx(y + 80 * (1 - p) + fl)}px,${fx(-200 * (1 - p))}px) rotateY(${fx(ry * (1 - .4 * prog(t, 48, 52)))}deg) rotateX(${rx}deg) scale(${c.scale})`;
+    c.set({ ...state, percent: state.percent == null ? null : state.percent + 6 * prog(t, 48, 52), t: t - 48 + i * .4 });
+  });
+}
+
+const F2_SEQ = [['night', '夜间来信', 'FLAC'], ['dawn', '清晨', 'FLAC'], ['tide', '潮汐', 'MP3']];
+function sceneF2(t) {
+  rise(F2.h, t, 52.1, 55.72, { per: .06 });
+  const ci = E.out4(prog(t, 52.2, 53.1)), go = E.in2(prog(t, 55.6, 56));
+  // Covers change at 53.3 and 54.5; tint and backdrop follow over half a second.
+  const k = t < 53.3 ? 0 : t < 54.5 ? 1 : 2, pm = E.io2(prog(t, [53.3, 54.5, 99][k - 1] ?? 0, ([53.3, 54.5, 99][k - 1] ?? 0) + .6));
+  const [key, song, format] = F2_SEQ[k], prev = F2_SEQ[Math.max(0, k - 1)][0], blend = k ? pm : 1;
+  const pal = COVER[key].pal, ppal = COVER[prev].pal;
+  F2.b1.style.background = `radial-gradient(closest-side,${mix(ppal[1], pal[1], blend).replace('rgb', 'rgba').replace(')', ',.55)')},transparent)`;
+  F2.b2.style.background = `radial-gradient(closest-side,${mix(ppal[0], pal[0], blend).replace('rgb', 'rgba').replace(')', ',.42)')},transparent)`;
+  F2.b1.style.opacity = F2.b2.style.opacity = fx(ci * (1 - go));
+  const c = F2.card;
+  c.host.style.opacity = fx(ci * (1 - go));
+  c.host.style.filter = blur((1 - ci) * 12);
+  c.host.style.transform = `translate(${fx(CX - 270 * c.scale / 2)}px,${fx((V ? 1000 : 560) - 52 * c.scale + 40 * (1 - ci))}px) scale(${c.scale})`;
+  const swap = k ? 1 - bump(prog(t, [53.3, 54.5][k - 1] - .02, [53.3, 54.5][k - 1] + .3)) * .9 : 1;
+  c.song.style.opacity = c.fmt.style.opacity = fx(swap);
+  c.set({ phase: 'converting', song, format, percent: [72, 38, 55][k] + 8 * prog(t, [52, 53.3, 54.5][k], [53.3, 54.5, 56][k]), t: t - 52, cover: COVER[key].art, tint: mix(TINT[prev], TINT[key], blend) });
+}
+
+function sceneG(t) {
+  rise(G.h1, t, 56.1, 59.72, { per: .05 });
+  rise(G.h2, t, 56.35, 59.72, { per: .05 });
+  show(G.win, t, 56.2, 59.72, { y: 36 });
+  // The cursor glides to the button and clicks it.
+  const mv = E.io3(prog(t, 56.75, 57.45)), [tx, ty] = G.target;
+  const cx = lerp(V ? 880 : 1560, tx, mv), cy = lerp(V ? 1500 : 1000, ty, mv), click = bump(prog(t, 57.5, 57.68));
+  G.cursor.style.opacity = fx(prog(t, 56.6, 56.85) * (1 - prog(t, 59.4, 59.7)));
+  G.cursor.style.transform = `translate(${fx(cx - 4)}px,${fx(cy - 3)}px) scale(${fx(1 - .12 * click)})`;
+  const rp = prog(t, 57.55, 58.05);
+  G.ripple.style.left = fx(tx) + 'px'; G.ripple.style.top = fx(ty) + 'px';
+  G.ripple.style.opacity = fx(rp > 0 && rp < 1 ? .8 * (1 - rp) : 0);
+  G.ripple.style.transform = `scale(${fx(.3 + rp * .9)})`;
+  G.scan.style.transform = `scale(${fx(1 - .05 * click)})`;
+  const scanning = t >= 57.58 && t < 58.6, queued = t >= 58.6;
+  G.spin.hidden = !scanning; G.spin.style.transform = `rotate(${fx((t - 57.58) * 480)}deg)`;
+  setText(G.scantext, scanning ? '正在查找…' : '查找并转换');
+  setText(G.status, scanning ? '正在查找已有下载' : queued ? '正在转换 · 剩余 12 首' : '已启用 · 下载完成后自动转换');
+  setText(G.note, queued ? '已加入 12 首待转换' : scanning ? '正在查找 D:\\CloudMusic\\VipSongsDownload' : '找出下载目录里还没有转换的 NCM');
+  const busy = scanning || queued, pulse = bump(((t - 57.58) / 1.6) % 1);
+  G.dot.style.setProperty('--c', busy ? '#7a8cff' : '#2fbf71');
+  G.dot.style.setProperty('--g', busy ? `rgba(122,140,255,${fx(.2 * (1 - pulse))})` : 'rgba(47,191,113,.18)');
+  G.dot.style.setProperty('--r', busy ? fx(4 + 3 * pulse) + 'px' : '4px');
+  G.note.style.opacity = queued ? fx(.6 * E.out2(prog(t, 58.6, 58.9))) : '';
+  // The first of the twelve starts right away.
+  const ci = snappy(prog(t, 58.85, 59.27)), go = E.in2(prog(t, 59.6, 60));
+  G.card.host.style.opacity = fx(clamp((t - 58.85) / .32) * (1 - go));
+  G.card.host.style.transformOrigin = '0 0';
+  G.card.place(22 * (1 - ci), 0, lerp(.98, 1, ci));
+  G.card.set({ phase: 'converting', song: '萤火', format: 'MP3', percent: t < 59.15 ? null : lerp(0, 36, E.io2(prog(t, 59.15, 59.9))), detail: '第 1 首 · 还剩 11 首', t: t - 58.85, cover: COVER.ember.art, tint: TINT.ember });
+}
+
+// What BetterNCM is: the client plus a plugin manager gives you plugins.
+function sceneT1(t) {
+  rise(T1.h, t, 60.1, 63.72, { per: .045 });
+  show(T1.s, t, 60.5, 63.72);
+  T1.parts.forEach((el, i) => show(el, t, 60.85 + i * .2, 63.72, { y: 34, scale: .9, din: .8 }));
+  const g = E.out3(prog(t, 62.3, 62.8));
+  T1.bd.style.transform = `scale(${fx(1 + .14 * bump(prog(t, 62.3, 62.9)))})`;
+  T1.bd.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,.3),0 0 0 ${fx(4 * g)}px rgba(190,180,255,${fx(.55 * g)}),0 18px 44px -8px rgba(154,139,255,${fx(.95 * g)})`;
+  show(T1.cap, t, 62.5, 63.72, { y: 14 });
+}
+
+// Step 1: the installer, then the new button beside the client's settings.
+function sceneT2(t) {
+  show(T2.k, t, 64.05, 67.72, { y: 12 });
+  rise(T2.h, t, 64.12, 67.72, { per: .05 });
+  show(T2.l, t, 64.3, 67.72, { y: 30 });
+  show(T2.arrow, t, 64.6, 67.72, { y: 0 });
+  if (V) T2.arrow.style.transform += ' rotate(90deg)';
+  show(T2.r, t, 64.45, 67.72, { y: 30 });
+  show(T2.c1, t, 64.55, 67.72, { y: 14 });
+  show(T2.c2, t, 66.3, 67.72, { y: 14 });
+  show(T2.foot, t, 64.8, 67.72, { y: 8 });
+  const [bx, by] = T2.btnPos, [nx, ny] = T2.bnPos;
+  const m1 = E.io3(prog(t, 64.6, 65.2)), m2 = E.io3(prog(t, 66.25, 66.85)), click = bump(prog(t, 65.3, 65.48));
+  const cx = lerp(lerp(V ? 880 : 1560, bx, m1), nx + 6, m2), cy = lerp(lerp(V ? 1500 : 1000, by, m1), ny + 8, m2);
+  T2.cursor.style.opacity = fx(prog(t, 64.5, 64.7) * (1 - prog(t, 67.4, 67.7)));
+  T2.cursor.style.transform = `translate(${fx(cx - 4)}px,${fx(cy - 3)}px) scale(${fx(1 - .12 * click)})`;
+  const rp = prog(t, 65.35, 65.85);
+  T2.ripple.style.left = fx(bx) + 'px'; T2.ripple.style.top = fx(by) + 'px';
+  T2.ripple.style.opacity = fx(rp > 0 && rp < 1 ? .8 * (1 - rp) : 0); T2.ripple.style.transform = `scale(${fx(.3 + rp * .9)})`;
+  const done = t >= 65.6;
+  T2.btn.style.transform = `scale(${fx(1 - .05 * click)})`;
+  T2.btn.style.background = done ? '#34c759' : '#f5f5f7'; T2.btn.style.color = done ? '#fff' : '#0b0b0f';
+  T2.ok.hidden = !done; setText(T2.btntext, done ? '已安装' : '安装');
+  // BetterNCM twinkles its button until it has been opened once.
+  const ip = prog(t, 66.1, 66.55), tw = t >= 66.1 ? .5 + .5 * Math.sin((t - 66.1) * 7) : 0;
+  T2.bn.style.opacity = fx(Math.min(1, ip * 3));
+  T2.bn.style.transform = `scale(${fx(Math.max(0, E.back(ip)))})`;
+  T2.bn.style.background = t >= 66.1 ? 'rgba(154,139,255,.28)' : 'transparent';
+  T2.bn.style.boxShadow = t >= 66.1 ? `0 0 0 ${fx(2 + 4 * tw)}px rgba(154,139,255,${fx(.3 + .3 * tw)}),0 0 ${fx(18 + 22 * tw)}px rgba(154,139,255,.6)` : 'none';
+  show(T2.tip, t, 66.8, 67.72, { y: 10 });
+  T2.tip.style.transform = `translate(${fx(nx)}px,${fx(ny + 44)}px) translateX(-50%) ` + T2.tip.style.transform;
+}
+
+// Steps 2 and 3, inside BetterNCM: welcome page, market search, install, restart.
+function sceneT3(t) {
+  show(T3.k, t, 68.05, 71.95, { y: 12, dout: .3 });
+  rise(T3.h, t, 68.12, 71.95, { per: .04, dout: .3 });
+  show(T3.k2, t, 72.05, 75.7, { y: 12 });
+  rise(T3.h2, t, 72.12, 75.7, { per: .06 });
+  show(T3.foot, t, 68.3, 75.7, { y: 8 });
+  const wi = E.out4(prog(t, 68, 68.5)), wo = E.in2(prog(t, 73.05, 73.5));
+  const zin = E.io3(prog(t, 70.0, 70.6)) * (1 - E.io3(prog(t, 71.6, 72.2)));
+  const s = lerp(V ? .7 : 1, V ? 2.6 : 2.2, zin) * lerp(.97, 1, wi) * (1 - .03 * wo);
+  const F = [lerp(960, T3.cardPos[0], zin), lerp(638, T3.cardPos[1], zin)], S = V ? [lerp(470, 540, zin), lerp(880, 960, zin)] : [960, lerp(638, 660, zin)];
+  T3.world.style.transform = `translate(${fx(S[0] - F[0] * s)}px,${fx(S[1] - F[1] * s)}px) scale(${fx(s)})`;
+  T3.world.style.opacity = fx(wi * (1 - wo));
+  T3.world.style.filter = blur(wo * 10);
+  // First launch shows BetterNCM's welcome page.
+  const wg = E.in2(prog(t, 68.7, 68.95));
+  T3.welcome.style.opacity = fx(1 - wg); T3.market.style.opacity = fx(wg);
+  T3.start.style.transform = `scale(${fx(1 - .05 * bump(prog(t, 68.5, 68.66)))})`;
+  const q = 'BetterDownload', n = Math.round(clamp((t - 69.0) / .06, 0, q.length));
+  setText(T3.typed, q.slice(0, n)); T3.ph.hidden = n > 0;
+  T3.caret.style.opacity = t < 70.1 && Math.floor(t * 2.6) % 2 === 0 ? '1' : '0';
+  const f = E.out3(prog(t, 69.3, 69.65)), fl = E.io3(prog(t, 69.45, 69.95));
+  T3.skel.forEach(el => { el.style.opacity = fx(1 - f); el.style.transform = `scale(${fx(1 - .06 * f)})`; });
+  T3.card.style.transform = `translate(${fx(-286 * fl)}px,${fx(-168 * fl)}px)`;
+  // Hovering a market card lifts its details and opens the action bar.
+  const hv = E.out3(prog(t, 70.2, 70.45));
+  T3.body.style.transform = `translateY(${fx(85 * (1 - hv))}px)`;
+  T3.body.style.background = `rgba(34,34,34,${fx(.94 * hv)})`;
+  T3.shade.style.opacity = fx(1 - hv);
+  T3.hbg.style.opacity = fx(.3 * hv);
+  T3.actions.style.width = fx(10 + 34 * hv) + 'px';
+  T3.actions.style.opacity = fx(.4 + .6 * hv);
+  const installing = t >= 70.9 && t < 71.4, installed = t >= 71.4;
+  T3.dl.hidden = installing || installed; T3.spin.hidden = !installing; T3.del.hidden = !installed;
+  T3.spin.style.display = installing ? 'inline-block' : ''; T3.spin.style.transform = `rotate(${fx((t - 70.9) * 540)}deg)`;
+  T3.state.style.opacity = fx(prog(t, 71.4, 71.55)); T3.state.style.transform = `scale(${fx(Math.max(0, E.back(prog(t, 71.4, 71.75))))})`;
+  const np = E.out3(prog(t, 71.55, 72.05));
+  T3.notice.style.opacity = fx(np); T3.notice.style.transform = `translateY(${fx(62 * (1 - np))}px)`;
+  T3.restart.style.transform = `scale(${fx(1 - .06 * bump(prog(t, 72.9, 73.06)))})`;
+  // The cursor lives in the window, so it zooms with it; counter-scaling keeps its size.
+  const path = [[1500, 950, 68], [...T3.startPos, 68.35], [...T3.startPos, 69.2], [T3.cardPos[0] + 40, T3.cardPos[1] - 10, 69.95], [...T3.installPos, 70.72], [...T3.installPos, 72.25], [...T3.restartPos, 72.8]];
+  let [x, y] = path[0];
+  for (let i = 1; i < path.length; i++) { const p = E.io3(prog(t, path[i - 1][2], path[i][2])); x = lerp(x, path[i][0], p); y = lerp(y, path[i][1], p); }
+  const click = Math.max(bump(prog(t, 68.5, 68.66)), bump(prog(t, 70.82, 70.98)), bump(prog(t, 72.9, 73.06)));
+  T3.cursor.style.opacity = fx(prog(t, 68, 68.2) * (1 - prog(t, 73.05, 73.3)));
+  T3.cursor.style.transform = `translate(${fx(x - 4 / s)}px,${fx(y - 3 / s)}px) scale(${fx((1 - .12 * click) / s)})`;
+  const hit = [[68.55, T3.startPos], [70.87, T3.installPos], [72.95, T3.restartPos]].find(([c]) => t >= c && t < c + .5);
+  const rp = hit ? (t - hit[0]) / .5 : 1;
+  T3.ripple.style.opacity = fx(hit ? .8 * (1 - rp) : 0);
+  if (hit) { T3.ripple.style.left = fx(hit[1][0]) + 'px'; T3.ripple.style.top = fx(hit[1][1]) + 'px'; }
+  T3.ripple.style.transform = `scale(${fx((.3 + rp * .9) / s)})`;
+  // After the restart, the next download converts on its own.
+  const ci = snappy(prog(t, 73.6, 74.05)), co = E.in2(prog(t, 75.6, 76));
+  T3.b1.style.opacity = T3.b2.style.opacity = fx(E.out3(prog(t, 73.5, 74.2)) * (1 - co));
+  const c = T3.pc;
+  c.host.style.opacity = fx(clamp((t - 73.6) / .3) * (1 - co));
+  c.host.style.transform = `translate(${fx(CX - 270 * c.scale / 2 + 40 * (1 - ci))}px,${fx(CY - 52 * c.scale)}px) scale(${c.scale})`;
+  const pct = t < 73.85 ? null : lerp(0, 100, E.io2(prog(t, 73.85, 74.7)));
+  c.set({ phase: t >= 74.8 ? 'success' : 'converting', song: '夜间来信', format: 'FLAC', percent: pct, t: t - 73.6, cover: COVER.night.art, tint: TINT.night, open: true });
+  show(T3.done, t, 74.1, 75.7, { y: 16 });
+}
+
+function sceneH(t) {
+  const ii = E.out5(prog(t, 76.05, 77.4)), fade = E.in2(prog(t, 83.4, 84.6));
+  H.halo.style.opacity = fx((.45 * E.out3(prog(t, 76, 77.6)) + .35 * (t >= 76 ? Math.exp(-(t - 76) * 2) : 0)) * (1 - fade));
+  H.halo.style.transform = `translate(-50%,-50%) scale(${fx(lerp(.7, .9, E.out3(prog(t, 76, 78))))})`;
+  iconAt(H.ic, { opacity: ii * (1 - fade), blur: (1 - ii) * 20, scale: lerp(.86, 1, ii), y: 24 * (1 - ii), reflect: 0, open: 1, shine: E.io2(prog(t, 77, 77.9)) });
+  const wi = E.out4(prog(t, 76.6, 77.6));
+  H.word.style.opacity = fx(wi * (1 - fade));
+  H.word.style.letterSpacing = fx(lerp(.1, -.018, E.out4(prog(t, 76.6, 77.9)))) + 'em';
+  H.word.style.filter = blur((1 - wi) * 12);
+  H.word.style.transform = `translateY(${fx(20 * (1 - wi))}px)`;
+  show(H.tag, t, 77.35, 79.55, { y: 18, dout: .45 });
+  H.grad.style.backgroundSize = '200% 100%'; H.grad.style.backgroundPosition = `${fx(-(t - 77) * 16)}% 0`;
+  // The store search: the name types itself in.
+  show(H.pill, t, 79.5, 84.6, { y: 20, din: .8, dout: 1.2, scale: .96 });
+  H.pill.style.transform = H.pill.style.transform.replace('translate3d(', 'translateX(-50%) translate3d(');
+  const name = 'BetterDownload', n = Math.round(clamp((t - 79.95) / .055, 0, name.length));
+  setText(H.typed, name.slice(0, n));
+  H.caret.style.opacity = t < 79.95 + name.length * .055 ? '1' : fx(.5 + .5 * Math.cos((t - 80.7) * Math.PI * 2.2) > .5 ? 1 : 0);
+  show(H.cap, t, 80.1, 84.6, { y: 14, dout: 1.2 });
+  show(H.legal, t, 80.7, 84.6, { y: 10, dout: 1.2 });
+  show(H.by, t, 81.4, 84.6, { y: 10, dout: 1.2 });
+}
+
+const SCENES = [
+  ['A', 0, 8, sceneA], ['B', 8, 16, sceneB], ['D', 16, 22, sceneD], ['W', 22, 28, sceneW],
+  ['E1', 28, 32, sceneE1], ['E2', 32, 36, sceneE2], ['E3', 36, 40, sceneE3], ['E4', 40, 44, sceneE4], ['E5', 44, 48, sceneE5],
+  ['F1', 48, 52, sceneF1], ['F2', 52, 56, sceneF2], ['G', 56, 60, sceneG], ['T1', 60, 64, sceneT1], ['T2', 64, 68, sceneT2], ['T3', 68, 76, sceneT3], ['H', 76, DURATION, sceneH],
+].map(([id, from, to, fn]) => ({ id, from, to, fn, el: $(id) }));
+
+function renderAt(t) {
+  for (const s of SCENES) {
+    const on = t >= s.from && t < s.to;
+    if (on !== s.on) { s.el.style.display = on ? 'block' : 'none'; s.on = on; }
+    if (on) s.fn(t);
+  }
+}
+
+/* ---------- boot ---------- */
+const RENDER = new URLSearchParams(location.search).has('render');
+window.PROMO = { duration: DURATION, fps: FPS, renderAt, ready: null };
+window.PROMO.ready = (async () => {
+  if (RENDER) document.body.classList.add('render');
+  await Promise.all([300, 400, 500, 600, 700, 800].map(w => document.fonts.load(`${w} 100px PF`, '汉字Aa0')));
+  await document.fonts.ready;
+  buildAll(); fit(); measure();
+  A.tiles.forEach(tl => tileAt(tl, 0, -1));
+  renderAt(Number(new URLSearchParams(location.search).get('t')) || 0);
+  if (!RENDER) preview();
+  return true;
+})();
+
+function fit() {
+  const vp = $('viewport');
+  if (RENDER) { vp.style.transform = ''; return; }
+  const k = Math.min(innerWidth / SW, (innerHeight - 52) / SH);
+  vp.style.transform = `translate(${(innerWidth - SW * k) / 2}px,${(innerHeight - 52 - SH * k) / 2}px) scale(${k})`;
+}
+
+function preview() {
+  const audio = new Audio('../build/promo/music.wav'), play = $('play'), scrub = $('scrub'), clock = $('clock');
+  let t = Number(scrub.value = new URLSearchParams(location.search).get('t') || 0), playing = false, last = 0;
+  const draw = () => { renderAt(t); scrub.value = t; clock.textContent = t.toFixed(2) + ' s'; };
+  const loop = now => {
+    if (!playing) return;
+    t = audio.readyState >= 2 && !audio.paused ? audio.currentTime : t + (now - last) / 1000; last = now;
+    if (t >= DURATION) { t = 0; audio.currentTime = 0; }
+    draw(); requestAnimationFrame(loop);
+  };
+  const toggle = () => {
+    playing = !playing; play.textContent = playing ? '❚❚' : '▶';
+    if (playing) { audio.currentTime = t; audio.play().catch(() => {}); last = performance.now(); requestAnimationFrame(loop); } else audio.pause();
+  };
+  play.onclick = toggle;
+  scrub.oninput = () => { t = Number(scrub.value); audio.currentTime = t; draw(); };
+  addEventListener('keydown', e => {
+    if (e.code === 'Space') { e.preventDefault(); toggle(); }
+    if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') { t = clamp(t + (e.code === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 / FPS : 1), 0, DURATION); audio.currentTime = t; draw(); }
+  });
+  addEventListener('resize', fit);
+  draw();
+}
+</script>
+</body>
+</html>
