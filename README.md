@@ -1,6 +1,8 @@
 <div align="center">
 
-<img src="plugin/preview.jpg" alt="BetterDownload" width="720">
+**网易云音乐版** | [QQ 音乐版](https://github.com/xiaoming6680/QQM-BetterDownload)
+
+<img src="docs/images/cover.jpg" alt="BetterDownload 网易云音乐版：自动解锁下载的 VIP 歌曲" width="880">
 
 # BetterDownload
 
@@ -80,7 +82,7 @@ BetterDownload 是一个 BetterNCM 插件。BetterNCM 是网易云音乐 PC 版�
 
 1. **安装 BetterNCM**：下载并运行 [BetterNCM 安装器](https://github.com/std-microblock/BetterNCM-Installer/releases)，点“安装”。
 2. **打开插件商店**：重启网易云，点右上角设置图标右边的 BetterNCM 图标。第一次打开会显示欢迎页，点“开始使用 BetterNCM”。
-3. **安装 BetterDownload**：在插件商店搜索 **BetterDownload**，点卡片右侧的下载按钮，再点底部的“重启”。插件默认启用，之后正常下载歌曲即可。
+3. **安装 BetterDownload**：点插件列表顶部、排序按钮左边的放大镜，搜索 **BetterDownload**，点卡片右侧的下载按钮，再点底部的“重启”。插件默认启用，之后正常下载歌曲即可。
 
 商店里的版本可能比 Releases 晚几天。想马上用最新版，从 [Releases](https://github.com/xiaoming6680/BetterDownload/releases) 下载 `.plugin` 文件，放进 BetterNCM 的插件文件夹（默认 `C:\betterncm\plugins`），再重启网易云。
 
@@ -128,12 +130,13 @@ $env:NBD_BROWSER_CHANNEL = 'msedge'
 node scripts/ui-check.cjs
 ```
 
-宣传视频和封面的源文件在 `promo/`，同样用 Playwright 渲染，结果写入 `build/promo/`。另外需要 ffmpeg（可以 `pip install imageio-ffmpeg`）；配乐由 `promo/music.py` 合成，需要 Python 和 numpy、scipy、soundfile。
+宣传视频和封面的源文件在 `promo/`，同样用 Playwright 渲染，结果写入 `build/promo/`。另外需要 ffmpeg（可以 `pip install imageio-ffmpeg`）；配乐由 `promo/music.py` 合成，需要 Python 和 numpy、scipy、soundfile。商店预览图和 README 封面的源文件是 `promo/preview.html`，`--preview` 渲染后直接写入 `plugin/preview.jpg` 和 `docs/images/cover.jpg`。
 
 ```powershell
 node promo/render.cjs             # 横屏视频
 node promo/render.cjs --vertical  # 竖屏视频
 node promo/render.cjs --cover     # B站和抖音封面
+node promo/render.cjs --preview   # 商店预览图和 README 封面
 ```
 
 | 文件 | 作用 |

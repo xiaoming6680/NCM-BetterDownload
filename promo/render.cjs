@@ -6,6 +6,7 @@
 //   node promo/render.cjs --stills 12,25.5     PNG stills at those seconds
 //   node promo/render.cjs --vertical           the 1080 × 1920 cut for phone feeds (also works with --stills)
 //   node promo/render.cjs --cover              cover images for Douyin and Bilibili
+//   node promo/render.cjs --preview            plugin/preview.jpg for the store and docs/images/cover.jpg for the README
 //   options: --size 1080|2160  --fps 60  --workers 6  --from 0 --to 85
 //
 // Needs Playwright (npm install --no-save playwright), Microsoft Edge or Chrome, and ffmpeg
@@ -93,6 +94,24 @@ async function covers(browser) {
     }
 }
 
+// Written straight to where they are used. The README shows its cover 880 wide, so that one renders at 2x.
+// Below quality 100 Chrome's JPEG encoder leaves blotches in the dark glow; the files stay small anyway.
+const PREVIEWS = [
+    ['?store', 960, 480, 1, path.join(root, 'plugin', 'preview.jpg')],
+    ['', 880, 440, 2, path.join(root, 'docs', 'images', 'cover.jpg')],
+];
+async function previews(browser) {
+    for (const [query, width, height, scale, file] of PREVIEWS) {
+        const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: scale });
+        page.on('pageerror', e => console.error('页面错误：', e.message));
+        await page.goto(pathToFileURL(path.join(__dirname, 'preview.html')).href + query);
+        await page.evaluate(() => document.fonts.ready);
+        await page.screenshot({ path: file, type: 'jpeg', quality: 100 });
+        console.log(file);
+        await page.close();
+    }
+}
+
 async function film(browser, size, ff) {
     const probe = await openPage(browser, size);
     const duration = await probe.page.evaluate(() => window.PROMO.duration);
@@ -149,6 +168,7 @@ async function film(browser, size, ff) {
     const browser = await chromium.launch({ channel: process.env.NBD_BROWSER_CHANNEL || 'msedge' });
     try {
         if (args.cover) await covers(browser);
+        else if (args.preview) await previews(browser);
         else if (args.stills) await stills(browser, size);
         else await film(browser, size, findFfmpeg());
     } finally {

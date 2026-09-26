@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>BetterDownload 预览图</title>
+<script>if (location.search.includes('store')) document.documentElement.classList.add('store');</script>
+<style>
+/* The README cover (880 × 440, rendered at 2x) and, with ?store, the BetterNCM store preview (960 × 480).
+   Store cards are 150px tall, crop the image with background-size: cover and lay the plugin name over the bottom 65px,
+   so the store version keeps the icon inside the upper half and leaves the name to the card. */
+@font-face{font-family:PF;src:local("PingFang SC Medium"),local("PingFangSC-Medium");font-weight:500}
+@font-face{font-family:PF;src:local("PingFang SC Semibold"),local("PingFangSC-Semibold"),local("PingFang SC Bold");font-weight:600}
+:root{--w:880px;--h:440px;--s:140px;--cy:158px;--brand:linear-gradient(135deg,#f39bc4,#9a8bff 52%,#5eaefc)}
+:root.store{--w:960px;--h:480px;--s:150px;--cy:162px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{position:relative;width:var(--w);height:var(--h);overflow:hidden;background:#000;color:#f5f5f7;font-family:PF,"Microsoft YaHei UI",sans-serif;-webkit-font-smoothing:antialiased}
+/* The icon and its glow share one centre. The glow is the icon's own gradient blurred twice: a bright core and a wide haze. */
+.l{position:absolute;left:50%;top:var(--cy);transform:translate(-50%,-50%)}
+.haze{width:calc(var(--s)*1.9);height:calc(var(--s)*1.9);border-radius:50%;background:var(--brand);filter:blur(calc(var(--s)*.5));opacity:.46}
+.core{width:calc(var(--s)*1.04);height:calc(var(--s)*1.04);border-radius:30%;background:var(--brand);filter:blur(calc(var(--s)*.16));opacity:.78}
+.icon{width:var(--s);height:var(--s)}
+.copy{position:absolute;left:0;right:0;top:264px;text-align:center;white-space:nowrap}
+.copy h1{font-size:52px;font-weight:600;letter-spacing:-.022em;line-height:1}
+.copy p{margin-top:16px;font-size:19px;font-weight:500;letter-spacing:.04em;line-height:1;color:#a1a1a6}
+.store .copy{display:none}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+ <linearGradient id="base" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f39bc4"/><stop offset=".52" stop-color="#9a8bff"/><stop offset="1" stop-color="#5eaefc"/></linearGradient>
+ <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".12" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity=".16"/></linearGradient>
+ <!-- A continuous-corner square (corner radius 22.5%, 60% smoothing), the outline of Apple's app icons. -->
+ <path id="shape" d="M64 0c12.6 0 18.9 0 23.71 2.45a22.5 22.5 0 0 1 9.83 9.83c2.45 4.81 2.45 11.11 2.45 23.71V64c0 12.6 0 18.9-2.45 23.71a22.5 22.5 0 0 1-9.83 9.83c-4.81 2.45-11.11 2.45-23.71 2.45H36c-12.6 0-18.9 0-23.71-2.45a22.5 22.5 0 0 1-9.83-9.83C0 82.9 0 76.6 0 64V36c0-12.6 0-18.9 2.45-23.71a22.5 22.5 0 0 1 9.83-9.83C17.1 0 23.4 0 36 0Z"/>
+ <clipPath id="clip"><use href="#shape"/></clipPath>
+ <!-- Flat like the settings page logo: the gradient, a hairline inner edge that is brighter along the top, and the white mark. -->
+ <symbol id="icon" viewBox="0 0 100 100">
+  <use href="#shape" fill="url(#base)"/>
+  <use href="#shape" fill="none" stroke="url(#edge)" stroke-width="2" vector-effect="non-scaling-stroke" clip-path="url(#clip)"/>
+  <!-- The mark from plugin/progress-card.js, at 56% of the tile. -->
+  <g transform="translate(22 22) scale(2.3333)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M10 4.5v10M6 10.5l4 4 4-4M5 19.5h11" stroke-width="2"/>
+   <rect x="15.2" y="6.6" width="6.4" height="5" rx="1.3" fill="#fff" stroke="none"/>
+   <path d="M16.7 6.6V5a1.8 1.8 0 0 1 3.5-.6" stroke-width="1.5"/>
+  </g>
+ </symbol>
+</defs>
+</svg>
+
+<div class="l haze"></div>
+<div class="l core"></div>
+<svg class="l icon"><use href="#icon"/></svg>
+
+<div class="copy"><h1>BetterDownload</h1><p>网易云音乐版 · 自动解锁下载的 VIP 歌曲</p></div>
+</body>
+</html>
