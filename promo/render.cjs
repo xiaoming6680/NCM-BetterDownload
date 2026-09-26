@@ -5,7 +5,8 @@
 //   node promo/render.cjs --music track.mp3    your own (licensed) music instead
 //   node promo/render.cjs --stills 12,25.5     PNG stills at those seconds
 //   node promo/render.cjs --vertical           the 1080 × 1920 cut for phone feeds (also works with --stills)
-//   node promo/render.cjs --cover              cover images for Douyin and Bilibili
+//   node promo/render.cjs --update             the vertical 0.6 update video with its acoustic soundtrack (also works with --stills)
+//   node promo/render.cjs --cover              cover images for Douyin and Bilibili; --cover update renders only the 0.6 one
 //   node promo/render.cjs --preview            plugin/preview.jpg for the store and docs/images/cover.jpg for the README
 //   options: --size 1080|2160  --fps 60  --workers 6  --from 0 --to 85
 //
@@ -23,7 +24,7 @@ for (let i = 2; i < process.argv.length; i++) {
     if (a.startsWith('--')) args[a.slice(2)] = process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[++i] : true;
 }
 const python = process.platform === 'win32' ? 'python' : 'python3';
-const vertical = !!args.vertical;
+const update = !!args.update, vertical = update || !!args.vertical;
 
 function findFfmpeg() {
     if (process.env.FFMPEG) return process.env.FFMPEG;
@@ -41,7 +42,7 @@ const finished = child => new Promise((resolve, reject) => child.on('close', cod
 async function openPage(browser, size) {
     const page = await browser.newPage({ viewport: vertical ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, deviceScaleFactor: size / 1080 });
     page.on('pageerror', e => console.error('页面错误：', e.message));
-    await page.goto(pathToFileURL(path.join(__dirname, 'index.html')).href + (vertical ? '?render&v' : '?render'));
+    await page.goto(pathToFileURL(path.join(__dirname, 'index.html')).href + (update ? '?render&update' : vertical ? '?render&v' : '?render'));
     await page.evaluate(() => window.PROMO.ready);
     const cdp = await page.context().newCDPSession(page);
     return {
@@ -58,7 +59,7 @@ async function openPage(browser, size) {
 async function stills(browser, size) {
     const view = await openPage(browser, size);
     for (const t of String(args.stills).split(',').map(Number)) {
-        const file = path.join(outDir, `still-${vertical ? 'v-' : ''}${t.toFixed(2)}.png`);
+        const file = path.join(outDir, `still-${update ? 'u-' : vertical ? 'v-' : ''}${t.toFixed(2)}.png`);
         fs.writeFileSync(file, await view.shot(t));
         console.log(file);
     }
@@ -66,8 +67,9 @@ async function stills(browser, size) {
 
 function soundtrack(duration) {
     if (args.music) return path.resolve(String(args.music));
-    const wav = path.join(outDir, 'music.wav'), src = path.join(__dirname, 'music.py');
-    if (args.remix || !fs.existsSync(wav) || fs.statSync(wav).mtimeMs < fs.statSync(src).mtimeMs) {
+    const wav = path.join(outDir, update ? 'music-update.wav' : 'music.wav'), src = path.join(__dirname, update ? 'music_update.py' : 'music.py');
+    const newest = Math.max(fs.statSync(src).mtimeMs, fs.statSync(path.join(__dirname, 'sound.py')).mtimeMs);
+    if (args.remix || !fs.existsSync(wav) || fs.statSync(wav).mtimeMs < newest) {
         console.log('生成配乐…');
         run(python, [src, wav, String(duration)]);
     }
@@ -78,9 +80,10 @@ function soundtrack(duration) {
 const COVERS = [
     ['cover.html', 1080, 1920, [['cover-douyin-9x16.png', null], ['cover-douyin-3x4.png', { x: 0, y: 240, width: 1080, height: 1440 }]]],
     ['cover-bilibili.html', 1920, 1080, [['cover-bilibili-16x9.png', null], ['cover-bilibili-4x3.png', { x: 240, y: 0, width: 1440, height: 1080 }]]],
+    ['cover-update.html', 1080, 1920, [['cover-update-douyin-9x16.png', null], ['cover-update-douyin-3x4.png', { x: 0, y: 240, width: 1080, height: 1440 }]]],
 ];
 async function covers(browser) {
-    for (const [html, width, height, shots] of COVERS) {
+    for (const [html, width, height, shots] of COVERS.filter(([html]) => args.cover === true || html.includes(String(args.cover)))) {
         const page = await browser.newPage({ viewport: { width, height } });
         page.on('pageerror', e => console.error('页面错误：', e.message));
         await page.goto(pathToFileURL(path.join(__dirname, html)).href);
@@ -154,7 +157,8 @@ async function film(browser, size, ff) {
     const video = path.join(tmp, 'video.mp4');
     run(ff, ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', video]);
     const length = total / fps, name = args.out ? path.resolve(String(args.out))
-        : path.join(outDir, `BetterDownload-promo${vertical ? '-vertical' : ''}${size > 1080 ? '-4k' : ''}.mp4`);
+        : path.join(outDir, update ? `BetterDownload-${require('../plugin/manifest.json').version}-update${size > 1080 ? '-4k' : ''}.mp4`
+            : `BetterDownload-promo${vertical ? '-vertical' : ''}${size > 1080 ? '-4k' : ''}.mp4`);
     // Music of any length is trimmed to the film and faded out over its last seconds.
     run(ff, ['-y', '-loglevel', 'error', '-i', video, '-ss', String(from), '-i', music, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
         '-af', `afade=t=out:st=${Math.max(0, length - 2.5)}:d=2.5`, '-c:a', 'aac', '-b:a', '256k', '-t', String(length), '-movflags', '+faststart', name]);

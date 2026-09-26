@@ -11,3 +11,4 @@ node_modules/
 /task_plan.md
 /findings.md
 /progress.md
+__pycache__/

@@ -200,53 +200,67 @@ html,body{height:100%;background:#000;overflow:hidden}
 .dl-row small{display:block;margin-top:6px;font:500 22px/1.3 var(--ui);color:#86868b}
 .inst-btn{position:absolute;left:44px;bottom:44px;height:76px;padding:0 44px;border-radius:20px;display:flex;align-items:center;gap:12px;font-size:32px;font-weight:700;color:#0b0b0f;background:#f5f5f7}
 .inst-btn svg{width:30px;height:30px;display:block}
-.toolbar{position:absolute;left:36px;right:36px;top:64px;height:92px;border-radius:18px;background:#15171c;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);display:flex;align-items:center;gap:18px;padding:0 24px;color:#a1a1a6}
+.toolbar{position:absolute;left:36px;right:36px;top:64px;height:128px;border-radius:18px;background:#15171c;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);display:flex;align-items:flex-start;gap:18px;padding:26px 24px 0;color:#a1a1a6}
 .toolbar .srch{width:90px;height:40px;border-radius:20px;background:#22252c;margin-right:auto}
-.toolbar .ava{width:40px;height:40px;border-radius:50%;background:#2c3038}
-.toolbar svg{width:32px;height:32px;flex:none}
-.toolbar .sep{width:1px;height:34px;background:#2c3038}
-.toolbar .bn{position:relative;flex:none;color:#fff;display:grid;place-items:center;width:52px;height:52px;border-radius:14px}
-.toolbar .bn svg{width:38px;height:38px}
+.toolbar .ava{flex:none;width:40px;height:40px;border-radius:50%;background:#2c3038}
+.toolbar .uname{flex:none;width:64px;height:12px;margin-top:14px;border-radius:6px;background:#2c3038}
+.toolbar svg{width:32px;height:32px;flex:none;margin-top:4px}
+.toolbar .sep{flex:none;width:1px;height:34px;margin-top:3px;background:#2c3038}
+/* BetterNCM puts its button under the client's settings button. */
+.toolbar .gear{position:relative;flex:none;width:32px;height:40px}
+.toolbar .bn{position:absolute;left:50%;top:42px;width:46px;height:46px;margin-left:-23px;border-radius:13px;display:grid;place-items:center;color:#fff}
+.toolbar .bn svg{width:30px;height:30px;margin:0}
 .tip{position:absolute;left:0;top:0;padding:12px 22px;border-radius:14px;background:#f5f5f7;color:#0b0b0f;font:700 26px/1 var(--ui);white-space:nowrap}
 .tip::before{content:"";position:absolute;left:50%;top:-10px;margin-left:-10px;border:10px solid transparent;border-top:0;border-bottom-color:#f5f5f7}
-.mgr{position:absolute;border-radius:14px;overflow:hidden;background:#1d1f24;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 50px 100px -40px #000;font-family:var(--ui);color:#e9eaee}
-.mgr-head{position:absolute;left:0;right:0;top:0;height:92px;display:flex;align-items:center;gap:18px;padding:0 26px;border-bottom:1px solid #8883}
-.mgr-logo{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff;background:radial-gradient(120% 120% at 30% 8%,#5a4db0,#221d47 72%)}
-.mgr-logo svg{width:40px;height:40px}
-.mgr-head h4{font-size:24px;font-weight:700}.mgr-head h4 small{font-size:16px;font-weight:600;opacity:.8}
-.mgr-btns{display:flex;gap:10px;margin-top:6px}.mgr-btns span{font-size:13px;padding:3px 12px;border-radius:6px;border:1px solid #8886;color:#cfd1d6}
-.mgr-side{position:absolute;left:0;top:92px;bottom:0;width:230px;border-right:1px solid #8885;padding:14px 12px}
-.mgr-side div{height:40px;border-radius:8px;display:flex;align-items:center;padding:0 14px;font-size:15px;color:#c9cbd1;margin-bottom:4px}
-.mgr-side div.on{background:#ffffff14;color:#fff;font-weight:600}
-.mgr-side b{height:10px;border-radius:5px;background:#34373f}
-.mgr-main{position:absolute;left:230px;right:0;top:92px;bottom:0}
+/* BetterNCM 1.3.4 and PluginMarket 0.8.4 as they look inside the client's dark theme */
+.mgr{position:absolute;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#2e3648,#212838 55%,#1b202c);box-shadow:0 0 0 1px rgba(255,255,255,.08),0 50px 100px -40px #000;font-family:var(--ui);color:#e9eaee}
+.mgr-head{position:absolute;left:0;right:0;top:0;height:112px;display:flex;align-items:center;gap:22px;padding:0 30px 0 34px}
+.mgr-logo{flex:none;width:64px;height:64px;border-radius:16px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#f590b5,#b29cf2 55%,#86b8f3)}
+.mgr-logo svg{width:48px;height:48px}
+.mgr-head h4{font-size:26px;font-weight:700;letter-spacing:-.2px}.mgr-head h4 small{font-size:22px;font-weight:600;opacity:.8}
+.mgr-btns{display:flex;gap:8px;margin-top:9px}.mgr-btns span{font-size:14px;line-height:28px;padding:0 13px;border-radius:9px;border:1px solid #ffffff30;background:#ffffff08;color:#e3e6ec}
+.mgr-links{align-self:flex-start;margin:26px 0 0 auto;display:flex;gap:6px}.mgr-links svg{width:30px;height:30px;display:block}
+.mgr-side{position:absolute;left:0;top:112px;bottom:0;width:220px;border-right:1px solid #ffffff17;padding:4px 14px}
+.mgr-side div{height:38px;border-radius:12px;display:flex;align-items:center;padding:0 14px;font-size:15px;color:#fff;background:#ffffff14}
+.mgr-main{position:absolute;left:220px;right:0;top:112px;bottom:0}
 .welcome{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:0 120px}
 .welcome h5{font-size:30px;font-weight:700;color:#fff}.welcome p{font-size:16px;line-height:1.6;color:#b8bac0}
 .welcome span{margin-top:10px;font-size:16px;font-weight:600;padding:9px 22px;border-radius:8px;background:#ffffff1c;color:#fff}
 .market{position:absolute;inset:0}
-.mk-filters{position:absolute;left:24px;right:24px;top:18px;height:40px;display:flex;align-items:center;gap:8px}
-.mk-filters .cat{font-size:14px;padding:6px 14px;border-radius:6px;color:#cfd1d6;background:#ffffff0d}.mk-filters .cat.on{background:#ffffff26;color:#fff}
-.mk-search{margin-left:auto;display:flex;align-items:center;gap:8px;height:34px;width:260px;padding:0 12px;border-radius:6px;border:1px solid #ffffff2e;font-size:15px;color:#fff}
-.mk-search svg{width:16px;height:16px;fill:#fff;flex:none}
+/* Category tabs, then a search button that opens into a box while the sort buttons step aside */
+.mk-filters{position:absolute;left:24px;right:24px;top:12px;height:44px;display:flex;align-items:center;padding:0 6px 0 15px}
+.mk-cats{flex:1;display:flex;gap:30px;font-size:19px;color:#fff}.mk-cats span{opacity:.7}
+.mk-search{position:relative;flex:none;width:38px;height:34px;margin-right:8px;border-radius:6px;border:1px solid transparent;display:flex;align-items:center;overflow:hidden;font-size:15px;white-space:nowrap}
+.mk-search svg{position:absolute;left:10px;top:7px;width:18px;height:18px;fill:#fff}
+.mk-search .txt{padding-left:36px;color:#ffffffcc}
 .mk-search .ph{color:#ffffff66}
-.mk-search .caret{width:2px;height:18px;background:#fff;margin-left:-6px}
+.mk-search .caret{display:inline-block;width:2px;height:18px;margin-left:1px;vertical-align:-3px;background:#fff}
+.mk-sort{flex:none;display:flex;overflow:hidden;max-width:400px}
+.mk-sort b{position:relative;height:30px;padding:0 15px;display:grid;place-items:center;border:1px solid #ffffff22;border-left-width:0;background:#f2a6a9}
+.mk-sort b:first-child{border-left-width:1px;border-radius:6px 0 0 6px}.mk-sort b:last-child{border-radius:0 6px 6px 0}
+.mk-sort svg{width:18px;height:18px;fill:#e03a41}
+.mk-sort b.on{padding:0 23px 0 11px;background:#ec4141}.mk-sort b.on svg{fill:#fff}
+.mk-sort i{position:absolute;right:6px;top:10px;font-size:9px;font-style:normal;line-height:1;color:#ddd;transform:scaleY(.7)}
 .mk-grid{position:absolute;left:24px;right:24px;top:76px;bottom:0}
 .mk-card,.mk-skel{position:absolute;width:264px;height:150px;border-radius:6px;overflow:hidden;background:#1b1b1b;box-shadow:0 15px 35px rgba(50,50,50,.1),0 5px 15px rgba(0,0,0,.07)}
 .mk-prev{position:absolute;inset:0;background-size:cover;background-position:center}
-.mk-shade{position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(transparent,rgba(0,0,0,.78))}
+.mk-shade{position:absolute;left:0;right:0;top:85px;bottom:0;background:linear-gradient(#0000,#08080899 20%)}
 .mk-body{position:absolute;left:0;right:0;top:0;height:150px;transform:translateY(85px);z-index:2}
-.mk-hbg{position:absolute;left:0;top:0;bottom:0;width:calc(100% - 35px);z-index:-1;background-size:cover;background-position:center;-webkit-mask-image:linear-gradient(90deg,#000,transparent);opacity:0}
+.mk-hbg{position:absolute;left:0;top:0;bottom:0;width:calc(100% - 35px);z-index:-1;overflow:hidden;background-size:0 0;-webkit-mask-image:linear-gradient(90deg,#000,transparent);opacity:0}
+.mk-hbg::before{content:"";position:absolute;inset:-20px;background:inherit;background-size:cover;background-position:center;filter:blur(10px)}
 .mk-info{padding:15px 15px 12px;max-width:calc(100% - 26px)}
 .mk-title{font-size:18px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.75);margin-bottom:6px;white-space:nowrap}
-.mk-author{font-size:14px;margin-bottom:10px;color:#b3e4ff;text-shadow:0 1px 3px rgba(0,0,0,.75)}
+.mk-author{font-size:14px;margin-bottom:10px;color:#ffffff9a;text-shadow:0 1px 3px rgba(0,0,0,.75)}
 .mk-desc{font-size:14px;line-height:1.2;color:hsla(0,0%,100%,.658)}
 .mk-meta{margin-top:6px;font-size:13px;color:hsla(0,0%,100%,.658)}
-.mk-actions{position:absolute;z-index:3;right:0;top:0;bottom:0;width:10px;display:grid;place-items:center;background:#ffffff12;overflow:hidden}
-.mk-actions svg{width:20px;height:20px;fill:#ccc;display:block}
-.mk-state{position:absolute;z-index:1;left:8px;top:8px;width:24px;height:24px;border-radius:50%;background:#35c46a;display:grid;place-items:center;opacity:0}
-.mk-state svg{width:15px;height:15px}
+/* The action bar is 10px wide and opens on hover; it turns yellow while installing and green once installed. */
+.mk-actions{position:absolute;z-index:3;right:0;top:0;bottom:0;width:10px;display:grid;place-items:center;overflow:hidden;fill:#ccc}
+.mk-actions svg{width:20px;height:20px;display:block}
+.mk-ind{position:absolute;z-index:1;left:8px;top:8px;display:flex;align-items:center;gap:8px}
+.mk-ind svg{width:20px;height:20px;fill:#fff;opacity:.7;filter:drop-shadow(0 1px 3px rgba(0,0,0,.75))}
+.mk-new{padding:1px 8px;border-radius:999px;background:#ffd966;color:#171a1c;font-size:13px;font-weight:700;line-height:18px;opacity:.9;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 .mk-skel b{position:absolute;left:15px;height:10px;border-radius:5px;background:#ffffff40}
-.mk-notice{position:absolute;left:242px;right:12px;bottom:12px;height:50px;border-radius:4px;background:#444;display:flex;align-items:center;padding-left:25px;font-size:18px;color:#eee;box-shadow:0 -15px 35px rgba(50,50,50,.2),0 -5px 15px rgba(0,0,0,.15);opacity:0}
+.mk-notice{position:absolute;left:232px;right:12px;bottom:12px;height:50px;border-radius:4px;background:#444;display:flex;align-items:center;padding-left:25px;font-size:18px;color:#eee;box-shadow:0 -15px 35px rgba(50,50,50,.2),0 -5px 15px rgba(0,0,0,.15);opacity:0}
 .mk-restart{margin-left:auto;margin-right:25px;height:30px;display:flex;align-items:center;gap:8px;padding:0 14px;border-radius:100px;background:#ec4141;border:1px solid hsla(0,0%,100%,.15);color:hsla(0,0%,100%,.9);font-size:15px}
 .mk-restart svg{width:16px;height:16px;fill:hsla(0,0%,100%,.85)}
 .byline{position:absolute;left:0;right:0;text-align:center;font:600 30px/1 var(--ui);letter-spacing:.3em;color:#c7c7cc}
@@ -254,6 +268,52 @@ html,body{height:100%;background:#000;overflow:hidden}
 /* Finale */
 .pill{position:absolute;left:50%;height:84px;border-radius:42px;display:flex;align-items:center;gap:18px;padding:0 34px 0 30px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 30px 60px -30px rgba(0,0,0,.9);font-size:38px;font-weight:600;color:#f5f5f7;transform:translateX(-50%)}
 .pill .caret{display:inline-block;width:3px;height:40px;margin-left:3px;border-radius:2px;background:#a796ff;vertical-align:middle}
+
+/* The 0.6 update cut (?update, always vertical). Lyrics look like a music app's lyric view:
+   a moving blur of the cover's colours, big left-aligned lines, the current one filling word by word. */
+.fluid{position:absolute;inset:0;overflow:hidden;background:#140a18}
+.fluid i{position:absolute;border-radius:50%}
+.fluid::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.18),rgba(0,0,0,.5))}
+.lyrics{position:absolute;left:110px;right:120px;top:0;height:100%}
+.ln{position:absolute;left:0;right:0;top:0;font-size:80px;font-weight:800;line-height:1.14;letter-spacing:-.01em;transform-origin:0 50%;white-space:nowrap}
+.ln span{display:block;color:rgba(255,255,255,.34)}
+.ln .lit{position:absolute;left:0;top:0;color:#fff;-webkit-mask-image:linear-gradient(90deg,#000 calc(var(--p) - 6%),transparent calc(var(--p) + 6%))}
+.ln small{display:block;margin-top:10px;font-size:42px;font-weight:600;line-height:1.2;color:rgba(255,255,255,.5)}
+.dots{position:absolute;display:flex;gap:20px}.dots i{width:24px;height:24px;border-radius:50%;background:#fff}
+.u-foot{position:absolute;left:90px;right:90px;top:1392px;text-align:center;font-size:26px;font-weight:500;line-height:1.6;color:#86868b}
+.u-pill{display:inline-flex;align-items:center;gap:18px;height:92px;padding:0 42px;border-radius:46px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1.5px rgba(190,180,255,.35);font-size:44px;font-weight:600;color:#e8e8ed}
+.u-pill b{font:800 42px/1 var(--ui);letter-spacing:.02em}
+.song-tile{position:absolute;border-radius:64px;overflow:hidden;box-shadow:inset 0 0 0 2px rgba(255,255,255,.14),0 60px 110px -40px rgba(0,0,0,.95)}
+.lrc-line{position:absolute;left:0;top:0;white-space:nowrap;font:600 34px/1 var(--ui);color:#e8e8ed;transform-origin:50% 50%}
+.lrc-line b{margin-right:18px;font-weight:600;color:#a796ff;font-variant-numeric:tabular-nums}
+.file-chip{display:inline-flex;align-items:center;gap:14px;height:72px;padding:0 30px;border-radius:22px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.14);font-size:32px;font-weight:600;color:#e8e8ed;vertical-align:middle}
+.file-chip i{width:36px;height:36px;border-radius:10px;flex:none}
+.phone{position:absolute;left:290px;top:604px;width:500px;height:760px;border-radius:80px;overflow:hidden;background:#000;box-shadow:0 0 0 9px #1c1c1e,0 0 0 11px #3a3a3c,0 60px 120px -40px #000}
+.phone .ln{font-size:46px}.phone .ln small{font-size:26px}
+.np-art{position:absolute;left:44px;top:92px;width:100px;height:100px;border-radius:16px;box-shadow:0 12px 30px -10px rgba(0,0,0,.8)}
+.np-meta{position:absolute;left:164px;top:106px;right:40px;white-space:nowrap}.np-meta b{display:block;font-size:32px;font-weight:700}.np-meta small{display:block;margin-top:4px;font-size:24px;font-weight:500;color:rgba(255,255,255,.6)}
+.np-bar{position:absolute;left:44px;right:44px;bottom:150px;height:8px;border-radius:4px;background:rgba(255,255,255,.22);overflow:hidden}.np-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:rgba(255,255,255,.85)}
+.np-ctl{position:absolute;left:0;right:0;bottom:56px;display:flex;justify-content:center;align-items:center;gap:74px}.np-ctl svg{fill:#fff}
+.u-set{position:absolute;left:0;top:0;width:540px;font:14px/1.6 var(--ui);padding:28px 30px;color:#eceef2;transform-origin:0 0}
+.u-set .section{margin:0 0 12px;font-size:12px;font-weight:600;letter-spacing:.4px;opacity:.55}
+.u-set .row{display:flex;align-items:center;gap:14px;padding:16px 18px}.u-set .row+.row{border-top:1px solid rgba(136,136,136,.16)}.u-set .indent{padding-left:46px}
+.u-set .copy{flex:1;min-width:0}.u-set .copy>div{font-weight:600}.u-set small{display:block;margin-top:1px;font-size:12px;opacity:.6}
+.u-set .glyph{flex:none;align-self:flex-start;width:14px;height:22px;display:grid;place-items:center;opacity:.6}
+.u-set .switch{position:relative;overflow:hidden;flex:none;width:44px;height:24px;border-radius:999px;background:rgba(136,136,136,.4)}
+.u-set .switch::before{content:"";position:absolute;inset:0;background:var(--brand);opacity:var(--on,0)}
+.u-set .switch span{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.greenline{position:absolute;left:0;height:4px;border-radius:2px;background:linear-gradient(90deg,rgba(49,194,124,0),#31c27c 30%,#b4ffd9 50%,#31c27c 70%,rgba(49,194,124,0));box-shadow:0 0 24px 4px rgba(49,194,124,.55)}
+.greenhaze{position:absolute;border-radius:50%;background:radial-gradient(closest-side,rgba(49,194,124,.42),rgba(49,194,124,.1) 55%,rgba(49,194,124,0))}
+.greenicon{position:absolute;overflow:hidden;border-radius:23.5%;background:linear-gradient(135deg,#8ff5c0,#31c27c 48%,#0f7a48);box-shadow:inset 0 3px 2px rgba(255,255,255,.55),inset 0 0 0 3px rgba(210,255,232,.25),inset 0 -60px 120px rgba(0,60,30,.45)}
+.greenicon .gloss{position:absolute;inset:0;background:radial-gradient(120% 70% at 28% -4%,rgba(255,255,255,.45),transparent 58%)}
+.greenicon svg{position:absolute;left:50%;top:50%;width:56%;height:56%;margin:-28% 0 0 -28%;overflow:visible;filter:drop-shadow(0 12px 20px rgba(0,60,30,.45))}
+.soon{background:linear-gradient(90deg,#b4ffd9,#31c27c 55%,#1f9d63);-webkit-background-clip:text;background-clip:text;color:transparent}
+.greenicon .shine{position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 44%,rgba(255,255,255,.5) 50%,transparent 56%);transform:translateX(-75%)}
+.u-set .u-panel{border:1px solid rgba(136,136,136,.2);border-radius:14px;background:rgba(136,136,136,.06);overflow:hidden}
+.u-card{position:absolute;overflow:hidden;border-radius:48px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.1),0 50px 100px -40px rgba(0,0,0,.9)}
+.u-card .ln{font-size:62px}.u-card .ln small{font-size:38px}
+.tile-glow{position:absolute;border-radius:84px;box-shadow:0 0 0 8px rgba(190,180,255,.5),0 0 80px 10px rgba(154,139,255,.6);opacity:0}
+sup{font-size:.42em;vertical-align:.95em;margin-left:.08em;line-height:0}
 
 /* Vertical cut, 1080 × 1920. Content stays clear of a phone feed's overlays:
    the top tabs, the caption block along the bottom and the button column on the right. */
@@ -302,6 +362,8 @@ html,body{height:100%;background:#000;overflow:hidden}
 #controls{position:fixed;left:0;right:0;bottom:0;height:52px;display:flex;align-items:center;gap:14px;padding:0 18px;background:rgba(20,20,22,.92);color:#ddd;font:13px/1 system-ui,sans-serif;z-index:10}
 #controls button{width:34px;height:30px;border:0;border-radius:6px;background:#333;color:#fff;font-size:14px;cursor:pointer}
 #controls input{flex:1}
+#controls #volume{flex:none;width:96px}
+#controls button svg{display:block;margin:auto}
 #controls output{min-width:120px;font-variant-numeric:tabular-nums}
 body.render #controls{display:none}
 </style>
@@ -464,17 +526,18 @@ body.render #controls{display:none}
   </div>
   <svg class="abs" id="T2-arrow" style="left:928px;top:470px" width="64" height="50" viewBox="0 0 64 50" fill="none" stroke="#6e6e73" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 25h48M40 11l14 14-14 14"/></svg>
   <div class="panel2" id="T2-r" style="left:1010px;top:330px;width:700px;height:330px">
-    <div class="toolbar"><span class="srch"></span><span class="ava"></span>
+    <div class="toolbar"><span class="srch"></span><span class="ava"></span><span class="uname"></span>
       <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-      <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M20.5 12h-2.2M5.7 12H3.5M18 6l-1.6 1.6M7.6 16.4 6 18M18 18l-1.6-1.6M7.6 7.6 6 6"/></svg>
-      <span class="bn" id="T2-bn"><svg viewBox="0 0 29 29" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3707 22.342C16.9214 22.342 19.3998 21.0048 20.6842 18.9345C22.2492 16.4133 21.8458 13.1462 19.7247 11.1649C18.8879 10.3829 17.7719 9.89053 16.5779 9.77494L16.5289 9.58894L16.517 9.54384C16.4653 9.34756 16.4077 9.12931 16.3596 8.9496C16.2977 8.72364 16.2901 8.51814 16.3377 8.35497C16.351 8.30693 16.3724 8.26316 16.4019 8.20846C16.5123 8.00343 16.7197 7.85739 16.9561 7.81838C17.0603 7.80078 17.1697 7.80601 17.2729 7.83313C17.379 7.86167 17.4837 7.91305 17.575 7.98155C17.6341 8.02647 17.6857 8.07986 17.74 8.1361L17.741 8.1371C17.7462 8.14245 17.7514 8.14782 17.7566 8.15318C17.7851 8.18261 17.8136 8.21201 17.8438 8.23938C18.0126 8.39778 18.2334 8.48484 18.4646 8.48484C18.9669 8.48484 19.3755 8.07573 19.3755 7.5734C19.3755 7.42831 19.3417 7.28893 19.2756 7.15906C19.2699 7.14764 19.2637 7.1367 19.2575 7.12624L19.2461 7.10531C19.1605 6.96165 19.0382 6.82369 18.8608 6.67147C18.5892 6.43838 18.26 6.25571 17.9099 6.14392C17.7453 6.09111 17.5759 6.05449 17.4075 6.03546C17.0336 5.99264 16.6469 6.03213 16.2892 6.14963C14.8754 6.61676 14.197 7.93398 14.6019 9.4272L14.7256 9.89481C14.4487 9.9576 14.1752 10.0413 13.9112 10.1431C12.5464 10.6683 11.4632 11.8361 11.0841 13.1905C10.949 13.6728 10.9028 14.1728 10.9466 14.6765C11.0417 15.7683 11.624 16.7849 12.5045 17.3971C13.3346 17.9736 14.3283 18.1434 15.3031 17.8747C15.9933 17.6839 16.6069 17.2739 17.0308 16.7202C17.7006 15.8449 17.9004 14.697 17.594 13.4868C17.4861 13.0607 17.3511 12.589 17.2201 12.1315L17.213 12.1068C17.1759 11.9779 17.1388 11.8485 17.1021 11.7201C17.6259 11.8732 18.1006 12.1401 18.4817 12.4964C19.9449 13.8631 20.2265 16.2178 19.1367 17.9741C18.1768 19.5211 16.3058 20.521 14.3707 20.521C11.106 20.521 8.45012 17.8652 8.45012 14.6004C8.45012 14.3107 8.47248 14.0177 8.51672 13.729C8.55239 13.4978 8.60234 13.2661 8.66561 13.0401C8.72793 12.818 8.80451 12.5973 8.89204 12.3846C8.98052 12.1725 9.08137 11.9641 9.19269 11.7662C9.3021 11.5702 9.42578 11.3766 9.5604 11.1906C9.68979 11.0108 9.83488 10.8329 9.99043 10.6626C10.1436 10.4961 10.3082 10.3363 10.479 10.1883C10.6507 10.0394 10.8324 9.89957 11.0189 9.77303C11.2058 9.64554 11.4033 9.52757 11.6059 9.42149C11.7167 9.36393 11.83 9.30922 11.9418 9.25975C12.0031 9.23264 12.065 9.20647 12.1268 9.18174C12.3528 9.09183 12.5302 8.91915 12.6263 8.69557C12.7224 8.47199 12.7257 8.22463 12.6358 7.99867C12.5454 7.77224 12.3727 7.5948 12.1487 7.49871C11.9256 7.40262 11.6782 7.39976 11.4523 7.49015C11.37 7.5225 11.2881 7.55722 11.2044 7.59385C11.0536 7.66092 10.9047 7.73275 10.763 7.80696C10.4999 7.94397 10.2411 8.09904 9.99376 8.26744C9.7483 8.43441 9.51045 8.61708 9.28687 8.81117C9.06187 9.00573 8.84685 9.21456 8.64848 9.43196C8.44774 9.6503 8.25793 9.88292 8.0843 10.1227C7.90972 10.3643 7.74751 10.6179 7.6029 10.8767C7.4559 11.1388 7.32366 11.4118 7.20949 11.6877C7.0939 11.967 6.99352 12.2562 6.9117 12.5483C6.82941 12.8418 6.76376 13.1462 6.71619 13.4526C6.65816 13.8327 6.62866 14.2189 6.62866 14.6004C6.62866 18.8694 10.1017 22.342 14.3707 22.342ZM15.1929 11.6583C15.2781 11.9694 15.3699 12.291 15.4617 12.6107C15.5911 13.0602 15.7243 13.5245 15.8285 13.9355C15.9464 14.4017 15.9997 15.0715 15.5844 15.6142H15.584C15.4003 15.8549 15.1282 16.0348 14.8181 16.1204C14.2501 16.2769 13.811 16.0885 13.5437 15.903C13.1027 15.5962 12.8102 15.0791 12.7612 14.5201C12.7364 14.2352 12.7621 13.9536 12.8377 13.6834C13.0647 12.8718 13.7268 12.1673 14.5655 11.8443C14.77 11.7658 14.9808 11.703 15.1929 11.6583Z" fill="currentColor"/></svg></span><span class="sep"></span>
+      <span class="gear"><svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3.3 19.5 7.6v8.8L12 20.7l-7.5-4.3V7.6z"/><circle cx="12" cy="12" r="2.8"/></svg><span class="bn" id="T2-bn"><svg viewBox="0 0 29 29" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3707 22.342C16.9214 22.342 19.3998 21.0048 20.6842 18.9345C22.2492 16.4133 21.8458 13.1462 19.7247 11.1649C18.8879 10.3829 17.7719 9.89053 16.5779 9.77494L16.5289 9.58894L16.517 9.54384C16.4653 9.34756 16.4077 9.12931 16.3596 8.9496C16.2977 8.72364 16.2901 8.51814 16.3377 8.35497C16.351 8.30693 16.3724 8.26316 16.4019 8.20846C16.5123 8.00343 16.7197 7.85739 16.9561 7.81838C17.0603 7.80078 17.1697 7.80601 17.2729 7.83313C17.379 7.86167 17.4837 7.91305 17.575 7.98155C17.6341 8.02647 17.6857 8.07986 17.74 8.1361L17.741 8.1371C17.7462 8.14245 17.7514 8.14782 17.7566 8.15318C17.7851 8.18261 17.8136 8.21201 17.8438 8.23938C18.0126 8.39778 18.2334 8.48484 18.4646 8.48484C18.9669 8.48484 19.3755 8.07573 19.3755 7.5734C19.3755 7.42831 19.3417 7.28893 19.2756 7.15906C19.2699 7.14764 19.2637 7.1367 19.2575 7.12624L19.2461 7.10531C19.1605 6.96165 19.0382 6.82369 18.8608 6.67147C18.5892 6.43838 18.26 6.25571 17.9099 6.14392C17.7453 6.09111 17.5759 6.05449 17.4075 6.03546C17.0336 5.99264 16.6469 6.03213 16.2892 6.14963C14.8754 6.61676 14.197 7.93398 14.6019 9.4272L14.7256 9.89481C14.4487 9.9576 14.1752 10.0413 13.9112 10.1431C12.5464 10.6683 11.4632 11.8361 11.0841 13.1905C10.949 13.6728 10.9028 14.1728 10.9466 14.6765C11.0417 15.7683 11.624 16.7849 12.5045 17.3971C13.3346 17.9736 14.3283 18.1434 15.3031 17.8747C15.9933 17.6839 16.6069 17.2739 17.0308 16.7202C17.7006 15.8449 17.9004 14.697 17.594 13.4868C17.4861 13.0607 17.3511 12.589 17.2201 12.1315L17.213 12.1068C17.1759 11.9779 17.1388 11.8485 17.1021 11.7201C17.6259 11.8732 18.1006 12.1401 18.4817 12.4964C19.9449 13.8631 20.2265 16.2178 19.1367 17.9741C18.1768 19.5211 16.3058 20.521 14.3707 20.521C11.106 20.521 8.45012 17.8652 8.45012 14.6004C8.45012 14.3107 8.47248 14.0177 8.51672 13.729C8.55239 13.4978 8.60234 13.2661 8.66561 13.0401C8.72793 12.818 8.80451 12.5973 8.89204 12.3846C8.98052 12.1725 9.08137 11.9641 9.19269 11.7662C9.3021 11.5702 9.42578 11.3766 9.5604 11.1906C9.68979 11.0108 9.83488 10.8329 9.99043 10.6626C10.1436 10.4961 10.3082 10.3363 10.479 10.1883C10.6507 10.0394 10.8324 9.89957 11.0189 9.77303C11.2058 9.64554 11.4033 9.52757 11.6059 9.42149C11.7167 9.36393 11.83 9.30922 11.9418 9.25975C12.0031 9.23264 12.065 9.20647 12.1268 9.18174C12.3528 9.09183 12.5302 8.91915 12.6263 8.69557C12.7224 8.47199 12.7257 8.22463 12.6358 7.99867C12.5454 7.77224 12.3727 7.5948 12.1487 7.49871C11.9256 7.40262 11.6782 7.39976 11.4523 7.49015C11.37 7.5225 11.2881 7.55722 11.2044 7.59385C11.0536 7.66092 10.9047 7.73275 10.763 7.80696C10.4999 7.94397 10.2411 8.09904 9.99376 8.26744C9.7483 8.43441 9.51045 8.61708 9.28687 8.81117C9.06187 9.00573 8.84685 9.21456 8.64848 9.43196C8.44774 9.6503 8.25793 9.88292 8.0843 10.1227C7.90972 10.3643 7.74751 10.6179 7.6029 10.8767C7.4559 11.1388 7.32366 11.4118 7.20949 11.6877C7.0939 11.967 6.99352 12.2562 6.9117 12.5483C6.82941 12.8418 6.76376 13.1462 6.71619 13.4526C6.65816 13.8327 6.62866 14.2189 6.62866 14.6004C6.62866 18.8694 10.1017 22.342 14.3707 22.342ZM15.1929 11.6583C15.2781 11.9694 15.3699 12.291 15.4617 12.6107C15.5911 13.0602 15.7243 13.5245 15.8285 13.9355C15.9464 14.4017 15.9997 15.0715 15.5844 15.6142H15.584C15.4003 15.8549 15.1282 16.0348 14.8181 16.1204C14.2501 16.2769 13.811 16.0885 13.5437 15.903C13.1027 15.5962 12.8102 15.0791 12.7612 14.5201C12.7364 14.2352 12.7621 13.9536 12.8377 13.6834C13.0647 12.8718 13.7268 12.1673 14.5655 11.8443C14.77 11.7658 14.9808 11.703 15.1929 11.6583Z" fill="currentColor"/></svg></span></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linejoin="round"><path d="M9 4.5 4.5 7l1.7 3.4L8 9.6v9.9h8V9.6l1.8.8L19.5 7 15 4.5a3 3 0 0 1-6 0z"/></svg>
+      <span class="sep"></span>
       <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round"><path d="M6 12h12"/></svg>
       <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5"/></svg>
       <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round"><path d="m7 7 10 10M17 7 7 17"/></svg></div>
   </div>
   <div class="tip" id="T2-tip">BetterNCM</div>
   <div class="t sub" id="T2-c1" style="left:210px;right:auto;width:700px;top:686px;font-size:34px">下载并运行安装器，点「安装」</div>
-  <div class="t sub" id="T2-c2" style="left:1010px;right:auto;width:700px;top:686px;font-size:34px">重启网易云，点设置右边的新图标</div>
+  <div class="t sub" id="T2-c2" style="left:1010px;right:auto;width:700px;top:686px;font-size:34px">重启网易云，点设置下方的新图标</div>
   <div class="ripple" id="T2-ripple"></div>
   <svg class="cursor" id="T2-cursor" viewBox="0 0 24 24"><path d="M4.2 2.6v17.1l4.3-4.1 2.9 6.6 2.9-1.3-2.9-6.5h6.1z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
   <div class="foot" id="T2-foot">需要 Windows 版网易云音乐 3.x<span class="hb"> · </span><br class="vb">实测网易云 3.1.37 + BetterNCM 1.3.4 · 链接见简介</div>
@@ -486,18 +549,20 @@ body.render #controls{display:none}
   <div class="abs" id="T3-view" style="left:0;top:0;width:1920px;height:1080px;-webkit-mask-image:linear-gradient(transparent 250px,#000 304px)">
   <div class="world" id="T3-world">
     <div class="mgr" style="left:260px;top:318px;width:1400px;height:640px">
-      <div class="mgr-head"><span class="mgr-logo"><svg viewBox="0 0 29 29" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3707 22.342C16.9214 22.342 19.3998 21.0048 20.6842 18.9345C22.2492 16.4133 21.8458 13.1462 19.7247 11.1649C18.8879 10.3829 17.7719 9.89053 16.5779 9.77494L16.5289 9.58894L16.517 9.54384C16.4653 9.34756 16.4077 9.12931 16.3596 8.9496C16.2977 8.72364 16.2901 8.51814 16.3377 8.35497C16.351 8.30693 16.3724 8.26316 16.4019 8.20846C16.5123 8.00343 16.7197 7.85739 16.9561 7.81838C17.0603 7.80078 17.1697 7.80601 17.2729 7.83313C17.379 7.86167 17.4837 7.91305 17.575 7.98155C17.6341 8.02647 17.6857 8.07986 17.74 8.1361L17.741 8.1371C17.7462 8.14245 17.7514 8.14782 17.7566 8.15318C17.7851 8.18261 17.8136 8.21201 17.8438 8.23938C18.0126 8.39778 18.2334 8.48484 18.4646 8.48484C18.9669 8.48484 19.3755 8.07573 19.3755 7.5734C19.3755 7.42831 19.3417 7.28893 19.2756 7.15906C19.2699 7.14764 19.2637 7.1367 19.2575 7.12624L19.2461 7.10531C19.1605 6.96165 19.0382 6.82369 18.8608 6.67147C18.5892 6.43838 18.26 6.25571 17.9099 6.14392C17.7453 6.09111 17.5759 6.05449 17.4075 6.03546C17.0336 5.99264 16.6469 6.03213 16.2892 6.14963C14.8754 6.61676 14.197 7.93398 14.6019 9.4272L14.7256 9.89481C14.4487 9.9576 14.1752 10.0413 13.9112 10.1431C12.5464 10.6683 11.4632 11.8361 11.0841 13.1905C10.949 13.6728 10.9028 14.1728 10.9466 14.6765C11.0417 15.7683 11.624 16.7849 12.5045 17.3971C13.3346 17.9736 14.3283 18.1434 15.3031 17.8747C15.9933 17.6839 16.6069 17.2739 17.0308 16.7202C17.7006 15.8449 17.9004 14.697 17.594 13.4868C17.4861 13.0607 17.3511 12.589 17.2201 12.1315L17.213 12.1068C17.1759 11.9779 17.1388 11.8485 17.1021 11.7201C17.6259 11.8732 18.1006 12.1401 18.4817 12.4964C19.9449 13.8631 20.2265 16.2178 19.1367 17.9741C18.1768 19.5211 16.3058 20.521 14.3707 20.521C11.106 20.521 8.45012 17.8652 8.45012 14.6004C8.45012 14.3107 8.47248 14.0177 8.51672 13.729C8.55239 13.4978 8.60234 13.2661 8.66561 13.0401C8.72793 12.818 8.80451 12.5973 8.89204 12.3846C8.98052 12.1725 9.08137 11.9641 9.19269 11.7662C9.3021 11.5702 9.42578 11.3766 9.5604 11.1906C9.68979 11.0108 9.83488 10.8329 9.99043 10.6626C10.1436 10.4961 10.3082 10.3363 10.479 10.1883C10.6507 10.0394 10.8324 9.89957 11.0189 9.77303C11.2058 9.64554 11.4033 9.52757 11.6059 9.42149C11.7167 9.36393 11.83 9.30922 11.9418 9.25975C12.0031 9.23264 12.065 9.20647 12.1268 9.18174C12.3528 9.09183 12.5302 8.91915 12.6263 8.69557C12.7224 8.47199 12.7257 8.22463 12.6358 7.99867C12.5454 7.77224 12.3727 7.5948 12.1487 7.49871C11.9256 7.40262 11.6782 7.39976 11.4523 7.49015C11.37 7.5225 11.2881 7.55722 11.2044 7.59385C11.0536 7.66092 10.9047 7.73275 10.763 7.80696C10.4999 7.94397 10.2411 8.09904 9.99376 8.26744C9.7483 8.43441 9.51045 8.61708 9.28687 8.81117C9.06187 9.00573 8.84685 9.21456 8.64848 9.43196C8.44774 9.6503 8.25793 9.88292 8.0843 10.1227C7.90972 10.3643 7.74751 10.6179 7.6029 10.8767C7.4559 11.1388 7.32366 11.4118 7.20949 11.6877C7.0939 11.967 6.99352 12.2562 6.9117 12.5483C6.82941 12.8418 6.76376 13.1462 6.71619 13.4526C6.65816 13.8327 6.62866 14.2189 6.62866 14.6004C6.62866 18.8694 10.1017 22.342 14.3707 22.342ZM15.1929 11.6583C15.2781 11.9694 15.3699 12.291 15.4617 12.6107C15.5911 13.0602 15.7243 13.5245 15.8285 13.9355C15.9464 14.4017 15.9997 15.0715 15.5844 15.6142H15.584C15.4003 15.8549 15.1282 16.0348 14.8181 16.1204C14.2501 16.2769 13.811 16.0885 13.5437 15.903C13.1027 15.5962 12.8102 15.0791 12.7612 14.5201C12.7364 14.2352 12.7621 13.9536 12.8377 13.6834C13.0647 12.8718 13.7268 12.1673 14.5655 11.8443C14.77 11.7658 14.9808 11.703 15.1929 11.6583Z" fill="currentColor"/></svg></span><div><h4>BetterNCM <small>1.3.4</small></h4><div class="mgr-btns"><span>打开插件文件夹</span><span>打开控制台</span></div></div></div>
-      <div class="mgr-side"><div class="on">插件商店</div><div><b style="width:120px"></b></div><div><b style="width:90px"></b></div><div><b style="width:132px"></b></div><div><b style="width:76px"></b></div></div>
+      <div class="mgr-head"><span class="mgr-logo"><svg viewBox="0 0 29 29" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3707 22.342C16.9214 22.342 19.3998 21.0048 20.6842 18.9345C22.2492 16.4133 21.8458 13.1462 19.7247 11.1649C18.8879 10.3829 17.7719 9.89053 16.5779 9.77494L16.5289 9.58894L16.517 9.54384C16.4653 9.34756 16.4077 9.12931 16.3596 8.9496C16.2977 8.72364 16.2901 8.51814 16.3377 8.35497C16.351 8.30693 16.3724 8.26316 16.4019 8.20846C16.5123 8.00343 16.7197 7.85739 16.9561 7.81838C17.0603 7.80078 17.1697 7.80601 17.2729 7.83313C17.379 7.86167 17.4837 7.91305 17.575 7.98155C17.6341 8.02647 17.6857 8.07986 17.74 8.1361L17.741 8.1371C17.7462 8.14245 17.7514 8.14782 17.7566 8.15318C17.7851 8.18261 17.8136 8.21201 17.8438 8.23938C18.0126 8.39778 18.2334 8.48484 18.4646 8.48484C18.9669 8.48484 19.3755 8.07573 19.3755 7.5734C19.3755 7.42831 19.3417 7.28893 19.2756 7.15906C19.2699 7.14764 19.2637 7.1367 19.2575 7.12624L19.2461 7.10531C19.1605 6.96165 19.0382 6.82369 18.8608 6.67147C18.5892 6.43838 18.26 6.25571 17.9099 6.14392C17.7453 6.09111 17.5759 6.05449 17.4075 6.03546C17.0336 5.99264 16.6469 6.03213 16.2892 6.14963C14.8754 6.61676 14.197 7.93398 14.6019 9.4272L14.7256 9.89481C14.4487 9.9576 14.1752 10.0413 13.9112 10.1431C12.5464 10.6683 11.4632 11.8361 11.0841 13.1905C10.949 13.6728 10.9028 14.1728 10.9466 14.6765C11.0417 15.7683 11.624 16.7849 12.5045 17.3971C13.3346 17.9736 14.3283 18.1434 15.3031 17.8747C15.9933 17.6839 16.6069 17.2739 17.0308 16.7202C17.7006 15.8449 17.9004 14.697 17.594 13.4868C17.4861 13.0607 17.3511 12.589 17.2201 12.1315L17.213 12.1068C17.1759 11.9779 17.1388 11.8485 17.1021 11.7201C17.6259 11.8732 18.1006 12.1401 18.4817 12.4964C19.9449 13.8631 20.2265 16.2178 19.1367 17.9741C18.1768 19.5211 16.3058 20.521 14.3707 20.521C11.106 20.521 8.45012 17.8652 8.45012 14.6004C8.45012 14.3107 8.47248 14.0177 8.51672 13.729C8.55239 13.4978 8.60234 13.2661 8.66561 13.0401C8.72793 12.818 8.80451 12.5973 8.89204 12.3846C8.98052 12.1725 9.08137 11.9641 9.19269 11.7662C9.3021 11.5702 9.42578 11.3766 9.5604 11.1906C9.68979 11.0108 9.83488 10.8329 9.99043 10.6626C10.1436 10.4961 10.3082 10.3363 10.479 10.1883C10.6507 10.0394 10.8324 9.89957 11.0189 9.77303C11.2058 9.64554 11.4033 9.52757 11.6059 9.42149C11.7167 9.36393 11.83 9.30922 11.9418 9.25975C12.0031 9.23264 12.065 9.20647 12.1268 9.18174C12.3528 9.09183 12.5302 8.91915 12.6263 8.69557C12.7224 8.47199 12.7257 8.22463 12.6358 7.99867C12.5454 7.77224 12.3727 7.5948 12.1487 7.49871C11.9256 7.40262 11.6782 7.39976 11.4523 7.49015C11.37 7.5225 11.2881 7.55722 11.2044 7.59385C11.0536 7.66092 10.9047 7.73275 10.763 7.80696C10.4999 7.94397 10.2411 8.09904 9.99376 8.26744C9.7483 8.43441 9.51045 8.61708 9.28687 8.81117C9.06187 9.00573 8.84685 9.21456 8.64848 9.43196C8.44774 9.6503 8.25793 9.88292 8.0843 10.1227C7.90972 10.3643 7.74751 10.6179 7.6029 10.8767C7.4559 11.1388 7.32366 11.4118 7.20949 11.6877C7.0939 11.967 6.99352 12.2562 6.9117 12.5483C6.82941 12.8418 6.76376 13.1462 6.71619 13.4526C6.65816 13.8327 6.62866 14.2189 6.62866 14.6004C6.62866 18.8694 10.1017 22.342 14.3707 22.342ZM15.1929 11.6583C15.2781 11.9694 15.3699 12.291 15.4617 12.6107C15.5911 13.0602 15.7243 13.5245 15.8285 13.9355C15.9464 14.4017 15.9997 15.0715 15.5844 15.6142H15.584C15.4003 15.8549 15.1282 16.0348 14.8181 16.1204C14.2501 16.2769 13.811 16.0885 13.5437 15.903C13.1027 15.5962 12.8102 15.0791 12.7612 14.5201C12.7364 14.2352 12.7621 13.9536 12.8377 13.6834C13.0647 12.8718 13.7268 12.1673 14.5655 11.8443C14.77 11.7658 14.9808 11.703 15.1929 11.6583Z" fill="currentColor"/></svg></span><div><h4>BetterNCM <small>1.3.4</small></h4><div class="mgr-btns"><span>打开插件文件夹</span><span>打开控制台</span><span>重载网易云</span><span>重启并重载插件</span><span>已是最新版本</span></div></div>
+        <div class="mgr-links"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.5" fill="#eceef2"/><path d="M12 10.6v6.6" stroke="#232a39" stroke-width="2.6" stroke-linecap="round"/><circle cx="12" cy="7.1" r="1.6" fill="#232a39"/></svg><svg viewBox="0 0 16 16"><path fill="#eceef2" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></div></div>
+      <div class="mgr-side"><div id="T3-pm">PluginMarket</div></div>
       <div class="mgr-main">
         <div class="welcome" id="T3-welcome"><h5>欢迎使用 BetterNCM！</h5><p>BetterNCM 是一个由一群热爱网易云音乐的云村村友开发的 PC 版网易云音乐扩展工具……</p><span id="T3-start">开始使用 BetterNCM</span></div>
         <div class="market" id="T3-market">
-          <div class="mk-filters"><span class="cat on">全部</span><span class="cat">扩展</span><span class="cat">主题</span><span class="cat">已安装</span>
-            <div class="mk-search"><svg viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7l126.6 126.7c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg><span class="ph" id="T3-ph">搜索...</span><span id="T3-typed"></span><i class="caret" id="T3-caret"></i></div></div>
+          <div class="mk-filters"><div class="mk-cats"><span>扩展</span><span>主题</span><span>已安装</span></div>
+            <div class="mk-search" id="T3-search"><svg viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7l126.6 126.7c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg><span class="txt"><span class="ph" id="T3-ph">搜索...</span><span id="T3-typed"></span><i class="caret" id="T3-caret"></i></span></div>
+            <div class="mk-sort" id="T3-sort"><b class="on"><svg viewBox="0 0 448 512"><path d="M160 80c0-26.5 21.5-48 48-48h32c26.5 0 48 21.5 48 48v352c0 26.5-21.5 48-48 48h-32c-26.5 0-48-21.5-48-48V80zM0 272c0-26.5 21.5-48 48-48h32c26.5 0 48 21.5 48 48v160c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V272zm368-176h32c26.5 0 48 21.5 48 48v288c0 26.5-21.5 48-48 48h-32c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48z"/></svg><i>▼</i></b><b><svg viewBox="0 0 576 512"><path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"/></svg></b><b><svg viewBox="0 0 512 512"><path d="M232 120c0-13.3 10.7-24 24-24s24 10.7 24 24v123.2l85.3 56.8c11 7.4 14 22.3 5.8 33.3-6.5 11-21.4 14-32.4 5.8l-96-64c-6.7-3.6-10.7-11.1-10.7-20V120zM256 0c141.4 0 256 114.6 256 256S397.4 512 256 512 0 397.4 0 256 114.6 0 256 0zM48 256c0 114.9 93.1 208 208 208s208-93.1 208-208S370.9 48 256 48 48 141.1 48 256z"/></svg></b><b><svg viewBox="0 0 512 512"><path d="M183.6 469.6C177.5 476.2 169 480 160 480s-17.5-3.8-23.6-10.4l-88-96c-11.9-13-11.1-33.3 2-45.2s33.3-11.1 45.2 2L128 365.7V64c0-17.7 14.3-32 32-32s32 14.3 32 32v301.7l32.4-35.4c11.9-13 32.2-13.9 45.2-2s13.9 32.2 2 45.2l-88 96zM320 320c0-17.7 14.3-32 32-32h128c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9L429.3 416H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H352c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l73.4-73.3H352c-17.7 0-32-14.3-32-32zM416 32c12.1 0 23.2 6.8 28.6 17.7l64 128 16 32c7.9 15.8 1.5 35-14.3 42.9s-35 1.5-42.9-14.3l-7.2-14.3h-88.4l-7.2 14.3c-7.9 15.8-27.1 22.2-42.9 14.3s-22.2-27.1-14.3-42.9l16-32 64-128C392.8 38.8 403.9 32 416 32zm-20.2 144h40.4L416 135.6 395.8 176z"/></svg></b></div></div>
           <div class="mk-grid" id="T3-grid">
             <div class="mk-card" id="T3-card" style="left:286px;top:168px"><div class="mk-prev" style="background-image:url(../plugin/preview.jpg)"></div><div class="mk-shade" id="T3-shade"></div>
               <div class="mk-body" id="T3-body"><div class="mk-hbg" id="T3-hbg" style="background-image:url(../plugin/preview.jpg)"></div><div class="mk-info"><div class="mk-title">BetterDownload</div><div class="mk-author">XIAOMING6680</div><div class="mk-desc">自动解锁下载的 VIP 歌曲，保留原音质，内嵌封面与歌曲信息。</div><div class="mk-meta">0.5.0</div></div></div>
               <div class="mk-actions" id="T3-actions"><span id="T3-dl"><svg viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32v242.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64v-32c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64z"/></svg></span><span id="T3-spin" hidden><svg viewBox="0 0 512 512"><path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg></span><span id="T3-del" hidden><svg viewBox="0 0 448 512"><path d="M135.2 17.7 128 32H32C14.3 32 0 46.3 0 64s14.3 32 32 32h384c17.7 0 32-14.3 32-32s-14.3-32-32-32h-96l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32l21.2 339c1.6 25.3 22.6 45 47.9 45h245.8c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg></span></div>
-              <div class="mk-state" id="T3-state"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></div></div>
+              <div class="mk-ind" id="T3-ind"><span class="mk-new">NEW</span></div></div>
           </div>
         </div>
       </div>
@@ -527,16 +592,85 @@ body.render #controls{display:none}
   <div class="t" id="H-legal" style="top:980px;font-size:24px;font-weight:500;color:#6e6e73">免费 · 开源 · GPL-3.0</div>
 </section>
 
+<!-- The 0.6 update cut (?update): lyrics, then the install steps above, then one more thing. -->
+<section class="scene" id="U1">
+  <div class="fluid" id="U1-fluid"></div>
+  <div class="dots" id="U1-dots" style="left:110px;top:790px"><i></i><i></i><i></i></div>
+  <div class="lyrics" id="U1-lyrics"></div>
+  <div class="t h2 split trim" id="U1-h1" style="top:700px">现在，</div>
+  <div class="t h2 split grad trim" id="U1-h2" style="top:846px">歌词也能<br class="vb">一起带走。</div>
+</section>
+
+<section class="scene" id="U2">
+  <div class="halo" id="U2-halo" style="top:720px"></div>
+  <div class="abs" id="U2-iconbox" style="left:410px;top:560px;width:260px;height:260px"></div>
+  <div class="t word" id="U2-word" style="top:896px">BetterDownload</div>
+  <div class="t" id="U2-tag" style="top:1062px"><span class="u-pill"><b class="gradfill">0.6</b>新增：写入歌词</span></div>
+</section>
+
+<section class="scene" id="U3">
+  <div class="t h3 split trim" id="U3-h" style="top:292px">歌词，写进文件里。</div>
+  <div class="t sub" id="U3-s" style="top:420px">FLAC、MP3 都能写，带时间轴。</div>
+  <div class="tile-glow" id="U3-glow" style="left:310px;top:620px;width:460px;height:460px"></div>
+  <div class="song-tile" id="U3-tile" style="left:330px;top:640px;width:420px;height:420px"></div>
+  <div class="t" id="U3-name" style="top:1098px;font-size:40px;font-weight:600;color:#e8e8ed">夜间来信.flac</div>
+  <div class="t" id="U3-chip" style="top:1180px"><span class="u-pill" style="height:66px;font-size:30px"><svg width="30" height="30" viewBox="0 0 16 16" fill="none" stroke="#a796ff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4h7M2.5 7h7M2.5 10h4"/><path d="M12.5 12V3.5l2 .8"/><circle cx="11.2" cy="12" r="1.4"/></svg>歌词已写入</span></div>
+  <div class="abs" id="U3-lines" style="left:0;top:0;width:1080px;height:1920px"></div>
+  <div class="u-foot" id="U3-foot">歌词功能可选，开启后需联网获取。</div>
+</section>
+
+<section class="scene" id="U4">
+  <div class="t h3 split trim" id="U4-h" style="top:292px">换个播放器，<br class="vb">照样滚动。<sup>1</sup></div>
+  <div class="phone" id="U4-phone"><div class="fluid" id="U4-fluid"></div><div class="lyrics" id="U4-lyrics" style="left:44px;right:24px;-webkit-mask-image:linear-gradient(transparent 200px,#000 250px,#000 540px,transparent 600px)"></div>
+    <div class="np-art" id="U4-art"></div><div class="np-meta"><b>夜间来信</b><small>BetterDownload</small></div>
+    <div class="np-bar"><i id="U4-bar"></i></div>
+    <div class="np-ctl"><svg width="44" height="30" viewBox="0 0 44 30"><path d="M22 15 40 3v24zM4 15 22 3v24z"/></svg><svg width="34" height="40" viewBox="0 0 34 40"><rect x="3" y="2" width="10" height="36" rx="3"/><rect x="21" y="2" width="10" height="36" rx="3"/></svg><svg width="44" height="30" viewBox="0 0 44 30"><path d="M22 15 4 3v24zM40 15 22 3v24z"/></svg></div></div>
+  <div class="u-foot" id="U4-foot"><sup>1</sup> 需播放器支持内嵌歌词。<br>歌词功能可选，开启后需联网获取。</div>
+</section>
+
+<section class="scene" id="U5">
+  <div class="t h3 split trim" id="U5-h" style="top:292px">外语歌，附带翻译。</div>
+  <div class="t sub" id="U5-s" style="top:420px">也能另存一份 .lrc，给车机和老播放器。</div>
+  <div class="u-card" id="U5-card" style="left:90px;top:560px;width:900px;height:560px"><div class="fluid" id="U5-fluid"></div><div class="lyrics" id="U5-lyrics" style="left:70px;right:40px"></div></div>
+  <div class="t" id="U5-files" style="top:1180px"><span class="file-chip" id="U5-flac"><i id="U5-art"></i>夜间来信.flac</span><span style="display:inline-block;width:22px"></span><span class="file-chip" id="U5-lrc"><i style="background:var(--brand)"></i>夜间来信.lrc</span></div>
+  <div class="u-foot" id="U5-foot">歌词功能可选，开启后需联网获取。</div>
+</section>
+
+<section class="scene" id="U6">
+  <div class="t h3 split trim" id="U6-h" style="top:292px">想要，就打开。</div>
+  <div class="t sub" id="U6-s" style="top:420px">写入歌词是可选功能，默认关闭。</div>
+  <div class="setwin" id="U6-win" style="left:111px;top:570px;width:858px;height:540px"><div class="u-set" style="transform:scale(1.59)">
+    <div class="section">歌词</div>
+    <div class="u-panel"><div class="row"><span class="glyph"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4h7M2.5 7h7M2.5 10h4"/><path d="M12.5 12V3.5l2 .8"/><circle cx="11.2" cy="12" r="1.4"/></svg></span><div class="copy"><div>写入歌词</div><small id="U6-note">从网易云获取歌词写入文件，需要联网</small></div><span class="switch" id="U6-sw"><span></span></span></div>
+    <div class="row indent" id="U6-o1"><div class="copy"><div>同时保存 .lrc 文件</div><small>放在歌曲旁边，给只认 .lrc 的车机和播放器</small></div><span class="switch"><span></span></span></div>
+    <div class="row indent" id="U6-o2"><div class="copy"><div>附带翻译</div><small>外语歌在每句原文下方加一行翻译</small></div><span class="switch"><span></span></span></div></div>
+  </div></div>
+  <div class="ripple" id="U6-ripple"></div>
+  <svg class="cursor" id="U6-cursor" viewBox="0 0 24 24"><path d="M4.2 2.6v17.1l4.3-4.1 2.9 6.6 2.9-1.3-2.9-6.5h6.1z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
+  <div class="u-foot" id="U6-foot">开启后需联网，从网易云获取歌词。</div>
+</section>
+
+<section class="scene" id="U8">
+  <div class="t h2 split trim" id="U8-h" style="top:820px">还有一件事。</div>
+  <div class="greenhaze" id="U8-haze" style="left:-260px;top:480px;width:1600px;height:1100px"></div>
+  <div class="greenicon" id="U8-icon" style="left:640px;top:1140px;width:820px;height:820px"><div class="gloss"></div><div class="shine" id="U8-shine"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4.5v10M6 10.5l4 4 4-4M5 19.5h11"/><rect x="15.2" y="6.6" width="6.4" height="5" rx="1.3" fill="#fff" stroke="none"/><path d="M16.7 6.6V5a1.8 1.8 0 0 1 3.5-.6" stroke-width="1.5"/></svg></div>
+  <div class="greenline" id="U8-line" style="top:958px;width:1080px"></div>
+  <div class="t h3" id="U8-soon" style="top:640px"><span class="soon">即将到来。</span></div>
+</section>
+
 <div id="grain"></div>
 </div></div>
 
-<div id="controls"><button id="play" title="播放 / 暂停（空格）">▶</button><output id="clock">0.00 s</output><input id="scrub" type="range" min="0" max="85" step="0.01" value="0"></div>
+<div id="controls"><button id="play" title="播放 / 暂停（空格）">▶</button><output id="clock">0.00 s</output><input id="scrub" type="range" min="0" max="85" step="0.01" value="0"><button id="mute" title="静音（M）"></button><input id="volume" type="range" min="0" max="1" step="0.01" value="1" title="音量（↑ ↓）"></div>
 
 <script>
 'use strict';
-const DURATION = 85, FPS = 60;
 // ?v renders the vertical cut for phone feeds; timeline and soundtrack are shared with the wide one.
-const V = new URLSearchParams(location.search).has('v');
+// ?update renders the 0.6 update video instead, vertical only, with its own timeline and soundtrack.
+const UPDATE = new URLSearchParams(location.search).has('update');
+const DURATION = UPDATE ? 60 : 85, FPS = 60;
+const V = UPDATE || new URLSearchParams(location.search).has('v');
 const SW = V ? 1080 : 1920, SH = V ? 1920 : 1080, CX = SW / 2, CY = SH / 2;
 if (V) document.documentElement.classList.add('v');
 const $ = id => document.getElementById(id);
@@ -659,6 +793,8 @@ const BADGE_SHACKLE = p => `M8.9 10.8V${fx(8.1 - .5 * p)}a3.1 3.1 0 0 1 6.2 ${fx
 const MARK = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4.5v10M6 10.5l4 4 4-4M5 19.5h11"/><rect x="15.2" y="6.6" width="6.4" height="5" rx="1.3" fill="#fff" stroke="none"/><path d="M16.7 6.6V5a1.8 1.8 0 0 1 3.5-.6" stroke-width="1.5"/></svg>';
 const FOLDER = '<svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M2 4.6A1.6 1.6 0 0 1 3.6 3h2.5l1.5 1.6h4.8A1.6 1.6 0 0 1 14 6.2v5.2a1.6 1.6 0 0 1-1.6 1.6H3.6A1.6 1.6 0 0 1 2 11.4z"/></svg>';
 const CHECK = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg>';
+// PluginMarket marks extension cards with a puzzle piece (its src/icons.js).
+const PUZZLE = '<svg viewBox="0 0 512 512"><path d="M192 104.8c0-9.2-5.8-17.3-13.2-22.8C167.2 73.3 160 61.3 160 48c0-26.5 28.7-48 64-48s64 21.5 64 48c0 13.3-7.2 25.3-18.8 34-7.4 5.5-13.2 13.6-13.2 22.8 0 12.8 10.4 23.2 23.2 23.2H336c26.5 0 48 21.5 48 48v56.8c0 12.8 10.4 23.2 23.2 23.2 9.2 0 17.3-5.8 22.8-13.2 8.7-11.6 20.7-18.8 34-18.8 26.5 0 48 28.7 48 64s-21.5 64-48 64c-13.3 0-25.3-7.2-34-18.8-5.5-7.4-13.6-13.2-22.8-13.2-12.8 0-23.2 10.4-23.2 23.2V464c0 26.5-21.5 48-48 48H279.2c-12.8 0-23.2-10.4-23.2-23.2 0-9.2 5.8-17.3 13.2-22.8 11.6-8.7 18.8-20.7 18.8-34 0-26.5-28.7-48-64-48s-64 21.5-64 48c0 13.3 7.2 25.3 18.8 34 7.4 5.5 13.2 13.6 13.2 22.8 0 12.8-10.4 23.2-23.2 23.2H48c-26.5 0-48-21.5-48-48V343.2C0 330.4 10.4 320 23.2 320c9.2 0 17.3 5.8 22.8 13.2 8.7 11.6 20.7 18.8 34 18.8 26.5 0 48-28.7 48-64s-21.5-64-48-64c-13.3 0-25.3 7.2-34 18.8-5.5 7.4-13.6 13.2-22.8 13.2C10.4 256 0 245.6 0 232.8V176c0-26.5 21.5-48 48-48h120.8c12.8 0 23.2-10.4 23.2-23.2z"/></svg>';
 function makeIcon(box) {
   box.innerHTML = `<div class="icon" style="left:0;top:0;width:100%;height:100%;border-radius:23.5%"><div class="gloss"></div><div class="shine"></div>
     <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:56%;height:56%;margin:-28% 0 0 -28%">
@@ -720,7 +856,7 @@ function makeCard(parent, x, y, scale = 1, compact = false) {
     c.card.dataset.phase = done ? 'success' : 'converting';
     setText(c.state, done ? '已完成' : '转换中');
     setText(c.song, s.song); setText(c.fmt, s.format || ''); setText(c.sum, s.summary || '');
-    setText(c.detail, done ? '原音质已保留 · 音乐已就绪' : s.detail || '正在整理音频与封面');
+    setText(c.detail, done ? (s.lyrics ? '原音质已保留 · 歌词已写入' : '原音质已保留 · 音乐已就绪') : s.detail || '正在整理音频与封面');
     c.cover.style.background = s.cover; c.tint.style.backgroundColor = s.tint;
     c.line.hidden = done; c.pct.hidden = done || waiting; c.open.hidden = !(done && s.open);
     c.bar.style.width = waiting ? '36%' : fx(done ? 100 : s.percent) + '%';
@@ -832,9 +968,11 @@ function buildAll() {
   $('T1-bd').innerHTML = MARK; $('T1-bd').querySelector('svg').setAttribute('style', 'width:46px;height:46px');
   Object.assign(T1, { h: $('T1-h'), s: $('T1-s'), parts: ['T1-a', 'T1-p', 'T1-b', 'T1-e', 'T1-g'].map($), bd: $('T1-bd'), cap: $('T1-cap') });
   Object.assign(T2, { k: $('T2-k'), h: $('T2-h'), l: $('T2-l'), r: $('T2-r'), arrow: $('T2-arrow'), btn: $('T2-btn'), ok: $('T2-ok'), btntext: $('T2-btntext'), bn: $('T2-bn'), tip: $('T2-tip'), c1: $('T2-c1'), c2: $('T2-c2'), cursor: $('T2-cursor'), ripple: $('T2-ripple'), foot: $('T2-foot'), btnPos: [0, 0], bnPos: [0, 0] });
-  Object.assign(T3, { k: $('T3-k'), h: $('T3-h'), k2: $('T3-k2'), h2: $('T3-h2'), world: $('T3-world'), welcome: $('T3-welcome'), start: $('T3-start'), market: $('T3-market'), ph: $('T3-ph'), typed: $('T3-typed'), caret: $('T3-caret'), card: $('T3-card'), shade: $('T3-shade'), body: $('T3-body'), hbg: $('T3-hbg'), actions: $('T3-actions'), dl: $('T3-dl'), spin: $('T3-spin'), del: $('T3-del'), state: $('T3-state'), notice: $('T3-notice'), restart: $('T3-restart'), cursor: $('T3-cursor'), ripple: $('T3-ripple'), done: $('T3-done'), foot: $('T3-foot'), b1: $('T3-b1'), b2: $('T3-b2') });
-  // Window coordinates of the card once it has moved to the first slot, and of its install button.
-  Object.assign(T3, { cardPos: [646, 561], installPos: [756, 561], startPos: [0, 0], restartPos: [0, 0] });
+  Object.assign(T3, { k: $('T3-k'), h: $('T3-h'), k2: $('T3-k2'), h2: $('T3-h2'), world: $('T3-world'), welcome: $('T3-welcome'), start: $('T3-start'), market: $('T3-market'), ph: $('T3-ph'), typed: $('T3-typed'), caret: $('T3-caret'), card: $('T3-card'), shade: $('T3-shade'), body: $('T3-body'), hbg: $('T3-hbg'), actions: $('T3-actions'), dl: $('T3-dl'), spin: $('T3-spin'), del: $('T3-del'), notice: $('T3-notice'), restart: $('T3-restart'), cursor: $('T3-cursor'), ripple: $('T3-ripple'), done: $('T3-done'), foot: $('T3-foot'), b1: $('T3-b1'), b2: $('T3-b2'), pm: $('T3-pm'), search: $('T3-search'), sort: $('T3-sort') });
+  T3.glass = T3.search.querySelector('svg');
+  $('T3-ind').insertAdjacentHTML('afterbegin', PUZZLE);
+  // Window coordinates of what the cursor visits, measured once laid out.
+  Object.assign(T3, { cardPos: [0, 0], installPos: [0, 0], startPos: [0, 0], searchPos: [0, 0], restartPos: [0, 0] });
   // Other plugins stay anonymous: gradient banners with blank titles.
   const banners = ['linear-gradient(135deg,#2b5876,#4e4376)', 'linear-gradient(135deg,#355c7d,#c06c84)', 'linear-gradient(135deg,#134e5e,#71b280)', 'linear-gradient(135deg,#41295a,#2f0743)', 'linear-gradient(135deg,#232526,#414345)', 'linear-gradient(135deg,#3a1c71,#d76d77)', 'linear-gradient(135deg,#1f4037,#99f2c8)', 'linear-gradient(135deg,#373b44,#4286f4)', 'linear-gradient(135deg,#5f2c82,#49a09d)', 'linear-gradient(135deg,#0f2027,#2c5364)', 'linear-gradient(135deg,#614385,#516395)'];
   T3.skel = [];
@@ -842,12 +980,13 @@ function buildAll() {
     if (i === 5) continue;
     const el = document.createElement('div'); el.className = 'mk-skel';
     el.style.left = (i % 4) * 286 + 'px'; el.style.top = ((i / 4) | 0) * 168 + 'px'; el.style.background = banners[n++ % banners.length];
-    el.innerHTML = `<div class="mk-shade"></div><b style="top:100px;width:${110 + (i * 37) % 70}px"></b><b style="top:124px;width:${60 + (i * 23) % 40}px;opacity:.55"></b>`;
+    el.innerHTML = `<div class="mk-shade"></div><div class="mk-ind">${PUZZLE}${i === 2 || i === 9 ? '<span class="mk-new">NEW</span>' : ''}</div><b style="top:100px;width:${110 + (i * 37) % 70}px"></b><b style="top:124px;width:${60 + (i * 23) % 40}px;opacity:.55"></b>`;
     $('T3-grid').insertBefore(el, T3.card); T3.skel.push(el);
   }
   T3.pc = makeCard($('T3-slot'), 0, 0, 2.6);
   // H: the end card
   Object.assign(H, { halo: $('H-halo'), word: $('H-word'), tag: $('H-tag'), grad: $('H-taggrad'), pill: $('H-pill'), typed: $('H-typed'), caret: $('H-caret'), cap: $('H-cap'), legal: $('H-legal'), by: $('H-by') }, { ic: makeIcon($('H-iconbox')) });
+  buildUpdate();
 }
 
 // Positions and widths that are only known after layout.
@@ -864,8 +1003,18 @@ function measure() {
   const at = (el, px = .5, py = .5) => { const r = el.getBoundingClientRect(); return [(r.left + r.width * px - stage.left) / k, (r.top + r.height * py - stage.top) / k]; };
   sceneT2(65); T2.btnPos = at(T2.btn, .5, .55);
   sceneT2(67.2); T2.bnPos = at(T2.bn);
-  sceneT3(68.45); T3.startPos = at(T3.start, .5, .55);
-  sceneT3(72.5); T3.restartPos = at(T3.restart);
+  // T3's cursor moves inside the zooming window, so its targets are window coordinates, not stage ones.
+  const inWorld = (el, px = .5, py = .5) => {
+    let x = el.offsetWidth * px, y = el.offsetHeight * py;
+    for (let e = el; e && e !== T3.world; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; }
+    return [x, y];
+  };
+  if (UPDATE) { sceneU6(28); U6.swPos = at(U6.sw); }
+  sceneT3(68.45);
+  T3.startPos = inWorld(T3.start, .5, .55); T3.searchPos = inWorld(T3.search); T3.restartPos = inWorld(T3.restart);
+  // The card slides to the first slot; its action bar opens to 44px on hover.
+  const [gx, gy] = inWorld($('T3-grid'), 0, 0);
+  T3.cardPos = [gx + 132, gy + 75]; T3.installPos = [gx + 264 - 22, gy + 75];
   const b = G.scan.getBoundingClientRect();
   G.target = [(b.left + b.width * .52 - stage.left) / k, (b.top + b.height * .55 - stage.top) / k];
   for (const s of SCENES) s.el.style.display = 'none';
@@ -1172,39 +1321,47 @@ function sceneT3(t) {
   T3.world.style.transform = `translate(${fx(S[0] - F[0] * s)}px,${fx(S[1] - F[1] * s)}px) scale(${fx(s)})`;
   T3.world.style.opacity = fx(wi * (1 - wo));
   T3.world.style.filter = blur(wo * 10);
-  // First launch shows BetterNCM's welcome page.
+  // First launch shows BetterNCM's welcome page; after it, PluginMarket is in the plugin list.
   const wg = E.in2(prog(t, 68.7, 68.95));
-  T3.welcome.style.opacity = fx(1 - wg); T3.market.style.opacity = fx(wg);
+  T3.welcome.style.opacity = fx(1 - wg); T3.market.style.opacity = T3.pm.style.opacity = fx(wg);
   T3.start.style.transform = `scale(${fx(1 - .05 * bump(prog(t, 68.5, 68.66)))})`;
-  const q = 'BetterDownload', n = Math.round(clamp((t - 69.0) / .06, 0, q.length));
-  setText(T3.typed, q.slice(0, n)); T3.ph.hidden = n > 0;
-  T3.caret.style.opacity = t < 70.1 && Math.floor(t * 2.6) % 2 === 0 ? '1' : '0';
+  // Clicking the magnifier opens the search box; the sort buttons fold away meanwhile, as in PluginMarket.
+  const ep = E.out3(prog(t, 69.0, 69.3));
+  T3.search.style.width = fx(38 + 242 * ep) + 'px';
+  T3.search.style.borderColor = `rgba(255,255,255,${fx(.13 * ep)})`;
+  T3.glass.style.opacity = fx(1 - .6 * ep); T3.glass.style.transform = `scale(${fx(1 - .1 * ep)})`;
+  T3.sort.style.opacity = fx(1 - ep); T3.sort.style.maxWidth = fx(400 * (1 - ep)) + 'px';
+  const q = 'BetterDownload', n = Math.round(clamp((t - 69.2) / .05, 0, q.length));
+  setText(T3.typed, q.slice(0, n)); T3.ph.hidden = n > 0; T3.ph.style.opacity = fx(ep);
+  T3.caret.style.opacity = ep > .5 && t < 70.1 && Math.floor(t * 2.6) % 2 === 0 ? '1' : '0';
   const f = E.out3(prog(t, 69.3, 69.65)), fl = E.io3(prog(t, 69.45, 69.95));
   T3.skel.forEach(el => { el.style.opacity = fx(1 - f); el.style.transform = `scale(${fx(1 - .06 * f)})`; });
   T3.card.style.transform = `translate(${fx(-286 * fl)}px,${fx(-168 * fl)}px)`;
-  // Hovering a market card lifts its details and opens the action bar.
+  // Hovering a market card lifts its details over a solid panel and opens the action bar; its buttons only show then.
   const hv = E.out3(prog(t, 70.2, 70.45));
   T3.body.style.transform = `translateY(${fx(85 * (1 - hv))}px)`;
-  T3.body.style.background = `rgba(34,34,34,${fx(.94 * hv)})`;
+  T3.body.style.background = `rgba(34,34,34,${fx(hv)})`;
   T3.shade.style.opacity = fx(1 - hv);
   T3.hbg.style.opacity = fx(.3 * hv);
   T3.actions.style.width = fx(10 + 34 * hv) + 'px';
-  T3.actions.style.opacity = fx(.4 + .6 * hv);
   const installing = t >= 70.9 && t < 71.4, installed = t >= 71.4;
   T3.dl.hidden = installing || installed; T3.spin.hidden = !installing; T3.del.hidden = !installed;
+  for (const b of [T3.dl, T3.spin, T3.del]) b.style.opacity = fx(.8 * hv);
   T3.spin.style.display = installing ? 'inline-block' : ''; T3.spin.style.transform = `rotate(${fx((t - 70.9) * 540)}deg)`;
-  T3.state.style.opacity = fx(prog(t, 71.4, 71.55)); T3.state.style.transform = `scale(${fx(Math.max(0, E.back(prog(t, 71.4, 71.75))))})`;
+  // The bar turns yellow while installing and green once installed.
+  T3.actions.style.background = installing ? '#ffcc22' : installed ? '#ccff99' : 'transparent';
+  T3.actions.style.fill = installing ? '#000' : installed ? '#3a3a3a' : '#ccc';
   const np = E.out3(prog(t, 71.55, 72.05));
   T3.notice.style.opacity = fx(np); T3.notice.style.transform = `translateY(${fx(62 * (1 - np))}px)`;
   T3.restart.style.transform = `scale(${fx(1 - .06 * bump(prog(t, 72.9, 73.06)))})`;
   // The cursor lives in the window, so it zooms with it; counter-scaling keeps its size.
-  const path = [[1500, 950, 68], [...T3.startPos, 68.35], [...T3.startPos, 69.2], [T3.cardPos[0] + 40, T3.cardPos[1] - 10, 69.95], [...T3.installPos, 70.72], [...T3.installPos, 72.25], [...T3.restartPos, 72.8]];
+  const path = [[1500, 950, 68], [...T3.startPos, 68.35], [...T3.startPos, 68.62], [...T3.searchPos, 68.92], [...T3.searchPos, 69.3], [T3.cardPos[0] + 40, T3.cardPos[1] - 10, 69.95], [...T3.installPos, 70.72], [...T3.installPos, 72.25], [...T3.restartPos, 72.8]];
   let [x, y] = path[0];
   for (let i = 1; i < path.length; i++) { const p = E.io3(prog(t, path[i - 1][2], path[i][2])); x = lerp(x, path[i][0], p); y = lerp(y, path[i][1], p); }
-  const click = Math.max(bump(prog(t, 68.5, 68.66)), bump(prog(t, 70.82, 70.98)), bump(prog(t, 72.9, 73.06)));
+  const click = Math.max(bump(prog(t, 68.5, 68.66)), bump(prog(t, 68.95, 69.11)), bump(prog(t, 70.82, 70.98)), bump(prog(t, 72.9, 73.06)));
   T3.cursor.style.opacity = fx(prog(t, 68, 68.2) * (1 - prog(t, 73.05, 73.3)));
   T3.cursor.style.transform = `translate(${fx(x - 4 / s)}px,${fx(y - 3 / s)}px) scale(${fx((1 - .12 * click) / s)})`;
-  const hit = [[68.55, T3.startPos], [70.87, T3.installPos], [72.95, T3.restartPos]].find(([c]) => t >= c && t < c + .5);
+  const hit = [[68.55, T3.startPos], [69.0, T3.searchPos], [70.87, T3.installPos], [72.95, T3.restartPos]].filter(([c]) => t >= c && t < c + .5).pop();
   const rp = hit ? (t - hit[0]) / .5 : 1;
   T3.ripple.style.opacity = fx(hit ? .8 * (1 - rp) : 0);
   if (hit) { T3.ripple.style.left = fx(hit[1][0]) + 'px'; T3.ripple.style.top = fx(hit[1][1]) + 'px'; }
@@ -1216,7 +1373,7 @@ function sceneT3(t) {
   c.host.style.opacity = fx(clamp((t - 73.6) / .3) * (1 - co));
   c.host.style.transform = `translate(${fx(CX - 270 * c.scale / 2 + 40 * (1 - ci))}px,${fx(CY - 52 * c.scale)}px) scale(${c.scale})`;
   const pct = t < 73.85 ? null : lerp(0, 100, E.io2(prog(t, 73.85, 74.7)));
-  c.set({ phase: t >= 74.8 ? 'success' : 'converting', song: '夜间来信', format: 'FLAC', percent: pct, t: t - 73.6, cover: COVER.night.art, tint: TINT.night, open: true });
+  c.set({ phase: t >= 74.8 ? 'success' : 'converting', song: '夜间来信', format: 'FLAC', percent: pct, t: t - 73.6, cover: COVER.night.art, tint: TINT.night, open: true, lyrics: UPDATE });
   show(T3.done, t, 74.1, 75.7, { y: 16 });
 }
 
@@ -1243,11 +1400,182 @@ function sceneH(t) {
   show(H.by, t, 81.4, 84.6, { y: 10, dout: 1.2 });
 }
 
-const SCENES = [
+/* ---------- the 0.6 update cut ---------- */
+const U1 = {}, U2 = {}, U3 = {}, U4 = {}, U5 = {}, U6 = {}, U8 = {};
+// A moving blur of the cover's colours behind the lyrics: soft blobs drifting on slow sines.
+function makeFluid(host, [a, b, s, g], size = 1) {
+  return [[b, 1100, -380, -260], [a, 1000, 360, 420], [g, 1200, -300, 1000], [s, 760, 420, -120], [b, 900, 200, 1300]].map(([c, d, x, y], k) => {
+    const i = document.createElement('i');
+    i.style.cssText = `left:0;top:0;width:${d * size}px;height:${d * size}px;background:radial-gradient(closest-side,${c},${c}00)`;
+    host.appendChild(i); return { i, x: x * size, y: y * size, k };
+  });
+}
+function fluidAt(blobs, t, amp = 1) {
+  for (const b of blobs) b.i.style.transform = `translate(${fx(b.x + Math.sin(t * .33 + b.k * 1.7) * 160 * amp)}px,${fx(b.y + Math.cos(t * .27 + b.k * 2.3) * 130 * amp)}px)`;
+}
+// Lines as a lyric view shows them: dim, the current one lighting up word by word; each can carry a translation.
+function makeLyrics(host, lines) {
+  return lines.map(([text, tr]) => {
+    const el = document.createElement('div'); el.className = 'ln';
+    el.innerHTML = `<span>${text}</span><span class="lit">${text}</span>${tr ? `<small>${tr}</small>` : ''}`;
+    host.appendChild(el); return { el, lit: el.querySelector('.lit') };
+  });
+}
+// times[i]: when line i becomes current. The view scrolls with it, lower lines following a beat later.
+function lyricsAt(view, t, times, top, gap) {
+  view.forEach((line, i) => {
+    let pos = -1;
+    for (let j = 0; j < view.length; j++) { const d = Math.max(0, i - j) * .06; pos += E.out4(prog(t, times[j] + d, times[j] + d + .75)); }
+    const end = times[i + 1] ?? times[i] + 1.2;
+    const on = E.out3(prog(t, times[i], times[i] + .35)) * (1 - E.out3(prog(t, end, end + .35)));
+    const dist = Math.abs(i - pos);
+    line.lit.style.setProperty('--p', fx(-6 + 112 * prog(t, times[i], end - .12)) + '%');
+    line.lit.style.opacity = fx(on);
+    line.el.style.transform = `translateY(${fx(top + (i - pos) * gap)}px) scale(${fx(.965 + .035 * on)})`;
+    line.el.style.opacity = fx(lerp(clamp(1 - dist * .22, .2, .75), 1, on));
+    line.el.style.filter = blur((1 - on) * Math.min(3.2, .8 + dist * 1.2));
+  });
+}
+
+function buildUpdate() {
+  const night = COVER.night.pal;
+  Object.assign(U1, { fluid: $('U1-fluid'), dots: $('U1-dots'), lyrics: $('U1-lyrics'), h1: $('U1-h1'), h2: $('U1-h2') });
+  U1.blobs = makeFluid(U1.fluid, night); U1.dotEls = [...U1.dots.children];
+  // Original lines, written for this video.
+  U1.view = makeLyrics(U1.lyrics, [['耳机里还是那首歌'], ['窗外的灯一盏盏亮起'], ['副歌落下的时候'], ['每个字都刚刚好']]);
+  U1.times = [.5, 1.2, 1.9, 2.6];
+  Object.assign(U2, { halo: $('U2-halo'), word: $('U2-word'), tag: $('U2-tag') }, { ic: makeIcon($('U2-iconbox')) });
+  Object.assign(U3, { h: $('U3-h'), s: $('U3-s'), tile: $('U3-tile'), glow: $('U3-glow'), name: $('U3-name'), chip: $('U3-chip'), foot: $('U3-foot') });
+  U3.tile.style.background = COVER.night.art;
+  U3.lines = ['[00:12.40]  耳机里还是那首歌', '[00:16.85]  窗外的灯一盏盏亮起', '[00:21.10]  副歌落下的时候', '[00:24.62]  每个字都刚刚好'].map(text => {
+    const el = document.createElement('div'); el.className = 'lrc-line';
+    const [stamp, words] = text.split('  '); el.innerHTML = `<b>${stamp}</b>${words}`;
+    $('U3-lines').appendChild(el); return el;
+  });
+  Object.assign(U4, { h: $('U4-h'), phone: $('U4-phone'), bar: $('U4-bar'), foot: $('U4-foot') });
+  U4.blobs = makeFluid($('U4-fluid'), night, .5); $('U4-art').style.background = COVER.night.art;
+  U4.view = makeLyrics($('U4-lyrics'), [['耳机里还是那首歌'], ['窗外的灯一盏盏亮起'], ['副歌落下的时候'], ['每个字都刚刚好'], ['像写给现在的我']]);
+  U4.times = [17.1, 18.0, 18.9, 19.8, 20.7];
+  Object.assign(U5, { h: $('U5-h'), s: $('U5-s'), card: $('U5-card'), flac: $('U5-flac'), lrc: $('U5-lrc'), foot: $('U5-foot') });
+  U5.blobs = makeFluid($('U5-fluid'), COVER.dawn.pal, .7); $('U5-art').style.background = COVER.night.art;
+  U5.view = makeLyrics($('U5-lyrics'), [['Under the city lights', '在城市的灯光下'], ['I hear our song again', '我又听见我们的歌'], ['Every word in place', '每个字都在原处']]);
+  U5.times = [22.7, 23.9, 25.1];
+  Object.assign(U6, { h: $('U6-h'), s: $('U6-s'), win: $('U6-win'), sw: $('U6-sw'), note: $('U6-note'), o1: $('U6-o1'), o2: $('U6-o2'), cursor: $('U6-cursor'), ripple: $('U6-ripple'), foot: $('U6-foot'), swPos: [0, 0] });
+  U6.knob = U6.sw.querySelector('span');
+  Object.assign(U8, { h: $('U8-h'), haze: $('U8-haze'), icon: $('U8-icon'), shine: $('U8-shine'), line: $('U8-line'), soon: $('U8-soon') });
+}
+
+// Lyrics scrolling over the cover's colours, then the headline.
+function sceneU1(t) {
+  const out = E.in2(prog(t, 3.2, 3.7));
+  U1.fluid.style.opacity = fx(E.out3(prog(t, 0, .6)) * (1 - .75 * out));
+  fluidAt(U1.blobs, t);
+  // The three breathing dots a lyric view shows before the first line.
+  U1.dots.style.opacity = fx(E.out3(prog(t, .05, .25)) * (1 - E.in2(prog(t, .38, .52))));
+  U1.dotEls.forEach((d, i) => { const b = .5 + .5 * Math.sin((t - i * .1) * 11); d.style.transform = `scale(${fx(.72 + .32 * b)})`; d.style.opacity = fx(.4 + .6 * b); });
+  lyricsAt(U1.view, t, U1.times, 760, 150);
+  U1.lyrics.style.opacity = fx(1 - out); U1.lyrics.style.filter = blur(out * 16); U1.lyrics.style.transform = `translateY(${fx(-50 * out)}px)`;
+  rise(U1.h1, t, 3.5, 6, { per: .08 });
+  rise(U1.h2, t, 3.8, 6, { per: .06 });
+}
+// The icon unlocks, as in the film, and the version with its one new thing.
+function sceneU2(t) {
+  const ii = E.out5(prog(t, 6.1, 7.2)), outW = E.in2(prog(t, 9.6, 10));
+  U2.halo.style.opacity = fx((.5 * E.out3(prog(t, 6, 7.4)) + .4 * (t >= 7.4 ? Math.exp(-(t - 7.4) * 2.4) : 0)) * (1 - outW));
+  U2.halo.style.transform = `translate(-50%,-50%) scale(${fx(lerp(.6, .95, E.out3(prog(t, 6, 8))))})`;
+  iconAt(U2.ic, {
+    opacity: ii * (1 - outW), blur: (1 - ii) * 22 + outW * 10, scale: lerp(.82, 1, ii) * (1 + .04 * outW), y: lerp(40, 0, ii), reflect: .16 * ii * (1 - outW),
+    arrowY: -7 * (1 - E.back(prog(t, 6.45, 7.05))), arrowO: E.out2(prog(t, 6.45, 6.7)), tray: E.out3(prog(t, 6.8, 7.2)),
+    open: Math.min(1.12, E.spring(prog(t, 7.35, 7.9))), lockY: -.55 * bump(prog(t, 7.35, 7.6)), lockO: E.out2(prog(t, 6.3, 6.7)), shine: E.io2(prog(t, 7.7, 8.5)),
+  });
+  const wi = E.out4(prog(t, 7.1, 8.0));
+  U2.word.style.opacity = fx(wi * (1 - outW));
+  U2.word.style.letterSpacing = fx(lerp(.12, -.018, E.out4(prog(t, 7.1, 8.3)))) + 'em';
+  U2.word.style.filter = blur((1 - wi) * 12 + outW * 8);
+  U2.word.style.transform = `translateY(${fx(lerp(24, 0, wi))}px)`;
+  show(U2.tag, t, 8.0, 10, { y: 18 });
+}
+// Timestamped lines drop into the song.
+function sceneU3(t) {
+  rise(U3.h, t, 10.1, 16, { per: .045 });
+  show(U3.s, t, 10.4, 16);
+  show(U3.tile, t, 10.25, 16, { y: 40, scale: .94 });
+  U3.lines.forEach((el, i) => {
+    const a = 10.55 + i * .5, p = E.io3(prog(t, a, a + .38));
+    el.style.opacity = fx(E.out2(prog(t, a - .2, a)) * (1 - prog(t, a + .3, a + .4)));
+    el.style.transform = `translate(${fx(540)}px,${fx(lerp(548, 850, p))}px) translate(-50%,-50%) scale(${fx(lerp(1, .3, p))})`;
+    el.style.filter = blur(p * 5);
+  });
+  const pulse = Math.max(...[0, 1, 2, 3].map(i => bump(prog(t, 10.93 + i * .5, 11.3 + i * .5))));
+  U3.tile.style.transform += ` scale(${fx(1 + .025 * pulse)})`;
+  U3.glow.style.opacity = fx(.85 * pulse + .35 * E.out3(prog(t, 13.1, 13.6)) * (1 - prog(t, 15.6, 16)));
+  show(U3.name, t, 10.5, 16, { y: 14 });
+  show(U3.chip, t, 13.1, 16, { y: 14, scale: .92, ease: E.back });
+  show(U3.foot, t, 10.8, 16, { y: 8 });
+}
+// Any player that reads embedded lyrics scrolls them.
+function sceneU4(t) {
+  rise(U4.h, t, 16.1, 22, { per: .045 });
+  show(U4.phone, t, 16.3, 22, { y: 90, scale: .96, din: 1.0 });
+  fluidAt(U4.blobs, t, .45);
+  lyricsAt(U4.view, t, U4.times, 300, 96);
+  U4.bar.style.width = fx(lerp(31, 52, prog(t, 16.3, 22))) + '%';
+  show(U4.foot, t, 16.9, 22, { y: 8 });
+}
+// Translation under each line, and an .lrc beside the song.
+function sceneU5(t) {
+  rise(U5.h, t, 22.1, 26, { per: .045 });
+  show(U5.s, t, 22.4, 26);
+  show(U5.card, t, 22.3, 26, { y: 40, scale: .97 });
+  fluidAt(U5.blobs, t, .6);
+  lyricsAt(U5.view, t, U5.times, 150, 210);
+  show(U5.flac, t, 23.7, 26, { y: 16 });
+  show(U5.lrc, t, 24.2, 26, { y: 16, scale: .85, ease: E.back });
+  show(U5.foot, t, 22.8, 26, { y: 8 });
+}
+// Off until turned on: the switch on the settings page.
+function sceneU6(t) {
+  rise(U6.h, t, 26.1, 30, { per: .06 });
+  show(U6.s, t, 26.4, 30);
+  show(U6.win, t, 26.3, 30, { y: 40, scale: .97 });
+  const on = E.out3(prog(t, 27.28, 27.6));
+  U6.sw.style.setProperty('--on', fx(on));
+  U6.knob.style.transform = `translateX(${fx(20 * E.back(prog(t, 27.28, 27.62)))}px)`;
+  U6.o1.style.opacity = U6.o2.style.opacity = fx(lerp(.45, 1, on));
+  setText(U6.note, t >= 27.3 ? '已开启 · 从网易云获取歌词写入文件，需要联网' : '从网易云获取歌词写入文件，需要联网');
+  const [sx, sy] = U6.swPos, m = E.io3(prog(t, 26.6, 27.15)), click = bump(prog(t, 27.2, 27.36));
+  U6.cursor.style.opacity = fx(prog(t, 26.5, 26.7) * (1 - prog(t, 29.3, 29.6)));
+  U6.cursor.style.transform = `translate(${fx(lerp(880, sx, m) - 4)}px,${fx(lerp(1320, sy + 8, m) - 3)}px) scale(${fx(1 - .12 * click)})`;
+  const rp = prog(t, 27.25, 27.75);
+  U6.ripple.style.left = fx(sx) + 'px'; U6.ripple.style.top = fx(sy) + 'px';
+  U6.ripple.style.opacity = fx(rp > 0 && rp < 1 ? .8 * (1 - rp) : 0); U6.ripple.style.transform = `scale(${fx(.3 + rp * .9)})`;
+  show(U6.foot, t, 26.8, 30, { y: 8 });
+}
+// One more thing: a green line, a glimpse, and nothing more.
+function sceneU8(t) {
+  rise(U8.h, t, 52.15, 53.75, { per: .08, dout: .55 });
+  const fade = E.in2(prog(t, 59.0, 59.9));
+  U8.line.style.opacity = fx(prog(t, 53.85, 54.0) * (1 - fade));
+  U8.line.style.clipPath = `inset(0 ${fx((1 - E.io3(prog(t, 53.9, 55.1))) * 100)}% 0 0)`;
+  U8.haze.style.opacity = fx(E.out3(prog(t, 54.6, 56.4)) * (.85 + .15 * Math.sin(t * 2.2)) * (1 - fade));
+  const gi = E.out3(prog(t, 55.0, 57.2));
+  U8.icon.style.opacity = fx(gi * .92 * (1 - fade));
+  U8.icon.style.filter = blur(lerp(30, 15, gi));
+  U8.icon.style.transform = `translate(${fx(lerp(70, 0, gi))}px,${fx(lerp(90, 0, gi))}px) rotate(${fx(lerp(-9, -5, gi))}deg)`;
+  U8.shine.style.transform = `translateX(${fx(lerp(-75, 75, E.io2(prog(t, 56.3, 57.7))))}%)`;
+  show(U8.soon, t, 57.45, 59.9, { y: 18, din: 1.0, dout: .75, blur: 14 });
+}
+
+const SCENES = (UPDATE ? [
+  ['U1', 0, 6, sceneU1], ['U2', 6, 10, sceneU2], ['U3', 10, 16, sceneU3], ['U4', 16, 22, sceneU4], ['U5', 22, 26, sceneU5], ['U6', 26, 30, sceneU6],
+  // The film's install steps, shifted 30 seconds earlier; its end card, a little faster.
+  ['T1', 30, 34, t => sceneT1(t + 30)], ['T2', 34, 38, t => sceneT2(t + 30)], ['T3', 38, 46, t => sceneT3(t + 30)],
+  ['H', 46, 52, t => sceneH(76 + (t - 46) * 1.45)], ['U8', 52, DURATION, sceneU8],
+] : [
   ['A', 0, 8, sceneA], ['B', 8, 16, sceneB], ['D', 16, 22, sceneD], ['W', 22, 28, sceneW],
   ['E1', 28, 32, sceneE1], ['E2', 32, 36, sceneE2], ['E3', 36, 40, sceneE3], ['E4', 40, 44, sceneE4], ['E5', 44, 48, sceneE5],
   ['F1', 48, 52, sceneF1], ['F2', 52, 56, sceneF2], ['G', 56, 60, sceneG], ['T1', 60, 64, sceneT1], ['T2', 64, 68, sceneT2], ['T3', 68, 76, sceneT3], ['H', 76, DURATION, sceneH],
-].map(([id, from, to, fn]) => ({ id, from, to, fn, el: $(id) }));
+]).map(([id, from, to, fn]) => ({ id, from, to, fn, el: $(id) }));
 
 function renderAt(t) {
   for (const s of SCENES) {
@@ -1279,7 +1607,8 @@ function fit() {
 }
 
 function preview() {
-  const audio = new Audio('../build/promo/music.wav'), play = $('play'), scrub = $('scrub'), clock = $('clock');
+  const audio = new Audio(UPDATE ? '../build/promo/music-update.wav' : '../build/promo/music.wav'), play = $('play'), scrub = $('scrub'), clock = $('clock');
+  scrub.max = DURATION;
   let t = Number(scrub.value = new URLSearchParams(location.search).get('t') || 0), playing = false, last = 0;
   const draw = () => { renderAt(t); scrub.value = t; clock.textContent = t.toFixed(2) + ' s'; };
   const loop = now => {
@@ -1294,9 +1623,25 @@ function preview() {
   };
   play.onclick = toggle;
   scrub.oninput = () => { t = Number(scrub.value); audio.currentTime = t; draw(); };
+  // Volume: the slider, M to mute, ↑ ↓ in steps of 10%. The last setting is kept for the next preview.
+  const volume = $('volume'), mute = $('mute');
+  const speaker = waves => `<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6v4H5l3.5 3V3L5 6z" fill="currentColor"/>${waves ? '<path d="M11 5.5a3.5 3.5 0 0 1 0 5M12.8 3.5a6.5 6.5 0 0 1 0 9"/>' : '<path d="m11 6 4 4m0-4-4 4"/>'}</svg>`;
+  const showVolume = () => { mute.innerHTML = speaker(!audio.muted && audio.volume > 0); volume.value = audio.muted ? 0 : audio.volume; };
+  const keepVolume = () => { try { localStorage.setItem('promo-volume', JSON.stringify({ volume: audio.volume, muted: audio.muted })); } catch {} };
+  const setVolume = v => { audio.volume = clamp(Math.round(v * 100) / 100, 0, 1); audio.muted = audio.volume === 0; keepVolume(); showVolume(); };
+  const toggleMute = () => { audio.muted = !audio.muted; if (!audio.muted && audio.volume === 0) audio.volume = .5; keepVolume(); showVolume(); };
+  try { const v = JSON.parse(localStorage.getItem('promo-volume')); if (v) { audio.volume = clamp(Number(v.volume) || 0, 0, 1); audio.muted = !!v.muted; } } catch {}
+  showVolume();
+  volume.oninput = () => setVolume(Number(volume.value));
+  mute.onclick = toggleMute;
+  // Controls hand the keyboard back after use, so the shortcuts below don't act twice.
+  for (const el of [play, mute]) el.addEventListener('click', () => el.blur());
+  for (const el of [scrub, volume]) el.addEventListener('change', () => el.blur());
   addEventListener('keydown', e => {
     if (e.code === 'Space') { e.preventDefault(); toggle(); }
     if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') { t = clamp(t + (e.code === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 / FPS : 1), 0, DURATION); audio.currentTime = t; draw(); }
+    if (e.code === 'ArrowUp' || e.code === 'ArrowDown') { e.preventDefault(); setVolume((audio.muted ? 0 : audio.volume) + (e.code === 'ArrowUp' ? .1 : -.1)); }
+    if (e.code === 'KeyM') toggleMute();
   });
   addEventListener('resize', fit);
   draw();

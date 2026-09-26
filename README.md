@@ -138,12 +138,13 @@ $env:NBD_BROWSER_CHANNEL = 'msedge'
 node scripts/ui-check.cjs
 ```
 
-宣传视频和封面的源文件在 `promo/`，同样用 Playwright 渲染，结果写入 `build/promo/`。另外需要 ffmpeg（可以 `pip install imageio-ffmpeg`）；配乐由 `promo/music.py` 合成，需要 Python 和 numpy、scipy、soundfile。商店预览图和 README 封面的源文件是 `promo/preview.html`，`--preview` 渲染后直接写入 `plugin/preview.jpg` 和 `docs/images/cover.jpg`。
+宣传视频和封面的源文件在 `promo/`，同样用 Playwright 渲染，结果写入 `build/promo/`。另外需要 ffmpeg（可以 `pip install imageio-ffmpeg`）；配乐由 `promo/music.py`（宣传片）和 `promo/music_update.py`（0.6 更新视频）合成，共用 `promo/sound.py` 里的乐器与混音，需要 Python 和 numpy、scipy、soundfile。商店预览图和 README 封面的源文件是 `promo/preview.html`，`--preview` 渲染后直接写入 `plugin/preview.jpg` 和 `docs/images/cover.jpg`。
 
 ```powershell
 node promo/render.cjs             # 横屏视频
 node promo/render.cjs --vertical  # 竖屏视频
-node promo/render.cjs --cover     # B站和抖音封面
+node promo/render.cjs --update    # 0.6 更新视频（竖屏）
+node promo/render.cjs --cover     # B站和抖音封面（--cover update 只渲染 0.6 的）
 node promo/render.cjs --preview   # 商店预览图和 README 封面
 ```
 
