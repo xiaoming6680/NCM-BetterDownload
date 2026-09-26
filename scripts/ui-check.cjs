@@ -53,10 +53,10 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
             window.publish = (activity, extra = {}) => { mock.files[file('status.json')] = JSON.stringify(Object.assign({ session: control().session, heartbeat: Date.now(), state: 'converting', message: '正在转换', results: {}, activity }, extra)); };
             setInterval(() => { const f = file('status.json'); if (mock.alive && mock.files[f]) { const s = JSON.parse(mock.files[f]); s.heartbeat = Date.now(); mock.files[f] = JSON.stringify(s); } }, 1000);
         }, version);
-        for (const file of ['download-hook.js', 'progress-card.js', 'main.js']) await page.addScriptTag({ path: path.resolve('plugin', file) });
+        for (const file of ['download-hook.js', 'progress-card.js', 'lyrics.js', 'main.js']) await page.addScriptTag({ path: path.resolve('plugin', file) });
         // Opening the settings page plays the entrance: every block rises in, the logo pops.
         const entrance = await page.evaluate(() => { document.body.appendChild(configCallback()); loadCallback(); return Array.from(document.querySelectorAll('.nbd-settings .nbd-in, .nbd-settings .nbd-logo')).map(node => node.getAnimations().length); });
-        assert.equal(entrance.length, 9);
+        assert.equal(entrance.length, 11);
         assert.ok(entrance.every(count => count > 0), JSON.stringify(entrance));
         await page.waitForFunction(() => !!mock.listener);
         const settings = page.locator('.nbd-settings'), card = page.locator('#nbd-progress-card');
@@ -64,10 +64,10 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
         const shadowText = (selector, value) => page.waitForFunction(([selector, value]) => document.querySelector('#nbd-progress-card').shadowRoot.querySelector(selector).textContent === value, [selector, value]);
         const hidden = () => page.waitForFunction(() => document.querySelector('#nbd-progress-card').style.display === 'none', null, { timeout: 9000 });
         assert.equal(await settings.locator('input').count(), 0);
-        assert.equal(await settings.getByRole('switch').count(), 1);
+        assert.equal(await settings.getByRole('switch').count(), 4);
         assert.deepEqual(await settings.getByRole('radio').allTextContents(), ['每首歌', '仅出错', '不显示', '标准', '简洁', '2 秒', '4 秒', '6 秒']);
         assert.deepEqual(await settings.getByRole('radio', { checked: true }).allTextContents(), ['每首歌', '标准', '4 秒']);
-        assert.equal(await settings.locator('button').count(), 11);
+        assert.equal(await settings.locator('button').count(), 14);
         assert.equal(await settings.locator('.nbd-version').textContent(), 'v' + version);
         const toggle = page.getByRole('switch', { name: '启用 BetterDownload' });
         assert.equal(await toggle.getAttribute('aria-checked'), 'true');
@@ -186,6 +186,42 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
         const found = await page.evaluate(() => control().jobs);
         await page.evaluate(found => publish(null, { state: 'ready', results: Object.fromEntries(found.map(job => [job.id, { state: 'success', output: job.target.replace(/\.ncm$/, '.flac') }])) }), found);
         await page.waitForFunction(() => control().jobs.length === 0);
+        // Lyrics are off by default; their options wait until they are on, and the page says they need the network.
+        const lyricsSwitch = settings.getByRole('switch', { name: '写入歌词' });
+        assert.equal(await lyricsSwitch.getAttribute('aria-checked'), 'false');
+        assert.deepEqual(await settings.locator('[data-lyrics-option] button').evaluateAll(buttons => buttons.map(b => b.disabled)), [true, true]);
+        assert.match(await settings.locator('[data-lyrics-note]').textContent(), /需要联网/);
+        await lyricsSwitch.click();
+        await settings.getByRole('switch', { name: '附带翻译' }).click();
+        assert.deepEqual(await page.evaluate(() => [mock.config.lyrics, mock.config.lyricsTranslation, mock.config.lyricsFile]), [true, true, undefined]);
+        assert.match(await settings.locator('[data-lyrics-note]').textContent(), /^已开启/);
+        // The worker asks by song ID; the plugin answers from NetEase's lyric API, credits and translation folded into LRC.
+        await page.evaluate(() => { window.fetch = async url => { mock.fetched = String(url); if (mock.offline) throw new TypeError('Failed to fetch'); return { ok: true, status: 200, json: async () => ({ code: 200, lrc: { lyric: '{"t":0,"c":[{"tx":"作词: "},{"tx":"测试作者"}]}\n[00:01.00]First line\n' }, tlyric: { lyric: '[00:01.00]第一句\n' } }) }; }; });
+        await page.evaluate(() => mock.listener('lyric', 1, 'VipSongsDownload/歌手/有词.ncm'));
+        await page.waitForFunction(() => control().jobs.length === 1);
+        const worded = await page.evaluate(() => control().jobs[0]);
+        assert.deepEqual(await page.evaluate(() => control().lyrics), { enabled: true, file: false });
+        await page.evaluate(job => publish({ id: job.id, state: 'converting', path: job.source, percent: 0, message: '正在获取歌词' }, { lyrics: { id: job.id, musicId: '42' } }), worded);
+        await page.waitForFunction(() => typeof control().jobs[0].lyrics === 'string');
+        assert.equal(await page.evaluate(() => control().jobs[0].lyrics), '[00:00.00]作词: 测试作者\n[00:01.00]First line\n[00:01.00]第一句\n');
+        assert.match(await page.evaluate(() => mock.fetched), /^https:\/\/music\.163\.com\/api\/song\/lyric\/v1\?.*&id=42$/);
+        await shadowText('.detail-text', '正在获取歌词');
+        const wordedOutput = worded.target.replace(/\.ncm$/, '.flac');
+        await page.evaluate(({ worded, wordedOutput }) => publish({ id: worded.id, state: 'success', path: wordedOutput, output: wordedOutput, percent: 100, format: 'FLAC', lyrics: true }, { state: 'ready', results: { [worded.id]: { state: 'success', output: wordedOutput } } }), { worded, wordedOutput });
+        await shadowText('.detail-text', '原音质已保留 · 歌词已写入');
+        await page.waitForFunction(() => control().jobs.length === 0);
+        // Without the network the song still converts; the plugin passes on a note instead of lyrics.
+        await page.evaluate(() => { mock.offline = true; mock.listener('offline', 1, 'VipSongsDownload/歌手/断网.ncm'); });
+        await page.waitForFunction(() => control().jobs.length === 1);
+        const offline = await page.evaluate(() => control().jobs[0]);
+        await page.evaluate(job => publish({ id: job.id, state: 'converting', path: job.source, percent: 0, message: '正在获取歌词' }, { lyrics: { id: job.id, musicId: '43' } }), offline);
+        await page.waitForFunction(() => control().jobs[0].lyricsNote === '歌词获取失败');
+        assert.equal(await page.evaluate(() => control().jobs[0].lyrics), '');
+        await page.evaluate(job => publish(null, { state: 'ready', results: { [job.id]: { state: 'success', output: job.target.replace(/\.ncm$/, '.flac'), warning: '歌词获取失败' } } }), offline);
+        await page.waitForFunction(() => control().jobs.length === 0);
+        await settings.getByRole('switch', { name: '附带翻译' }).click();
+        await lyricsSwitch.click();
+        assert.deepEqual(await page.evaluate(() => [mock.config.lyrics, mock.config.lyricsTranslation]), [false, false]);
         // A worker that never answers (for example blocked by security software) is reported, not retried silently.
         await page.evaluate(() => { mock.alive = false; publish(null, { state: 'stopped', heartbeat: Date.now() - 60000 }); });
         const launches = await page.evaluate(() => mock.calls.length);
@@ -276,6 +312,6 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
         assert.equal(await card.count(), 0);
         assert.equal(await page.evaluate(() => mock.listener), null);
         assert.deepEqual(errors, []);
-        console.log('UI passed: on-demand worker, album art and tint, rounds, search, blocked-worker notice, pop-up modes, compact style and preview, stay time, settings motion, runtime cleanup, switch, 270px card, idle disappearance, hover/focus, light/dark, narrow layout, cleanup.');
+        console.log('UI passed: on-demand worker, album art and tint, rounds, search, lyrics, blocked-worker notice, pop-up modes, compact style and preview, stay time, settings motion, runtime cleanup, switch, 270px card, idle disappearance, hover/focus, light/dark, narrow layout, cleanup.');
     } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

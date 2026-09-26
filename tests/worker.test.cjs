@@ -95,6 +95,82 @@ test('unreadable cover or tags never cost the audio', t => {
     assert.equal(s.status().failed, 0);
     assert.deepEqual(fs.readdirSync(s.output).sort(), ['broken.flac', 'gif.flac']);
 });
+// Made-up lyrics in the shape the plugin hands over: LRC with credits turned into ordinary lines.
+const LRC = '[00:00.00]作词: 测试作者\n[00:01.00]第一句歌词\n[00:02.50]Second line\n';
+const lyricsIn = (bytes, ext) => ext === 'flac' ? bytes.includes(Buffer.from('LYRICS=' + LRC, 'utf8'))
+    : bytes.includes(Buffer.from('USLT')) && (bytes.includes(Buffer.from(LRC, 'utf16le')) || bytes.includes(Buffer.from(LRC, 'utf8')));
+for (const ext of ['flac', 'mp3']) test(ext + ': lyrics are asked for by song ID, then embedded beside the other tags with an .lrc next to the song', t => {
+    const s = setup(t); s.config.lyrics = { enabled: true, file: true }; s.save();
+    const job = s.job('歌手/歌曲.ncm', fixture(audio(ext)));
+    // First pass: nothing is written yet; the request carries the ID from the NCM's metadata.
+    assert.equal(s.run().status, 0);
+    assert.deepEqual(s.status().lyrics, { id: 'job-1', musicId: '1234567' });
+    assert.deepEqual(s.status().results, {});
+    assert.ok(!fs.existsSync(s.output));
+    s.config.jobs[0].lyrics = LRC; s.save();
+    assert.equal(s.run().status, 0, JSON.stringify(s.status()));
+    const output = job.target.replace(/\.ncm$/, '.' + ext), converted = fs.readFileSync(output);
+    assert.deepEqual(frames(converted, ext), frames(audio(ext), ext));
+    assert.ok(lyricsIn(converted, ext), 'lyrics embedded where players read them');
+    assert.ok(converted.includes(cover));
+    // UTF-8 with a BOM and CRLF, which older players read correctly.
+    assert.deepEqual(fs.readFileSync(output.replace(/\.\w+$/, '.lrc')), Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), Buffer.from(LRC.replace(/\n/g, '\r\n'))]));
+    assert.equal(s.status().lyrics, null);
+    assert.equal(s.status().activity.lyrics, true);
+    assert.equal(s.status().results['job-1'].message, '音频、歌曲信息与歌词已保存');
+});
+test('lyrics that do not arrive in time, or a song without an ID, never hold up the audio', t => {
+    const s = setup(t); s.config.lyrics = { enabled: true, file: true, wait: 0 }; s.save();
+    const late = s.job('late.ncm', fixture(audio('flac'))), anonymous = s.job('anonymous.ncm', fixture(audio('mp3'), { metadata: false }));
+    assert.equal(s.run().status, 0, JSON.stringify(s.status()));
+    assert.ok(!fs.readFileSync(late.target.replace(/\.ncm$/, '.flac')).includes(Buffer.from('LYRICS=')));
+    assert.ok(fs.existsSync(anonymous.target.replace(/\.ncm$/, '.mp3')));
+    assert.deepEqual(fs.readdirSync(s.output).sort(), ['anonymous.mp3', 'late.flac']);
+    assert.equal(s.status().results['job-1'].message, '音频与歌曲信息已保存');
+    assert.equal(s.status().activity.lyrics, false);
+});
+test('a failed lyric request is noted, an existing .lrc is kept, and lyrics stay out when turned off', t => {
+    const s = setup(t); s.config.lyrics = { enabled: true, file: true }; s.save();
+    s.job('failed.ncm', fixture(audio('flac'))); Object.assign(s.config.jobs[0], { lyrics: '', lyricsNote: '歌词获取失败' });
+    const kept = s.job('kept.ncm', fixture(audio('mp3'))); s.config.jobs[1].lyrics = LRC; s.save();
+    fs.mkdirSync(s.output); const own = kept.target.replace(/\.ncm$/, '.lrc'); fs.writeFileSync(own, '我自己的歌词');
+    assert.equal(s.run().status, 0, JSON.stringify(s.status()));
+    assert.equal(s.status().results['job-1'].warning, '歌词获取失败');
+    assert.equal(s.status().results['job-1'].message, '音频已保存；歌词获取失败');
+    assert.ok(lyricsIn(fs.readFileSync(kept.target.replace(/\.ncm$/, '.mp3')), 'mp3'));
+    assert.equal(fs.readFileSync(own, 'utf8'), '我自己的歌词');
+    assert.deepEqual(fs.readdirSync(s.output).sort(), ['failed.flac', 'kept.lrc', 'kept.mp3']);
+    const off = setup(t); off.config.lyrics = { enabled: false, file: true }; off.save();
+    const plain = off.job('plain.ncm', fixture(audio('flac'))); off.config.jobs[0].lyrics = LRC; off.save();
+    assert.equal(off.run().status, 0);
+    assert.ok(!fs.readFileSync(plain.target.replace(/\.ncm$/, '.flac')).includes(Buffer.from('LYRICS=')));
+    assert.deepEqual(fs.readdirSync(off.output), ['plain.flac']);
+    assert.equal(off.status().lyrics, null);
+});
+test('a running worker waits for the plugin to hand over lyrics, and converts without them once the wait is over', { timeout: 15000 }, async t => {
+    const s = setup(t); s.config.lyrics = { enabled: true, file: false, wait: 1500 }; s.save();
+    const child = spawn(s.copy(), [], { windowsHide: true, stdio: 'ignore' });
+    const exited = new Promise(resolve => child.once('exit', resolve));
+    const beat = setInterval(() => { s.config.heartbeat = Date.now(); s.save(); }, 1000);
+    t.after(async () => { clearInterval(beat); if (child.exitCode === null) { child.kill(); await exited; } });
+    const read = () => { try { return s.status(); } catch (_) { return null; } };
+    const until = async (check, ms) => { for (const deadline = Date.now() + ms; Date.now() < deadline; await sleep(30)) if (check()) return true; return false; };
+    const answered = s.job('answered.ncm', fixture(audio('flac'))), first = answered.target.replace(/\.ncm$/, '.flac');
+    assert.ok(await until(() => read() && read().lyrics && read().lyrics.id === 'job-1', 4000), 'the worker asks for lyrics');
+    assert.equal(read().activity.message, '正在获取歌词');
+    assert.ok(!fs.existsSync(first));
+    s.config.jobs[0].lyrics = LRC; s.save();
+    assert.ok(await until(() => fs.existsSync(first) && read() && read().results['job-1'], 3000));
+    assert.ok(lyricsIn(fs.readFileSync(first), 'flac'));
+    // Nobody answers for the second song.
+    const started = Date.now(), ignored = s.job('ignored.ncm', fixture(audio('flac'))), second = ignored.target.replace(/\.ncm$/, '.flac');
+    assert.ok(await until(() => fs.existsSync(second) && read() && read().results['job-2'], 6000));
+    assert.ok(Date.now() - started >= 1300, 'it waited for the lyrics first');
+    assert.ok(!fs.readFileSync(second).includes(Buffer.from('LYRICS=')));
+    assert.equal(read().lyrics, null);
+    s.config.enabled = false; s.save();
+    assert.equal(await Promise.race([exited, sleep(3000).then(() => 'timeout')]), 0);
+});
 test('user-requested search lists unconverted NCM downloads only', t => {
     const s = setup(t);
     for (const name of ['new.ncm', '歌手/second.ncm', 'done.ncm', 'unlock/x/inside.ncm']) {

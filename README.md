@@ -37,8 +37,9 @@ D:/CloudMusic/VipSongsDownload/歌手/歌曲.ncm
 
 - **原音质**：直接取出 NCM 里的原始音频，不重新编码。原来是 FLAC 就是 FLAC，是 MP3 就是 MP3，不会“升级”，也不会降质。
 - **信息完整**：封面、标题、歌手、专辑和曲目号写进音频文件，换哪个播放器都能正常显示。
+- **歌词（可选）**：在设置页打开后，把这首歌的歌词一起写进文件，支持的播放器可以跟着音乐滚动。
 - **原文件保留**：结果保存在下载目录的 `VipSongsDownload/unlock`，保留歌手子文件夹；NCM 源文件原样保留，也不会覆盖你已有的同名文件。
-- **完全本地**：转换在你的电脑上完成，不联网，不上传任何文件，也不依赖第三方网站。
+- **完全本地**：转换在你的电脑上完成，不上传任何文件，也不依赖第三方网站。默认不联网；打开“写入歌词”后，只会向网易云请求这首歌的歌词。
 - **只处理新下载**：订阅网易云的下载完成事件，平时不扫描你的音乐目录；有下载才启动转换程序，空闲一分钟后自动退出。
 
 ## 进度卡片
@@ -74,6 +75,7 @@ D:/CloudMusic/VipSongsDownload/歌手/歌曲.ncm
 
 - **启用开关**：随时暂停或恢复自动转换。
 - **转换已有下载**：找出下载目录里以前下载、还没转换的 NCM，一键加入转换，已转换过的自动跳过。
+- **歌词**：默认关闭。打开后从网易云获取歌词写入文件，需要联网；可以同时保存同名 `.lrc` 文件，或在外语歌的每句下方附上翻译。
 - **进度卡片**：弹出时机（每首歌 / 仅出错 / 不显示）、样式（标准 / 简洁）、停留时间（2 / 4 / 6 秒），可以随时预览。
 
 ## 安装
@@ -81,7 +83,7 @@ D:/CloudMusic/VipSongsDownload/歌手/歌曲.ncm
 BetterDownload 是一个 BetterNCM 插件。BetterNCM 是网易云音乐 PC 版的开源插件管理器，装上后网易云里会多出一个插件商店。已经装过 BetterNCM，从第 3 步开始。
 
 1. **安装 BetterNCM**：下载并运行 [BetterNCM 安装器](https://github.com/std-microblock/BetterNCM-Installer/releases)，点“安装”。
-2. **打开插件商店**：重启网易云，点右上角设置图标右边的 BetterNCM 图标。第一次打开会显示欢迎页，点“开始使用 BetterNCM”。
+2. **打开插件商店**：重启网易云，点右上角设置图标下方的 BetterNCM 图标。第一次打开会显示欢迎页，点“开始使用 BetterNCM”。
 3. **安装 BetterDownload**：点插件列表顶部、排序按钮左边的放大镜，搜索 **BetterDownload**，点卡片右侧的下载按钮，再点底部的“重启”。插件默认启用，之后正常下载歌曲即可。
 
 商店里的版本可能比 Releases 晚几天。想马上用最新版，从 [Releases](https://github.com/xiaoming6680/BetterDownload/releases) 下载 `.plugin` 文件，放进 BetterNCM 的插件文件夹（默认 `C:\betterncm\plugins`），再重启网易云。
@@ -107,6 +109,12 @@ BetterDownload 是一个 BetterNCM 插件。BetterNCM 是网易云音乐 PC 版�
 
 **封面或歌曲信息没写进去？**
 音频会照常保存，卡片上会说明哪一部分没写入，例如封面格式无法识别。
+
+**写入的歌词能在哪些播放器显示？**
+歌词写在 FLAC 的 `LYRICS` 标签和 MP3 的 `USLT` 帧里，带时间轴。MusicBee、Poweramp、装了歌词插件的 foobar2000 和不少安卓本地播放器能跟着音乐滚动；Apple Music、旧版 Windows Media Player 只显示 MP3 的歌词，而且会连时间一起显示；Windows 11 自带的媒体播放器和 VLC 不显示。车机差异很大，只认 `.lrc` 的设备可以打开“同时保存 .lrc 文件”。
+
+**为什么有的歌没有歌词？**
+纯音乐和网易云上没有歌词的歌会跳过。歌词获取失败（比如断网）时歌曲照常转换，卡片上会注明“歌词获取失败”。之前已经转换过的歌不会补写歌词。
 
 **哪些情况不处理？**
 UNC 网络路径、目录链接，以及 `VipSongsDownload` 以外的文件。
@@ -144,6 +152,7 @@ node promo/render.cjs --preview   # 商店预览图和 README 封面
 | `src/Worker.cs` | 任务队列、NCM 提取、文件保护与空闲退出 |
 | `src/Metadata.cs` | 用 TagLibSharp 写入封面与标签 |
 | `plugin/download-hook.js` | 订阅网易云下载完成事件 |
+| `plugin/lyrics.js` | 请求网易云歌词并整理成 LRC |
 | `plugin/main.js` | 设置页与转换程序的生命周期 |
 | `plugin/progress-card.js` | 进度卡片 |
 

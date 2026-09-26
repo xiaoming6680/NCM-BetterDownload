@@ -22,7 +22,7 @@ $archivePath = Join-Path $dist "BetterDownload-$($manifest.version)$label.plugin
 if (Test-Path -LiteralPath $archivePath) { Remove-Item -LiteralPath $archivePath }
 $zip = [IO.Compression.ZipFile]::Open($archivePath, 'Create')
 try {
-    foreach ($name in @('manifest.json', 'download-hook.js', 'progress-card.js', 'main.js', 'worker.exe', 'TagLibSharp.dll', 'TAGLIB-LICENSE', 'preview.jpg', 'release.json', 'LICENSE', 'NOTICE.md')) {
+    foreach ($name in @('manifest.json', 'download-hook.js', 'progress-card.js', 'lyrics.js', 'main.js', 'worker.exe', 'TagLibSharp.dll', 'TAGLIB-LICENSE', 'preview.jpg', 'release.json', 'LICENSE', 'NOTICE.md')) {
         [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, (Join-Path $pluginDir $name), $name, 'Optimal') | Out-Null
     }
 } finally { $zip.Dispose() }

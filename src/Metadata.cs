@@ -17,8 +17,10 @@ namespace NcmBetterDownload {
             return null;
         }
         // Skipped optional details come back as a note; only a failed tag write throws.
-        public static string Embed(string path, string format, byte[] json, byte[] cover) {
+        // lyrics goes to FLAC's LYRICS comment or MP3's USLT frame, where most players look for embedded lyrics.
+        public static string Embed(string path, string format, byte[] json, byte[] cover, string lyrics, out bool withLyrics) {
             var notes = new List<string>();
+            withLyrics = false;
             Dictionary<string, object> info = new Dictionary<string, object>();
             if (json.Length > 0) {
                 try { info = new JavaScriptSerializer { MaxJsonLength = 8 * 1024 * 1024 }.Deserialize<Dictionary<string, object>>(Encoding.UTF8.GetString(json)) ?? info; }
@@ -47,6 +49,7 @@ namespace NcmBetterDownload {
                     // Preserve other embedded pictures, replace only the front cover.
                     audio.Tag.Pictures = audio.Tag.Pictures.Where(p => p.Type != TagLib.PictureType.FrontCover).Concat(new TagLib.IPicture[] { picture }).ToArray();
                 }
+                if (lyrics.Length > 0) audio.Tag.Lyrics = lyrics;
                 audio.Save();
             }
             // Verify persistence before committing the final filename.
@@ -54,6 +57,8 @@ namespace NcmBetterDownload {
                 if (mime != null && !check.Tag.Pictures.Any(p => p.Type == TagLib.PictureType.FrontCover && p.Data.Data.SequenceEqual(cover))) throw new IOException("封面写入验证失败。");
                 string title = Text(info, "musicName");
                 if (title.Length > 0 && check.Tag.Title != title) throw new IOException("歌曲标签写入验证失败。");
+                // Lyrics are a bonus: a missing copy is noted instead of costing the cover and tags.
+                if (lyrics.Length > 0) { withLyrics = !String.IsNullOrEmpty(check.Tag.Lyrics); if (!withLyrics) notes.Add("歌词未写入"); }
             }
             return String.Join("；", notes);
         }

@@ -119,13 +119,15 @@
                 latest = activity; phase = nextPhase;
                 const done = nextPhase === 'success', failed = nextPhase === 'error', round = activity.round;
                 const percent = done ? 100 : Math.max(0, Math.min(99, Number(activity.percent) || 0));
-                const waiting = !done && !failed && (percent === 0 || activity.message === '等待客户端释放文件');
+                // Messages about waiting on something else are shown as they are, with the sweeping bar.
+                const held = activity.message === '等待客户端释放文件' || activity.message === '正在获取歌词';
+                const waiting = !done && !failed && (percent === 0 || held);
                 const extension = /\.(flac|mp3)$/i.exec(activity.output || '');
                 card.dataset.phase = done ? 'success' : failed ? 'error' : 'converting';
                 q('.state-text').textContent = done ? '已完成' : failed ? '未完成' : '转换中';
                 q('.song').textContent = (activity.path || '').split(/[\\/]/).pop().replace(/\.(ncm|flac|mp3)$/i, '') || '本地音乐';
                 q('.format').textContent = failed ? '' : activity.format || (extension ? extension[1].toUpperCase() : '');
-                q('.detail-text').textContent = done ? '原音质已保留 · 音乐已就绪' : failed ? activity.message : activity.message === '等待客户端释放文件' ? activity.message
+                q('.detail-text').textContent = done ? (activity.lyrics ? '原音质已保留 · 歌词已写入' : '原音质已保留 · 音乐已就绪') : failed ? activity.message : held ? activity.message
                     : round ? '第 ' + round.position + ' 首' + (round.pending > 1 ? ' · 还剩 ' + (round.pending - 1) + ' 首' : '') : '正在整理音频与封面';
                 q('.summary').textContent = done && round ? '本轮 ' + round.converted + ' 首' + (round.failed ? ' · ' + round.failed + ' 首未完成' : '') : '';
                 const line = q('.line');

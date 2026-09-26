@@ -8,7 +8,7 @@ $links = Get-Content -LiteralPath (Join-Path $pluginDir 'release.json') -Raw -En
 if ($manifest.version -ne $package.version -or $manifest.version -notmatch '^\d+\.\d+\.\d+$') { throw '插件与 package.json 版本必须一致，并使用 x.y.z 格式。' }
 if ($manifest.name -ne 'BetterDownload' -or $manifest.slug -ne 'ncm-better-download') { throw '名称应为 BetterDownload；保留现有 slug 以支持开发版升级。' }
 if ([string]::IsNullOrWhiteSpace($manifest.author) -or $manifest.author -eq '待填写') { throw '请填写插件作者。' }
-foreach ($file in @('manifest.json','main.js','download-hook.js','progress-card.js','worker.exe','TagLibSharp.dll','preview.jpg','release.json','LICENSE','TAGLIB-LICENSE','NOTICE.md')) {
+foreach ($file in @('manifest.json','main.js','download-hook.js','progress-card.js','lyrics.js','worker.exe','TagLibSharp.dll','preview.jpg','release.json','LICENSE','TAGLIB-LICENSE','NOTICE.md')) {
     if (-not (Test-Path -LiteralPath (Join-Path $pluginDir $file) -PathType Leaf)) { throw "插件缺少 $file" }
 }
 foreach ($inject in $manifest.injects.Main) {

@@ -13,6 +13,9 @@
     let notify = plugin.getConfig('notify', 'all'), compact = plugin.getConfig('cardStyle', 'standard') === 'compact', stay = Number(plugin.getConfig('cardStay', 4000));
     if (!['all', 'errors', 'off'].includes(notify)) notify = 'all';
     if (![2000, 4000, 6000].includes(stay)) stay = 4000;
+    // Lyrics come from NetEase over the network, so they stay off until the user turns them on.
+    const lyricsApi = window.NBDLyrics, fetching = new Set();
+    let lyricsOn = plugin.getConfig('lyrics', false) === true, lyricsFile = plugin.getConfig('lyricsFile', false) === true, lyricsTranslation = plugin.getConfig('lyricsTranslation', false) === true;
     let stateDir = '', runtimeDir = '', controlPath = '', statusPath = '', workerPath = '', initialized = false;
     let disposed = false, busy = false, timer, detach = null, sdk = null, card = null, view = null;
     let jobs = [], serial = 0, status = null, error = '', errorAt = 0, problem = '', hint = '';
@@ -37,7 +40,10 @@
         q('[data-dot]').dataset.state = error || problem ? 'problem' : !enabled ? 'off' : jobs.length || scan ? 'busy' : 'on';
         text('[data-status]', error || problem || (!enabled ? '已关闭' : !initialized ? '正在准备' : !detach ? '等待下载接口；若持续未就绪，请重启网易云'
             : scan ? '正在查找已有下载' : jobs.length ? '正在转换' + (jobs.length > 1 ? ' · 剩余 ' + jobs.length + ' 首' : '') : '已启用 · 下载完成后自动转换'));
-        text('[data-count]', converted || failed ? '本次完成 ' + converted + ' 首' + (failed ? ' · ' + failed + ' 首失败' : '') : '封面与歌曲信息直接写入音频文件');
+        text('[data-count]', converted || failed ? '本次完成 ' + converted + ' 首' + (failed ? ' · ' + failed + ' 首失败' : '') : lyricsOn ? '封面、歌曲信息与歌词直接写入音频文件' : '封面与歌曲信息直接写入音频文件');
+        for (const [name, value] of [['lyrics', lyricsOn], ['lyricsFile', lyricsFile], ['lyricsTranslation', lyricsTranslation]]) q('[data-switch=' + name + ']').setAttribute('aria-checked', String(value));
+        view.querySelectorAll('[data-lyrics-option]').forEach(row => { row.setAttribute('aria-disabled', String(!lyricsOn)); row.querySelector('button').disabled = !lyricsOn; });
+        text('[data-lyrics-note]', (lyricsOn ? '已开启 · ' : '') + '从网易云获取歌词写入文件，需要联网');
         const activity = mine() && status.activity;
         q('[data-detail]').textContent = hint || (activity && activity.state === 'error' ? activity.message : '');
         const find = q('[data-scan]');
@@ -58,7 +64,7 @@
     }
     function writeControl() {
         if (!initialized || disposed) return Promise.resolve();
-        const content = JSON.stringify({ session, enabled, heartbeat: Date.now(), state: stateDir, scan: scan ? scan.request : null, jobs: jobs.slice() }); lastWrite = Date.now();
+        const content = JSON.stringify({ session, enabled, heartbeat: Date.now(), state: stateDir, scan: scan ? scan.request : null, lyrics: { enabled: lyricsOn && !!lyricsApi, file: lyricsFile }, jobs: jobs.slice() }); lastWrite = Date.now();
         // writeFile keeps non-ASCII data paths intact; writeFileText passes them through the ANSI code page.
         writes = writes.catch(() => {}).then(async () => {
             if (!disposed && !await betterncm.fs.writeFile(controlPath, new Blob([content]))) throw new Error('无法写入插件任务，请检查 BetterNCM 数据目录权限。');
@@ -131,6 +137,9 @@
             } else { failed++; round.failed++; }
         }
         if (finished.length) { round.last = Date.now(); jobs = jobs.filter(job => !results[job.id]); writeControl().catch(reportError); }
+        // The worker read the song ID from the NCM and waits for its lyrics.
+        const ask = status.lyrics, asking = ask && jobs.find(job => job.id === ask.id);
+        if (asking && asking.lyrics === undefined && !fetching.has(asking.id)) fetchLyrics(asking, ask.musicId);
         // Only activity for a queued or just-finished job reaches the card; an earlier worker's leftovers never do.
         const activity = status.activity;
         if (enabled && activity && activity.id && (finished.some(job => job.id === activity.id) || jobs.some(job => job.id === activity.id))) {
@@ -138,6 +147,22 @@
             if (key !== lastTaskKey) { lastTaskKey = key; show(activity); }
         }
         if (scan && status.scan && status.scan.id === scan.request.id) takeScan(status.scan);
+    }
+    // Asks NetEase's lyric API, as the client's own lyric view does. A song without lyrics gets '', a failed request a note.
+    async function fetchLyrics(job, musicId) {
+        fetching.add(job.id);
+        let lyrics = '', note = '';
+        const abort = new AbortController(), timeout = setTimeout(() => abort.abort(), 8000);
+        try {
+            if (!/^\d{1,20}$/.test(String(musicId))) throw new Error('bad id');
+            const response = await fetch(lyricsApi.url(musicId, window.APP_CONF && window.APP_CONF.domain), { signal: abort.signal });
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            lyrics = lyricsApi.build(await response.json(), { translation: lyricsTranslation });
+        } catch (_) { note = '歌词获取失败'; }
+        finally { clearTimeout(timeout); fetching.delete(job.id); }
+        if (disposed || !jobs.includes(job)) return;
+        job.lyrics = lyrics; if (note) job.lyricsNote = note;
+        writeControl().then(wake, reportError);
     }
     function startScan() {
         const root = sdk ? hook.scanRoot(sdk.Storage.downloadDir) : '';
@@ -269,7 +294,8 @@
         keep: '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.6A1.6 1.6 0 0 1 3.6 3h2.5l1.5 1.6h4.8A1.6 1.6 0 0 1 14 6.2v5.2a1.6 1.6 0 0 1-1.6 1.6H3.6A1.6 1.6 0 0 1 2 11.4z"/><path d="m5.8 8.7 1.5 1.5 2.9-3"/></svg>',
         bell: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5A3.5 3.5 0 0 0 4.5 6v2.4L3.2 10.8h9.6L11.5 8.4V6A3.5 3.5 0 0 0 8 2.5z"/><path d="M6.6 12.8a1.5 1.5 0 0 0 2.8 0"/></svg>',
         card: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="12" height="8" rx="2"/><path d="M4.8 7h3.4M4.8 9.2h6"/></svg>',
-        clock: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="5.6"/><path d="M8 5.2V8l1.9 1.3"/></svg>'
+        clock: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="5.6"/><path d="M8 5.2V8l1.9 1.3"/></svg>',
+        lyrics: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4h7M2.5 7h7M2.5 10h4"/><path d="M12.5 12V3.5l2 .8"/><circle cx="11.2" cy="12" r="1.4"/></svg>'
     };
     plugin.onConfig(() => {
         if (view) return view;
@@ -298,11 +324,12 @@
         .nbd-settings [data-dot][data-state=problem]::before{background:#e5534b;box-shadow:0 0 0 4px rgba(229,83,75,.18)}
         .nbd-settings button{font:inherit;color:inherit;cursor:pointer;transition:transform .15s cubic-bezier(.3,.7,.3,1)}.nbd-settings button:not(:disabled):active{transform:scale(.95)}
         .nbd-settings button:disabled{opacity:.45;cursor:default}.nbd-settings button:focus-visible{outline:2px solid #8b7dff;outline-offset:3px}
-        .nbd-settings [data-toggle]{position:relative;overflow:hidden;flex:none;width:44px;height:24px;padding:0;border:0;border-radius:999px;background:rgba(136,136,136,.4)}
-        .nbd-settings [data-toggle]::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#f39bc4,#9a8bff 52%,#5eaefc);opacity:0;transition:opacity .3s}.nbd-settings [data-toggle][aria-checked=true]::before{opacity:1}
-        .nbd-settings [data-toggle] span{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .42s cubic-bezier(.34,1.5,.64,1),width .2s cubic-bezier(.3,.7,.3,1)}
-        .nbd-settings [data-toggle][aria-checked=true] span{transform:translateX(20px)}
-        .nbd-settings [data-toggle]:active span{width:22px}.nbd-settings [data-toggle][aria-checked=true]:active span{transform:translateX(16px)}
+        .nbd-settings .nbd-switch{position:relative;overflow:hidden;flex:none;width:44px;height:24px;padding:0;border:0;border-radius:999px;background:rgba(136,136,136,.4)}
+        .nbd-settings .nbd-switch::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#f39bc4,#9a8bff 52%,#5eaefc);opacity:0;transition:opacity .3s}.nbd-settings .nbd-switch[aria-checked=true]::before{opacity:1}
+        .nbd-settings .nbd-switch span{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .42s cubic-bezier(.34,1.5,.64,1),width .2s cubic-bezier(.3,.7,.3,1)}
+        .nbd-settings .nbd-switch[aria-checked=true] span{transform:translateX(20px)}
+        .nbd-settings .nbd-switch:active span{width:22px}.nbd-settings .nbd-switch[aria-checked=true]:active span{transform:translateX(16px)}
+        .nbd-settings .nbd-sub{padding-left:46px;transition:opacity .3s,background .25s}.nbd-settings .nbd-sub[aria-disabled=true]{opacity:.45}
         .nbd-settings [data-scan]{flex:none;font-size:13px;font-weight:600;padding:7px 14px;border-radius:9px;border:1px solid rgba(136,136,136,.35);background:rgba(136,136,136,.1);white-space:nowrap;transition:background .2s,border-color .2s,transform .15s}
         .nbd-settings [data-scan]:hover:not(:disabled){background:rgba(136,136,136,.18);border-color:rgba(136,136,136,.5)}
         .nbd-settings [data-scan][data-busy=true]::before{content:"";display:inline-block;width:10px;height:10px;margin-right:7px;vertical-align:-1px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:nbd-spin .75s linear infinite}
@@ -331,20 +358,24 @@
         @media(prefers-reduced-motion:reduce){.nbd-settings *,.nbd-settings *::before,.nbd-settings *::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
         @media(max-width:520px){.nbd-settings{padding:24px 18px}.nbd-settings .nbd-row{flex-wrap:wrap}}
         </style><header class="nbd-head nbd-in" style="--i:0"><div class="nbd-logo">${window.NBDProgressCard.mark}</div><div><h2>BetterDownload<span class="nbd-version">v${plugin.manifest.version}</span></h2><p>自动解锁下载的 VIP 歌曲，保留原音质。</p></div></header>
-        <div class="nbd-panel nbd-in" style="--i:1"><div class="nbd-row"><span data-dot></span><div class="nbd-copy"><div data-status role="status"></div><small data-count></small></div><button data-toggle role="switch" aria-checked="true" aria-label="启用 BetterDownload"><span></span></button></div>
+        <div class="nbd-panel nbd-in" style="--i:1"><div class="nbd-row"><span data-dot></span><div class="nbd-copy"><div data-status role="status"></div><small data-count></small></div><button class="nbd-switch" data-toggle role="switch" aria-checked="true" aria-label="启用 BetterDownload"><span></span></button></div>
         <div class="nbd-row"><span class="nbd-glyph">${ICON.search}</span><div class="nbd-copy"><div>转换已有下载</div><small data-scan-note role="status"></small></div><button data-scan>查找并转换</button></div></div>
         <div data-detail></div>
-        <div class="nbd-section nbd-in" style="--i:2">进度卡片</div>
-        <div class="nbd-panel nbd-in" style="--i:3"><div class="nbd-row"><span class="nbd-glyph">${ICON.bell}</span><div class="nbd-copy"><div>弹出时机</div><small data-notify-note></small></div>
+        <div class="nbd-section nbd-in" style="--i:2">歌词</div>
+        <div class="nbd-panel nbd-in" style="--i:3"><div class="nbd-row"><span class="nbd-glyph">${ICON.lyrics}</span><div class="nbd-copy"><div>写入歌词</div><small data-lyrics-note></small></div><button class="nbd-switch" data-switch="lyrics" role="switch" aria-checked="false" aria-label="写入歌词"><span></span></button></div>
+        <div class="nbd-row nbd-sub" data-lyrics-option><div class="nbd-copy"><div>同时保存 .lrc 文件</div><small>放在歌曲旁边，给只认 .lrc 的车机和播放器</small></div><button class="nbd-switch" data-switch="lyricsFile" role="switch" aria-checked="false" aria-label="同时保存 .lrc 文件"><span></span></button></div>
+        <div class="nbd-row nbd-sub" data-lyrics-option><div class="nbd-copy"><div>附带翻译</div><small>外语歌在每句原文下方加一行翻译</small></div><button class="nbd-switch" data-switch="lyricsTranslation" role="switch" aria-checked="false" aria-label="附带翻译"><span></span></button></div></div>
+        <div class="nbd-section nbd-in" style="--i:4">进度卡片</div>
+        <div class="nbd-panel nbd-in" style="--i:5"><div class="nbd-row"><span class="nbd-glyph">${ICON.bell}</span><div class="nbd-copy"><div>弹出时机</div><small data-notify-note></small></div>
         <div class="nbd-segment" role="radiogroup" aria-label="弹出时机" data-notify style="--n:3"><span class="nbd-thumb"></span><button role="radio" data-value="all">每首歌</button><button role="radio" data-value="errors">仅出错</button><button role="radio" data-value="off">不显示</button></div></div>
         <div class="nbd-row"><span class="nbd-glyph">${ICON.card}</span><div class="nbd-copy"><div>卡片样式</div><small data-style-note></small></div>
         <div class="nbd-segment" role="radiogroup" aria-label="卡片样式" data-card-style style="--n:2"><span class="nbd-thumb"></span><button role="radio" data-value="standard">标准</button><button role="radio" data-value="compact">简洁</button></div><button data-preview>预览</button></div>
         <div class="nbd-row"><span class="nbd-glyph">${ICON.clock}</span><div class="nbd-copy"><div>停留时间</div><small>鼠标停在卡片上时不会收起</small></div>
         <div class="nbd-segment" role="radiogroup" aria-label="停留时间" data-card-stay style="--n:3"><span class="nbd-thumb"></span><button role="radio" data-value="2000">2 秒</button><button role="radio" data-value="4000">4 秒</button><button role="radio" data-value="6000">6 秒</button></div></div></div>
-        <ul class="nbd-features"><li class="nbd-in" style="--i:4"><i>${ICON.wave}</i><div><b>无损提取</b><small>直接取出 FLAC / MP3 原始音频，不重新编码</small></div></li>
-        <li class="nbd-in" style="--i:5"><i>${ICON.tag}</i><div><b>信息完整</b><small>封面、标题、歌手与专辑写入音频文件</small></div></li>
-        <li class="nbd-in" style="--i:6"><i>${ICON.keep}</i><div><b>原文件保留</b><small>输出到 VipSongsDownload\\unlock，不覆盖你已有的文件</small></div></li></ul>
-        <footer class="nbd-in" style="--i:7"><span>作者 XIAOMING6680</span><span data-links></span></footer>`;
+        <ul class="nbd-features"><li class="nbd-in" style="--i:6"><i>${ICON.wave}</i><div><b>无损提取</b><small>直接取出 FLAC / MP3 原始音频，不重新编码</small></div></li>
+        <li class="nbd-in" style="--i:7"><i>${ICON.tag}</i><div><b>信息完整</b><small>封面、标题、歌手与专辑写入音频文件</small></div></li>
+        <li class="nbd-in" style="--i:8"><i>${ICON.keep}</i><div><b>原文件保留</b><small>输出到 VipSongsDownload\\unlock，不覆盖你已有的文件</small></div></li></ul>
+        <footer class="nbd-in" style="--i:9"><span>作者 XIAOMING6680</span><span data-links></span></footer>`;
         view.querySelector('[data-toggle]').onclick = async () => {
             const button = view.querySelector('[data-toggle]'); button.disabled = true;
             try {
@@ -355,6 +386,13 @@
             } catch (e) { reportError(e); }
             finally { button.disabled = false; }
         };
+        view.querySelectorAll('[data-switch]').forEach(button => { button.onclick = () => {
+            const name = button.dataset.switch, value = button.getAttribute('aria-checked') !== 'true';
+            if (name === 'lyrics') lyricsOn = value; else if (name === 'lyricsFile') lyricsFile = value; else lyricsTranslation = value;
+            plugin.setConfig(name, value); render();
+            // A running worker learns at once; otherwise the next download carries the setting.
+            if (wanted() || running()) writeControl().catch(reportError);
+        }; });
         view.querySelector('[data-scan]').onclick = startScan;
         view.querySelector('[data-preview]').onclick = preview;
         view.querySelector('[data-notify]').onclick = event => {

@@ -12,7 +12,7 @@ try {
     foreach ($folder in @('src','scripts','tests','docs','.github','plugin')) { $files += Get-ChildItem -LiteralPath (Join-Path $projectRoot $folder) -File -Recurse }
     foreach ($file in $files) {
         $relative = $file.FullName.Substring($projectRoot.Length + 1).Replace('\','/')
-        if ($relative -match '^plugin/' -and $relative -notin @('plugin/manifest.json','plugin/main.js','plugin/download-hook.js','plugin/progress-card.js','plugin/preview.jpg','plugin/release.json','plugin/LICENSE','plugin/TAGLIB-LICENSE','plugin/NOTICE.md')) { continue }
+        if ($relative -match '^plugin/' -and $relative -notin @('plugin/manifest.json','plugin/main.js','plugin/download-hook.js','plugin/progress-card.js','plugin/lyrics.js','plugin/preview.jpg','plugin/release.json','plugin/LICENSE','plugin/TAGLIB-LICENSE','plugin/NOTICE.md')) { continue }
         [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $file.FullName, $relative, 'Optimal') | Out-Null
     }
 } finally { $zip.Dispose() }

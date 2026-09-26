@@ -12,10 +12,19 @@ namespace NcmBetterDownload {
         public string id = "";
         public string source = "";
         public string target = "";
+        // Filled in by the plugin once asked: the LRC text, "" when the song has none, and a note when fetching failed.
+        public string lyrics;
+        public string lyricsNote;
     }
     public sealed class ScanRequest {
         public string id = "";
         public string root = "";
+    }
+    public sealed class LyricsOptions {
+        public bool enabled;
+        public bool file;
+        // How long a song waits for its lyrics before it is converted without them, in milliseconds.
+        public long wait = 15000;
     }
     public sealed class Control {
         public string session = "";
@@ -24,6 +33,7 @@ namespace NcmBetterDownload {
         public string state = "";
         public long idle;
         public ScanRequest scan;
+        public LyricsOptions lyrics;
         public Job[] jobs = new Job[0];
     }
     public sealed class Receipt {
@@ -41,6 +51,7 @@ namespace NcmBetterDownload {
     public sealed class Extracted {
         public string path = "";
         public string warning = "";
+        public bool lyrics;
     }
     public static class Worker {
         static readonly JavaScriptSerializer Json = new JavaScriptSerializer { MaxJsonLength = 16 * 1024 * 1024 };
@@ -48,13 +59,16 @@ namespace NcmBetterDownload {
         static readonly List<object> Events = new List<object>();
         static readonly Dictionary<string, object> Results = new Dictionary<string, object>();
         static readonly Dictionary<string, int> Attempts = new Dictionary<string, int>();
+        // Job ID → when its lyrics were first asked for, and the song ID they were asked by.
+        static readonly Dictionary<string, KeyValuePair<DateTime, string>> LyricsAsked = new Dictionary<string, KeyValuePair<DateTime, string>>();
         static Dictionary<string, Receipt> Receipts = new Dictionary<string, Receipt>(StringComparer.OrdinalIgnoreCase);
         static string ControlPath, StatusPath, ReceiptPath, Session, ScanId;
         static int Converted, Failed;
         static DateTime LastStatus, LastAlive, LastControlAt, LastBusy;
         static Control LastControl;
-        static object Activity, Scan;
+        static object Activity, Scan, LyricsRequest;
         static string ActivityState = "", CurrentJob = "", CurrentPath = "", CurrentCover = "", CurrentFormat = "";
+        static bool CurrentLyrics;
         public static long Now() { return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds; }
         public static string Full(string path) { return Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar); }
         public static string Signature(FileInfo file) { return file.Length + ":" + file.LastWriteTimeUtc.Ticks; }
@@ -107,7 +121,7 @@ namespace NcmBetterDownload {
         static TimeSpan IdleLimit(Control control) { return TimeSpan.FromMilliseconds(control.idle > 0 ? Math.Max(1000, Math.Min(control.idle, 600000)) : 60000); }
         static void Report(string state, string message, string path = "", bool add = true, int percent = 0, string warning = "") {
             if (state == "converting" || state == "success" || state == "error" || (state == "stopped" && ActivityState == "converting")) {
-                Activity = new { id = CurrentJob, state, message, path = path.Length > 0 ? path : CurrentPath, output = state == "success" ? path : "", percent = state == "success" ? 100 : percent, warning, cover = CurrentCover, format = CurrentFormat };
+                Activity = new { id = CurrentJob, state, message, path = path.Length > 0 ? path : CurrentPath, output = state == "success" ? path : "", percent = state == "success" ? 100 : percent, warning, cover = CurrentCover, format = CurrentFormat, lyrics = state == "success" && CurrentLyrics };
                 ActivityState = state;
             }
             if (add) {
@@ -115,7 +129,7 @@ namespace NcmBetterDownload {
                 if (Events.Count > 30) Events.RemoveAt(30);
             }
             // Status is advisory: a failed write is retried by the next report and never fails a conversion.
-            if (TryWriteJson(StatusPath, new { session = Session, heartbeat = Now(), state, message, converted = Converted, failed = Failed, events = Events, activity = Activity, results = Results, scan = Scan })) LastStatus = DateTime.UtcNow;
+            if (TryWriteJson(StatusPath, new { session = Session, heartbeat = Now(), state, message, converted = Converted, failed = Failed, events = Events, activity = Activity, results = Results, scan = Scan, lyrics = LyricsRequest })) LastStatus = DateTime.UtcNow;
         }
         public static string UnlockTarget(string source) {
             var parts = Full(source).Split(Path.DirectorySeparatorChar);
@@ -150,8 +164,37 @@ namespace NcmBetterDownload {
             } catch (IOException) { return ""; }
             catch (UnauthorizedAccessException) { return ""; }
         }
+        // True while the song should keep waiting for the plugin to hand over its lyrics; the request stays in status.json meanwhile.
+        static bool WaitForLyrics(Job job, LyricsOptions options) {
+            KeyValuePair<DateTime, string> asked;
+            if (!LyricsAsked.TryGetValue(job.id, out asked)) {
+                string musicId = Ncm.MusicId(job.source);
+                if (musicId.Length == 0) return false;
+                LyricsAsked[job.id] = asked = new KeyValuePair<DateTime, string>(DateTime.UtcNow, musicId);
+                LyricsRequest = new { id = job.id, musicId };
+                Report("converting", "正在获取歌词", job.source, false);
+            }
+            if (DateTime.UtcNow - asked.Key >= TimeSpan.FromMilliseconds(Math.Max(0, Math.Min(options.wait, 60000)))) return false;
+            LyricsRequest = new { id = job.id, musicId = asked.Value };
+            return true;
+        }
+        // An .lrc beside the song for players and car stereos that only read those; an existing file is never replaced.
+        static string SaveLyricsFile(string audio, string lyrics) {
+            string path = Path.ChangeExtension(audio, ".lrc");
+            if (File.Exists(path) || Directory.Exists(path)) return "";
+            string temp = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+            try {
+                // UTF-8 with a BOM and CRLF: older players otherwise read Chinese lyrics as the ANSI code page.
+                File.WriteAllText(temp, lyrics.Replace("\r\n", "\n").Replace("\n", "\r\n"), new UTF8Encoding(true));
+                File.Move(temp, path);
+                return "";
+            } catch (Exception e) {
+                if (!(e is IOException) && !(e is UnauthorizedAccessException)) throw;
+                return "歌词文件未保存";
+            } finally { try { if (File.Exists(temp)) File.Delete(temp); } catch (IOException) { } catch (UnauthorizedAccessException) { } }
+        }
         static void Finish(Job job, string state, string path, string message, string warning = "") {
-            Attempts.Remove(job.id);
+            Attempts.Remove(job.id); LyricsAsked.Remove(job.id);
             Results[job.id] = new { state, output = state == "success" ? path : "", message, warning };
             Report(state, message, path, true, 0, warning);
         }
@@ -160,12 +203,14 @@ namespace NcmBetterDownload {
             var jobs = control.jobs ?? new Job[0];
             // Results live only as long as the plugin still lists the job.
             foreach (var id in Results.Keys.Where(id => !jobs.Any(job => job.id == id)).ToList()) Results.Remove(id);
-            bool pending = false;
+            foreach (var id in LyricsAsked.Keys.Where(id => !jobs.Any(job => job.id == id)).ToList()) LyricsAsked.Remove(id);
+            bool pending = false, wantLyrics = control.lyrics != null && control.lyrics.enabled;
+            LyricsRequest = null;
             foreach (var job in jobs) {
                 if (Results.ContainsKey(job.id)) continue;
                 pending = true;
                 if (!once && !Alive()) return true;
-                CurrentJob = job.id; CurrentPath = job.source; CurrentCover = ""; CurrentFormat = "";
+                CurrentJob = job.id; CurrentPath = job.source; CurrentCover = ""; CurrentFormat = ""; CurrentLyrics = false;
                 try {
                     Validate(job);
                     string signature = Signature(new FileInfo(job.source));
@@ -174,6 +219,10 @@ namespace NcmBetterDownload {
                     if (receipt != null && receipt.signature == signature && File.Exists(receipt.output) && new FileInfo(receipt.output).Length == receipt.length) {
                         Finish(job, "success", receipt.output, "此下载已完成转换"); continue;
                     }
+                    // Lyrics are online, so the plugin fetches them: ask by song ID and give it a little while before converting without.
+                    string lyrics = wantLyrics && job.lyrics != null && job.lyrics.Length <= 256 * 1024 ? job.lyrics : "";
+                    if (wantLyrics && job.lyrics == null && WaitForLyrics(job, control.lyrics)) return true;
+                    LyricsRequest = null;
                     Report("converting", "正在转换", job.source);
                     DateTime progressAt = DateTime.MinValue;
                     var saved = Ncm.Extract(job.source, job.target, true, once ? (Func<bool>)(() => true) : ContinueConversion, signature, (done, total) => {
@@ -183,12 +232,18 @@ namespace NcmBetterDownload {
                     }, receipt, (format, cover) => {
                         CurrentFormat = format.TrimStart('.').ToUpperInvariant(); CurrentCover = SaveCover(job.id, cover);
                         Report("converting", "正在转换", job.source, false);
-                    });
+                    }, lyrics);
                     var output = new FileInfo(saved.path);
                     Receipts[job.source] = new Receipt { signature = signature, output = saved.path, length = output.Length, written = output.LastWriteTimeUtc.Ticks };
                     TryWriteJson(ReceiptPath, Receipts);
                     Converted++;
-                    Finish(job, "success", saved.path, saved.warning.Length > 0 ? "音频已保存；" + saved.warning : "音频与歌曲信息已保存", saved.warning);
+                    var notes = new List<string>();
+                    if (saved.warning.Length > 0) notes.Add(saved.warning);
+                    if (wantLyrics && !String.IsNullOrEmpty(job.lyricsNote)) notes.Add(job.lyricsNote);
+                    CurrentLyrics = saved.lyrics;
+                    if (saved.lyrics && control.lyrics.file) { string note = SaveLyricsFile(saved.path, lyrics); if (note.Length > 0) notes.Add(note); }
+                    string warning = String.Join("；", notes);
+                    Finish(job, "success", saved.path, warning.Length > 0 ? "音频已保存；" + warning : saved.lyrics ? "音频、歌曲信息与歌词已保存" : "音频与歌曲信息已保存", warning);
                 } catch (OperationCanceledException) { return true; }
                 catch (Exception error) {
                     int attempt; Attempts.TryGetValue(job.id, out attempt); Attempts[job.id] = ++attempt;
@@ -323,6 +378,37 @@ namespace NcmBetterDownload {
                 using (var transform = aes.CreateDecryptor()) return transform.TransformFinalBlock(input, 0, input.Length);
             }
         }
+        // The song information as JSON bytes; empty when the block is missing or cannot be decrypted.
+        static byte[] Meta(byte[] metadata) {
+            if (metadata.Length == 0) return new byte[0];
+            try {
+                for (int i = 0; i < metadata.Length; i++) metadata[i] ^= 0x63;
+                string text = Encoding.UTF8.GetString(metadata);
+                if (text.StartsWith("163 key(Don't modify):")) {
+                    byte[] raw = Aes(Convert.FromBase64String(text.Substring(22)), "#14ljk_!\\]&0U<'(");
+                    if (Encoding.UTF8.GetString(raw).StartsWith("music:")) return raw.Skip(6).ToArray();
+                }
+            } catch (Exception e) { if (!(e is FormatException) && !(e is CryptographicException)) throw; }
+            return new byte[0];
+        }
+        // The song ID from the metadata, read without touching the audio; "" when there is none, as for radio programs.
+        public static string MusicId(string source) {
+            using (var file = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.None))
+            using (var r = new BinaryReader(file)) {
+                if (Encoding.ASCII.GetString(Read(r, 8)) != "CTENFDAM") throw new InvalidDataException("不是受支持的 NCM 文件。");
+                Read(r, 2);
+                Block(r, 1024 * 1024);
+                byte[] json = Meta(Block(r, 8 * 1024 * 1024));
+                if (json.Length == 0) return "";
+                object id;
+                try {
+                    var info = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Encoding.UTF8.GetString(json));
+                    if (info == null || !info.TryGetValue("musicId", out id) || id == null) return "";
+                } catch (ArgumentException) { return ""; } catch (InvalidOperationException) { return ""; }
+                string text = Convert.ToString(id, System.Globalization.CultureInfo.InvariantCulture);
+                return text.Length > 0 && text.Length <= 20 && text.All(c => c >= '0' && c <= '9') ? text : "";
+            }
+        }
         static string Unique(string target) {
             if (!File.Exists(target) && !Directory.Exists(target)) return target;
             string dir = Path.GetDirectoryName(target), stem = Path.GetFileNameWithoutExtension(target), ext = Path.GetExtension(target);
@@ -348,7 +434,8 @@ namespace NcmBetterDownload {
         }
         // previous: the receipt of an earlier conversion of the same download; its untouched output is replaced instead of adding "(2)".
         // header: called with the audio format and embedded cover as soon as both are known.
-        public static Extracted Extract(string source, string target, bool embedMetadata, Func<bool> alive, string expectedSignature = null, Action<long, long> progress = null, Receipt previous = null, Action<string, byte[]> header = null) {
+        // lyrics: LRC text to embed with the other tags; empty for none.
+        public static Extracted Extract(string source, string target, bool embedMetadata, Func<bool> alive, string expectedSignature = null, Action<long, long> progress = null, Receipt previous = null, Action<string, byte[]> header = null, string lyrics = null) {
             string temp = null;
             try {
                 // Exclusive open refuses downloads that are still held open by the client.
@@ -367,17 +454,7 @@ namespace NcmBetterDownload {
                     byte[] mask = new byte[256];
                     for (int i = 0; i < 256; i++) { int k = (i + 1) & 255; mask[i] = box[(box[k] + box[(box[k] + k) & 255]) & 255]; }
                     byte[] metadata = Block(r, 8 * 1024 * 1024);
-                    byte[] plainMeta = new byte[0];
-                    if (metadata.Length > 0) {
-                        try {
-                            for (int i = 0; i < metadata.Length; i++) metadata[i] ^= 0x63;
-                            string text = Encoding.UTF8.GetString(metadata);
-                            if (text.StartsWith("163 key(Don't modify):")) {
-                                byte[] raw = Aes(Convert.FromBase64String(text.Substring(22)), "#14ljk_!\\]&0U<'(");
-                                if (Encoding.UTF8.GetString(raw).StartsWith("music:")) plainMeta = raw.Skip(6).ToArray();
-                            }
-                        } catch (Exception e) { if (!(e is FormatException) && !(e is CryptographicException)) throw; }
-                    }
+                    byte[] plainMeta = Meta(metadata);
                     Read(r, 5); // CRC field and image version; not a reliable audio completeness check.
                     uint coverSpace = r.ReadUInt32(), coverSize = r.ReadUInt32();
                     if (coverSize > coverSpace || coverSpace > 32 * 1024 * 1024 || coverSpace > file.Length - file.Position) throw new InvalidDataException("NCM 封面数据不完整。");
@@ -404,16 +481,17 @@ namespace NcmBetterDownload {
                     WriteAudio(file, audioStart, audioLength, mask, temp, alive, progress);
                     if (!alive()) throw new OperationCanceledException();
                     var notes = new List<string>();
+                    bool withLyrics = false;
                     if (metadata.Length > 0 && plainMeta.Length == 0) notes.Add("歌曲信息无法读取");
                     if (embedMetadata) {
                         try {
-                            string note = Metadata.Embed(temp, format, plainMeta, cover);
+                            string note = Metadata.Embed(temp, format, plainMeta, cover, lyrics ?? "", out withLyrics);
                             if (note.Length > 0) notes.Add(note);
                         } catch (Exception) {
                             // Tags are optional: rewrite clean audio instead of losing the song.
                             File.Delete(temp);
                             WriteAudio(file, audioStart, audioLength, mask, temp, alive, null);
-                            notes.Clear(); notes.Add("封面与歌曲信息写入失败，已保存原始音频");
+                            notes.Clear(); notes.Add("封面与歌曲信息写入失败，已保存原始音频"); withLyrics = false;
                         }
                     }
                     if (!alive()) throw new OperationCanceledException();
@@ -424,7 +502,7 @@ namespace NcmBetterDownload {
                         File.Move(temp, dest);
                     }
                     temp = null;
-                    return new Extracted { path = dest, warning = String.Join("；", notes) };
+                    return new Extracted { path = dest, warning = String.Join("；", notes), lyrics = withLyrics };
                 }
             } finally { if (temp != null && File.Exists(temp)) File.Delete(temp); }
         }

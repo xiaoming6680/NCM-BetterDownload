@@ -20,7 +20,7 @@ function fixture(audio, options = {}) {
         const j = (i + 1) % 256;
         encryptedAudio[i] ^= box[(box[j] + box[(box[j] + j) % 256]) % 256];
     }
-    const meta = options.metadata === false ? Buffer.alloc(0) : Buffer.from("163 key(Don't modify):" + encrypt(Buffer.from('music:' + JSON.stringify({ musicName: '合成测试', album: '测试专辑', artist: [['测试歌手', 1]], track: 3, format: options.claimFormat || 'mp3' })), "#14ljk_!\\]&0U<'(").toString('base64')).map(x => x ^ 0x63);
+    const meta = options.metadata === false ? Buffer.alloc(0) : Buffer.from("163 key(Don't modify):" + encrypt(Buffer.from('music:' + JSON.stringify({ musicId: 1234567, musicName: '合成测试', album: '测试专辑', artist: [['测试歌手', 1]], track: 3, format: options.claimFormat || 'mp3' })), "#14ljk_!\\]&0U<'(").toString('base64')).map(x => x ^ 0x63);
     const cover = options.cover || require('node:fs').readFileSync(require('node:path').join(__dirname, 'fixtures/cover.png'));
     return Buffer.concat([Buffer.from('CTENFDAM'), Buffer.alloc(2), block(encryptedKey), block(meta), Buffer.alloc(5), u32(cover.length + 128), u32(cover.length), cover, Buffer.alloc(128), encryptedAudio]);
 }
