@@ -1,233 +1,143 @@
-"""Synthesizes the soundtrack of the 0.6 update video: an original, royalty-free acoustic track.
+"""Synthesizes the soundtrack of the 0.6 update video: a variation on the film's, in the same sounds.
 
-Nylon guitar, piano, strings and upright bass with snaps and a shaker; no synth pads, drum machine or risers.
-120 BPM in D major, so a bar lasts two seconds and the scenes of promo/index.html?update change on bars.
-The last eight seconds turn to B minor for the teaser.
+It plays the film's own bars (promo/music.py, through music.bar()) in the film's order: its intro, build, groove, the
+end of its breakdown, its build and its install groove, with one phrase of that groove played twice and the rest of
+the film's feature section left out. The variation is in the melodies: the intro tune follows the lyric lines, the
+groove from 20 s carries a new hook, and the film's own hook comes back on the end card. The music ends there; after
+a second of silence the teaser has only a few soft sounds of its own, so it arrives unannounced.
+120 BPM, so a bar lasts two seconds; the scenes of promo/index.html?update change on bars and their animations land on
+beats, each with a sound.
 
     python promo/music_update.py [out.wav] [seconds]
 """
 import sys
 
 import numpy as np
-from scipy import signal
 
+import music
 import sound
-from sound import BAR, BEAT, STEP, SR, filt, mtof, noise, norm, piano, place, ramp, tt, click, key, pop, tick, chime, swell, saw_table, TN
+from sound import *  # noqa: F401,F403  instruments, BAR/BEAT/STEP and the mix
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else 'music-update.wav'
-DUR = float(sys.argv[2]) if len(sys.argv) > 2 else 60.0
-sound.start(DUR, seed=20260927)
+DUR = float(sys.argv[2]) if len(sys.argv) > 2 else 78.0
+start(DUR, seed=20260930)
 
-
-# ---------- acoustic instruments ----------
-def string(m, seconds, t60, pick=0.18, bright=0.55, damp=None):
-    """A plucked string (Karplus-Strong), tuned with an all-pass fractional delay. damp: seconds until a fretting hand mutes it."""
-    f = mtof(m)
-    n = int(seconds * SR)
-    period = SR / f
-    delay = int(period - 0.5 - 0.1)
-    frac = period - 0.5 - delay
-    c = (1 - frac) / (1 + frac)
-    g = 10 ** (-3 / (t60 * f))
-    a = np.zeros(delay + 3)
-    a[0], a[1] = 1.0, c
-    a[delay] -= g * c / 2
-    a[delay + 1] -= g * (1 + c) / 2
-    a[delay + 2] -= g / 2
-    burst = int(period)
-    x = np.zeros(n)
-    exc = sound.rng.uniform(-1, 1, burst)
-    exc = signal.lfilter([1 - bright], [1, -bright], exc)          # softer fingers, warmer tone
-    exc -= 0.8 * np.concatenate([np.zeros(max(1, int(pick * burst))), exc])[:burst]
-    x[:burst] = exc
-    y = signal.lfilter([1, c], a, x)
-    if damp is not None:
-        t = np.arange(n) / SR
-        y *= np.where(t < damp, 1.0, np.exp(-(t - damp) / 0.06))
-    return y
-
-
-def guitar(t0, m, vel=0.55, pan=0.0, t60=None, damp=None):
-    """Nylon-string guitar: a plucked string through a small wooden body."""
-    t60 = t60 or float(np.interp(m, [40, 76], [3.2, 1.3]))
-    y = string(m, t60 * 1.1, t60, 0.2, 0.5, damp)
-    body = filt(y, 'bandpass', [90, 260]) * 0.35 + filt(y, 'bandpass', [380, 900]) * 0.2
-    y = filt(y + body, 'low', 5200) + 0.012 * filt(noise(len(y)), 'bandpass', [2000, 7000]) * np.exp(-np.arange(len(y)) / SR / 0.004)
-    place('pluck', t0, norm(y, vel), 1.0, pan, hall=0.16, room=0.18)
-
-
-def upright(t0, m, vel=0.6, dur=1.6):
-    """Upright bass, plucked: the same string, darker and heavier."""
-    y = string(m, dur + 0.4, 1.6, 0.3, 0.72, dur)
-    y = filt(y, 'low', 1400) + 0.3 * filt(y, 'bandpass', [60, 160])
-    place('bass', t0, norm(y, vel), 1.0, 0.0, room=0.12)
-
-
-def strings(t0, dur, notes, gain=0.8, attack=0.9, release=1.8, bright=2300, swell_to=1.0):
-    """A small string section: five detuned players per note with delayed vibrato."""
-    n = int((dur + release) * SR)
-    t = np.arange(n) / SR
-    a = ramp(t, attack)
-    env = a * a * (3 - 2 * a) * np.where(t < dur, 1.0, np.exp(-(t - dur) / (release / 4)))
-    env *= np.interp(t, [0, dur], [1.0, swell_to])
-    vib_depth = 7 * ramp(t - 0.35, 0.8)                                   # cents, arriving after the attack
-    out = np.zeros((n, 2))
-    for m in notes:
-        f = mtof(m)
-        tab = saw_table(f, bright)
-        for k in range(5):
-            cents = (k - 2) * 4.5 + sound.rng.uniform(-1.5, 1.5)
-            rate, ph0 = 4.8 + sound.rng.uniform(-0.5, 0.5), sound.rng.random() * 6.283
-            fr = f * 2 ** ((cents + vib_depth * np.sin(2 * np.pi * rate * t + ph0)) / 1200)
-            phase = (sound.rng.random() + np.cumsum(fr) / SR) % 1.0
-            idx = phase * TN
-            i0 = idx.astype(np.int64)
-            v = tab[i0] * (1 - (idx - i0)) + tab[(i0 + 1) % TN] * (idx - i0)
-            ang = ((k - 2) / 2.4 + 1) * np.pi / 4
-            out[:, 0] += v * np.cos(ang)
-            out[:, 1] += v * np.sin(ang)
-    out = filt(out, 'low', 3600)
-    out = out + 0.25 * filt(out, 'bandpass', [700, 1600])             # a little rosin in the mids
-    out *= (env * np.sqrt(2) / (len(notes) * 5))[:, None]
-    place('pad', t0, out, gain, hall=0.55)
-
-
-def snap(t0, vel=0.3, pan=0.15):
-    t = tt(0.25)
-    x = filt(noise(len(t)), 'bandpass', [1400, 4200]) * np.exp(-t / 0.014) * ramp(t, 0.0008)
-    x += 0.5 * np.sin(2 * np.pi * 2300 * t) * np.exp(-t / 0.007)
-    place('drums', t0, norm(x, vel), 1.0, pan, room=0.35, hall=0.1)
-
-
-def shaker(t0, vel=0.12, pan=-0.3):
-    t = tt(0.14)
-    x = filt(noise(len(t)), 'bandpass', [4500, 10000]) * ramp(t, 0.02) * np.exp(-t / 0.035)
-    place('drums', t0, norm(x, vel), 1.0, pan, room=0.1)
-
-
-def felt_kick(t0, vel=0.5):
-    t = tt(0.5)
-    f = 46 + 40 * np.exp(-t / 0.035)
-    x = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / 0.2) * ramp(t, 0.003)
-    place('kick', t0, x * vel, room=0.05)
-
-
-def celesta(t0, m, vel=0.25, pan=0.0):
-    f = mtof(m)
-    t = tt(2.2)
-    x = sum(a * np.sin(2 * np.pi * f * r * t) * np.exp(-t / d) for r, a, d in ((1, 1, 1.1), (3.0, 0.22, 0.35), (4.1, 0.1, 0.18), (0.5, 0.08, 0.6)))
-    place('keys', t0, norm(x * ramp(t, 0.002), vel), 1.0, pan, hall=0.5, echo=0.2)
-
-
-# ---------- arrangement ----------
-CHORDS = {  # bass note, string voicing, guitar voicing
-    'D': (38, [62, 66, 69, 74], [50, 57, 62, 66, 69]),
-    'A/C#': (37, [61, 64, 69, 73], [49, 57, 61, 64, 69]),
-    'Bm7': (35, [62, 66, 69, 71], [47, 54, 57, 62, 66]),
-    'Gmaj9': (31, [62, 66, 69, 71], [43, 50, 57, 59, 66]),
-    'D/F#': (42, [62, 66, 69, 74], [54, 57, 62, 66, 69]),
-    'Em9': (40, [59, 62, 66, 67], [52, 55, 59, 62, 66]),
-    'A7sus': (33, [62, 64, 67, 69], [45, 52, 55, 62, 64]),
-    'Bm9': (35, [61, 62, 66, 69], [47, 54, 61, 62, 66]),
-    'Gmaj7#11': (31, [61, 62, 66, 71], [43, 50, 59, 61, 66]),
-    'Em/B': (35, [59, 64, 67, 71], [47, 52, 59, 64, 67]),
+# ---------- the film's bars, and the variation ----------
+BARS = (list(range(0, 10))        # 0–20 s   intro (lyrics, then 现在，歌词也能一起带走), build (the icon), groove (lines land)
+        + list(range(14, 18))     # 20–28 s  the film's hook section, with the new hook: any player; translation
+        + [26, 27]                # 28–32 s  the second half of its breakdown: 想要，就打开
+        + [28, 29]                # 32–36 s  its build; the switch is clicked at 34
+        + list(range(30, 38))     # 36–52 s  its install groove: what BetterNCM is, step 1, step 2
+        + list(range(34, 38))     # 52–60 s  the groove's last phrase again: steps 2 and 3
+        + [38, 39, 40])           # 60–69 s  its end card: the film's hook and the last chord
+TUNE = [  # the intro tune, its first two bars moved onto the lyric lines at 0, 1, 2 and 3 s
+    [(0, 78, 2), (2, 76, 2)],
+    [(0, 74, 2), (2, 71, 1), (3, 74, 1)],
+    music.INTRO_TUNE[2],
+    music.INTRO_TUNE[3],
+]
+HOOK2 = {  # the new hook over the film's groove: it starts high and climbs again at the end of the phrase
+    'D': [(0, 81, 1), (1, 78, 0.5), (1.5, 76, 0.5), (2, 78, 2)],
+    'A/C#': [(0, 76, 1.5), (1.5, 73, 0.5), (2, 76, 1), (3, 81, 1)],
+    'Bm7': [(0, 78, 1.5), (1.5, 76, 0.5), (2, 74, 1), (3, 73, 1)],
+    'Gmaj9': [(0, 74, 1), (1, 76, 1), (2, 78, 2)],
 }
-PLAN = (['D', 'Bm7', 'Gmaj9']                               # 0–6 s    lyrics scrolling, piano alone
-        + ['A7sus', 'A7sus']                                # 6–10 s   the icon and "0.6"
-        + ['D', 'A/C#', 'Bm7', 'Gmaj9'] * 2 + ['D', 'A/C#'] # 10–30 s  lyrics in the file, any player, translation, optional
-        + ['Gmaj9', 'D/F#', 'Em9', 'A7sus', 'D', 'A/C#', 'Bm7', 'Gmaj9']  # 30–46 s  how to install
-        + ['D', 'Gmaj9', 'D']                               # 46–52 s  end card
-        + ['Bm9', 'Gmaj7#11', 'Em/B', 'Bm9'])               # 52–60 s  one more thing
-MELODY = {  # beats within the bar, note, length in beats
-    'D': [(0.5, 74, 0.5), (1, 76, 0.5), (1.5, 78, 1.5), (3, 76, 1)],
-    'A/C#': [(0, 73, 1.5), (1.5, 76, 0.5), (2, 81, 1.5), (3.5, 78, 0.5)],
-    'Bm7': [(0, 78, 1), (1, 76, 1), (2, 74, 1.5), (3.5, 73, 0.5)],
-    'Gmaj9': [(0, 71, 1), (1, 74, 1), (2, 79, 2)],
-}
-INTRO = [[(0, 78, 1.5), (1.5, 76, 0.5), (2, 74, 2)], [(0, 74, 1), (1, 76, 1), (2, 78, 1.5), (3.5, 76, 0.5)], [(0, 74, 3), (3, 71, 1)]]
-PICKING = [0, 3, 2, 4, 1, 3, 2, 4]  # eighth notes over the guitar voicing, bass string first
+for i, b in enumerate(BARS):
+    music.bar(b, i * BAR, hook=HOOK2 if b < 24 else music.HOOK, tune=TUNE)
 
-for b, name in enumerate(PLAN):
-    t0 = b * BAR
-    root, voices, frets = CHORDS[name]
-    intro, brand, feature, install, end, teaser = b < 3, 3 <= b < 5, 5 <= b < 15, 15 <= b < 23, 23 <= b < 26, b >= 26
+# ---------- hits and interface sounds, on the update's cues (the film's sounds for the same kinds of moment) ----------
+whoosh(3.9, 1.2, 0.14, 200, 900, 0, 0)                    # 现在，歌词也能一起带走
+tick(8.5, 81, 0.18)                                       # the arrow drops in
+click(9.5, 0.35, 3400)                                    # the lock springs open
+click(9.54, 0.25, 1800)
+pop(10.0, 0.22)                                           # 0.6 新增：写入歌词
+riser(8.6, 3.4, 0.45)
+impact(12.0, 1.0)                                         # 歌词，写进文件里
+for i, m in enumerate((81, 83, 86, 88)):                  # each line lands in the song
+    tick(13.0 + i, m, 0.2, -0.3 + 0.2 * i)
+chime(17.0, (86, 93), 0.28)                               # 歌词已写入
+swell(20.0, 0.6, 0.18)                                    # 换个播放器，照样滚动
+swell(24.0, 0.6, 0.18)                                    # 外语歌，附带翻译
+tick(26.0, 88, 0.16)                                      # .flac
+pop(26.5, 0.22)                                           # .lrc
+swoosh_down(27.4, 0.6, 0.2)                               # into the breakdown: 想要，就打开
+click(34.0, 0.3, 2400)                                    # the switch
+tick(34.3, 93, 0.16)
+riser(34.0, 2.0, 0.35)
+crash(36.0, 0.35)                                         # 它是一个 BetterNCM 插件
+for i, m in enumerate((81, 83, 86, 88, 90)):              # client + BetterNCM = plugins
+    tick(37.0 + i * 0.25, m, 0.16, -0.4 + 0.2 * i)
+tick(38.5, 93, 0.2)                                       # BetterDownload lights up
+swell(40.0, 0.6, 0.2)                                     # 第 1 步
+click(41.5, 0.3, 2400)                                    # 安装
+tick(41.75, 90, 0.16)
+pop(43.0, 0.22)                                           # the BetterNCM button appears
+swell(46.0, 0.6, 0.2)                                     # 第 2 步
+click(47.0, 0.28, 2400)                                   # 开始使用 BetterNCM
+click(48.0, 0.28, 2600)                                   # the magnifier
+for i in range(14):                                       # searching for BetterDownload
+    key(48.28 + i * 0.0694, 0.24)
+whoosh(48.62, 0.5, 0.1, 900, 2600, 0.3, -0.3)             # the card moves to the front
+click(52.0, 0.3, 2400)                                    # install
+tick(52.5, 93, 0.18)                                      # installed
+whoosh(54.5, 0.45, 0.12, 700, 2200, 0, 0)                 # 插件的更改需要重启以生效
+click(56.0, 0.3, 2400)                                    # 重启
+swoosh_down(56.1, 0.45, 0.18)
+whoosh(56.5, 0.42, 0.18, 900, 3200, 0.8, 0.2)             # the next download
+chime(58.0, (86, 93), 0.3)                                # converted
+swell(60.0, 0.8, 0.25)                                    # the end card, as in the film
+impact(60.0, 0.8)
+tick(61.0, 93, 0.12)
+for i in range(14):                                       # typing BetterDownload
+    key(63.95 + i * 0.055, 0.28)
+crash(64.0, 0.22, 4.0)
 
-    # Piano: alone under the scrolling lyrics, the tune over the features, chords elsewhere.
-    if intro:
-        for beat, m, length in INTRO[b]:
-            piano(t0 + beat * BEAT, m, length * BEAT, 0.55, 0.9, 0.1, hall=0.45)
-        piano(t0, root + 24, BAR, 0.3, 0.7, -0.2, hall=0.45)
-    elif brand:
-        for i, m in enumerate(sorted(voices)):
-            piano(t0 + i * 0.025, m, BAR, 0.4, 0.7, -0.2 + 0.13 * i, hall=0.4)
-    elif (feature or end) and name in MELODY:
-        for beat, m, length in MELODY[name]:
-            piano(t0 + beat * BEAT, m, length * BEAT, 0.6, 0.85, 0.12, hall=0.35)
-    elif install:
-        for m in sorted(voices)[:3]:
-            piano(t0, m, BAR * 0.9, 0.3, 0.55, 0.0, hall=0.4)
 
-    # Strings: a quiet bed that opens up at the reveal and the end card.
-    if intro:
-        strings(t0, BAR, voices, 0.55, attack=1.2 if b == 0 else 0.5)
-    elif brand:
-        strings(t0, BAR, voices + [root + 24], 0.7 + 0.25 * (b - 3), attack=0.4, swell_to=1.35)
-    elif feature or install:
-        strings(t0, BAR, voices, 0.55 if feature else 0.42, attack=0.35)
-    elif end:
-        strings(t0, BAR if b < 25 else 4.5, voices + [root + 24], 0.85, attack=0.3, release=2.5)
+def fade_out(a, b, sends_early=0.6):
+    """Fades everything placed so far out from a to b and silences it from then on, so no tail of the music reaches the
+    teaser. The reverb sends fade a little earlier, so the reverbs have died away by the time the teaser starts."""
+    for bufs, lead in ((sound.BUS, 0.0), (sound.SEND, sends_early)):
+        i, j = int((a - lead) * SR), int((b - lead) * SR)
+        g = np.ones(sound.N, np.float32)
+        g[i:j] = np.linspace(1, 0, j - i) ** 2
+        g[j:] = 0.0
+        for x in bufs.values():
+            x *= g[:, None]
 
-    # Guitar picking and bass under the groove.
-    if brand or feature or install or (end and b < 25):
-        for i in range(8):
-            if brand and b == 3 and i < 4:
-                continue
-            guitar(t0 + i * BEAT / 2, frets[PICKING[i]], 0.5 if i % 2 else 0.62, [-0.3, 0.25][i % 2])
-        upright(t0, root + 12, 0.7, BEAT * 1.8)
-        upright(t0 + 2 * BEAT, root + 12 + (7 if name not in ('A7sus',) else 5), 0.55, BEAT * 1.8)
-    elif end:
-        for i, m in enumerate(frets):                              # the last chord, strummed
-            guitar(t0 + i * 0.03, m, 0.55, -0.3 + 0.15 * i)
-        upright(t0, root + 12, 0.7, 3.0)
 
-    # Light percussion: felt kick, snaps on two and four, a shaker in eighths.
-    if feature or install or (end and b < 25):
-        felt_kick(t0, 0.42); felt_kick(t0 + 2 * BEAT, 0.28)
-        snap(t0 + BEAT, 0.34); snap(t0 + 3 * BEAT, 0.34, -0.1)
-        for s in range(0, 16, 2):
-            shaker(t0 + s * STEP, 0.13 if s % 4 else 0.08)
+# The music ends with the end card: its last chord fades by 69.2 s and nothing of it plays after that.
+fade_out(67.6, 69.2)
 
-    # One more thing: dark strings, a celesta line and a low piano.
-    if teaser:
-        strings(t0, BAR, [n - 12 for n in voices] + voices[1:3], 0.34 + 0.08 * (b - 26), attack=0.8 if b == 26 else 0.4, bright=1500)
-        upright(t0, root, 0.5, BAR * 0.95)
 
-# ---------- hits and interface sounds, on the video's cues ----------
-piano(52.0, 74, 1.6, 0.45, 0.8, 0.0, hall=0.6)                  # 还有一件事。
-for i, m in enumerate((90, 85, 86, 81, 90, 93)):               # the green line crosses the screen
-    celesta(54.0 + i * 0.22, m, 0.2 + 0.03 * i, -0.5 + 0.2 * i)
-for m in (38, 45, 50, 54):                                       # 即将到来。
-    piano(57.5, m, 2.4, 0.4, 0.8, 0.0, hall=0.6)
-celesta(57.5, 97, 0.18, 0.3)
-swell(46.0, 1.2, 0.18)                                           # into the end card
-for i, t in enumerate((10.9, 11.4, 11.9, 12.4)):                 # lyric lines fly into the song
-    tick(t, (86, 88, 90, 93)[i], 0.12, -0.3 + 0.2 * i)
-pop(13.2, 0.16)                                                  # 已写入
-pop(24.3, 0.16)                                                  # .lrc
-click(27.25, 0.22, 2400)                                         # the lyrics switch
-tick(27.35, 93, 0.12)
-for i, m in enumerate((81, 83, 86, 88, 90)):                     # client + BetterNCM = plugins
-    tick(30.85 + i * 0.2, m, 0.1, -0.4 + 0.2 * i)
-tick(32.3, 93, 0.14)
-click(35.3, 0.22, 2400); tick(35.6, 90, 0.12); pop(36.1, 0.16)   # 安装, the new button
-click(38.52, 0.2, 2400)                                          # 开始使用 BetterNCM
-click(38.97, 0.2, 2600)                                          # the magnifier
-for i in range(14):                                              # typing BetterDownload
-    key(39.2 + i * 0.05, 0.16)
-click(40.84, 0.22, 2400); tick(41.4, 93, 0.12)                   # install, installed
-click(42.92, 0.22, 2400)                                         # 重启
-chime(44.8, (86, 93), 0.2)                                       # the next download is done
-for i in range(14):                                              # the end card types the name
-    key(48.72 + i * 0.038, 0.18)
+# ---------- 70–78 s: one more thing, with a few soft sounds of its own ----------
+def light_run(t0, seconds=1.5, vel=0.1):
+    """A glassy shimmer that follows the light round the icon's edge, panned to where the light is."""
+    t = tt(seconds + 0.6)
+    x = sum(a * np.sin(2 * np.pi * f * t + sound.rng.random() * 6.283) for f, a in ((1175, 1), (1760, 0.6), (2349, 0.45), (3520, 0.25)))
+    x = x * (0.6 + 0.4 * np.sin(2 * np.pi * 9 * t)) * ramp(t, 0.3) * np.exp(-np.maximum(0, t - seconds) / 0.25)
+    u = np.clip(t / seconds, 0, 1)
+    p = np.where(u < 0.5, 2 * u * u, 1 - 2 * (1 - u) ** 2)             # the light's ease
+    ang = (0.7 * np.sin(2 * np.pi * p) + 1) * np.pi / 4
+    place('sfx', t0, norm(np.stack([x * np.cos(ang), x * np.sin(ang)], 1), vel), hall=0.5)
 
-sound.finish(OUT, DUR, pump=False)
+
+def boom(t0, vel=0.35):
+    """A soft low bloom, with its octave so a phone can play it."""
+    t = tt(2.0)
+    ph = 2 * np.pi * np.cumsum(48 + 30 * np.exp(-t / 0.15)) / SR
+    x = (np.sin(ph) * np.exp(-t / 0.6) + 0.3 * np.sin(2 * ph) * np.exp(-t / 0.3)) * ramp(t, 0.01)
+    place('sfx', t0, x * vel, hall=0.3)
+
+
+whoosh(69.9, 1.2, 0.1, 250, 700, 0, 0)                   # 还有一件事: only a breath under it
+light_run(72.0, vel=0.32)                                 # the light runs round the edge
+whoosh(72.0, 1.5, 0.1, 3500, 9000, 0.0, 0.0)
+swell(74.0, 0.8, 0.2)                                     # the glow blooms
+boom(74.0, 0.35)
+pad(74.0, 2.6, [62, 66, 69, 73, 76], 0.5, 1500, attack=0.25, release=1.4)
+whoosh(74.5, 1.1, 0.08, 2500, 9000, -0.5, 0.5)            # the sheen
+tick(75.05, 93, 0.12)
+chime(76.0, (86, 93), 0.2)                                # 即将到来
+boom(76.0, 0.3)
+
+finish(OUT, DUR)

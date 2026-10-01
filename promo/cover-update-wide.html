@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>BetterDownload 0.6 横版封面</title>
+<style>
+/* 1920 × 1080, the landscape companion of cover-update.html. Everything sits inside the middle 1440 × 1080 (the 4:3
+   crop Douyin asks for) and clear of the bottom strip where feeds show play count and duration.
+   The words stand on the left over black; the lyric view is on the right, over the cover's colours. */
+@font-face{font-family:PF;src:local("PingFang SC Medium"),local("PingFangSC-Medium");font-weight:500}
+@font-face{font-family:PF;src:local("PingFang SC Semibold"),local("PingFangSC-Semibold"),local("PingFang SC Bold");font-weight:600}
+@font-face{font-family:PF;src:local("PingFang SC Bold"),local("PingFangSC-Semibold");font-weight:700}
+@font-face{font-family:PF;src:local("PingFang SC Heavy"),local("PingFang SC Bold");font-weight:800}
+:root{--font:PF,"Noto Sans SC","Microsoft YaHei UI",sans-serif;--ui:"Segoe UI Variable Text","Segoe UI","Microsoft YaHei UI",sans-serif;--brand:linear-gradient(135deg,#f39bc4,#9a8bff 52%,#5eaefc)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{position:relative;width:1920px;height:1080px;overflow:hidden;background:#000;color:#f5f5f7;font-family:var(--font);-webkit-font-smoothing:antialiased}
+/* A lyric view's backdrop: the cover's colours, blurred, fading into black towards the words. */
+.blob{position:absolute;border-radius:50%}
+.fade{position:absolute;inset:0;background:linear-gradient(90deg,#000 24%,rgba(0,0,0,.78) 42%,rgba(0,0,0,.18) 62%,rgba(0,0,0,0) 80%),linear-gradient(rgba(0,0,0,0) 70%,rgba(0,0,0,.6))}
+.col{position:absolute;left:300px;white-space:nowrap}
+.kicker{font-size:34px;font-weight:600;color:rgba(255,255,255,.72);letter-spacing:.02em}
+.kicker b{font:800 32px/1 var(--ui);background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent;margin-left:8px}
+.title{font-size:116px;font-weight:800;line-height:1.12}
+.grad{background:linear-gradient(90deg,#f7a6cf,#a796ff 48%,#68b4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-size:36px;font-weight:600;color:#d2d2d7}
+.pill{position:absolute;left:300px;padding:0 44px;height:88px;border-radius:44px;display:flex;align-items:center;font-size:40px;font-weight:700;color:#fff;background:var(--brand);box-shadow:0 22px 56px -20px rgba(154,139,255,.95),inset 0 2px 0 rgba(255,255,255,.4);white-space:nowrap}
+.brand{position:absolute;left:300px;display:flex;align-items:center;gap:18px;font-size:40px;font-weight:700;white-space:nowrap}
+.icon{position:relative;width:64px;height:64px;border-radius:16px;display:grid;place-items:center;background:var(--brand);box-shadow:inset 0 2px 1px rgba(255,255,255,.55),0 14px 32px -12px rgba(122,104,255,.95)}
+.icon svg{width:38px;height:38px}
+.by{margin-left:10px;font:600 22px/1 var(--ui);letter-spacing:.3em;color:#a1a1a6}
+.lyrics{position:absolute;left:1070px;top:292px}
+.ln{font-size:60px;font-weight:800;line-height:1.16;letter-spacing:-.01em;white-space:nowrap;color:rgba(255,255,255,.3);margin-bottom:40px}
+.ln.near{filter:blur(2px);color:rgba(255,255,255,.22)}
+.ln.on{position:relative;color:rgba(255,255,255,.34)}
+.ln.on i{position:absolute;left:0;top:0;font-style:normal;color:#fff;-webkit-mask-image:linear-gradient(90deg,#000 58%,transparent 70%)}
+</style>
+</head>
+<body>
+<div class="blob" style="left:900px;top:-80px;width:1100px;height:1100px;background:radial-gradient(closest-side,rgba(217,74,130,.85),rgba(217,74,130,0))"></div>
+<div class="blob" style="left:1300px;top:240px;width:820px;height:820px;background:radial-gradient(closest-side,rgba(255,176,122,.7),rgba(255,176,122,0))"></div>
+<div class="blob" style="left:1380px;top:-220px;width:620px;height:620px;background:radial-gradient(closest-side,rgba(255,227,173,.5),rgba(255,227,173,0))"></div>
+<div class="blob" style="left:1000px;top:560px;width:1000px;height:760px;background:radial-gradient(closest-side,rgba(90,30,74,.9),rgba(90,30,74,0))"></div>
+<div class="fade"></div>
+
+<div class="col kicker" style="top:226px">网易云音乐 · BetterDownload<b>0.6</b></div>
+<div class="col title" style="top:292px">下载的歌</div>
+<div class="col title grad" style="top:422px">现在带歌词了</div>
+<div class="col sub" style="top:596px">FLAC / MP3 · 带时间轴 · 可附翻译</div>
+<div class="pill" style="top:676px">附 BetterNCM 安装教程</div>
+<div class="brand" style="top:824px"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4.5v10M6 10.5l4 4 4-4M5 19.5h11"/><rect x="15.2" y="6.6" width="6.4" height="5" rx="1.3" fill="#fff" stroke="none"/><path d="M16.7 6.6V5a1.8 1.8 0 0 1 3.5-.6" stroke-width="1.5"/></svg></span>BetterDownload<span class="by">BY XIAOMING6680</span></div>
+
+<div class="lyrics">
+  <div class="ln near">耳机里还是那首歌</div>
+  <div class="ln on">窗外的灯一盏盏亮起<i>窗外的灯一盏盏亮起</i></div>
+  <div class="ln near">副歌落下的时候</div>
+  <div class="ln near" style="opacity:.6">每个字都刚刚好</div>
+</div>
+</body>
+</html>

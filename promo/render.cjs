@@ -5,8 +5,8 @@
 //   node promo/render.cjs --music track.mp3    your own (licensed) music instead
 //   node promo/render.cjs --stills 12,25.5     PNG stills at those seconds
 //   node promo/render.cjs --vertical           the 1080 × 1920 cut for phone feeds (also works with --stills)
-//   node promo/render.cjs --update             the vertical 0.6 update video with its acoustic soundtrack (also works with --stills)
-//   node promo/render.cjs --cover              cover images for Douyin and Bilibili; --cover update renders only the 0.6 one
+//   node promo/render.cjs --update             the vertical 0.6 update video with its own soundtrack (also works with --stills)
+//   node promo/render.cjs --cover              cover images for Douyin and Bilibili; --cover update renders only the 0.6 ones
 //   node promo/render.cjs --preview            plugin/preview.jpg for the store and docs/images/cover.jpg for the README
 //   options: --size 1080|2160  --fps 60  --workers 6  --from 0 --to 85
 //
@@ -81,6 +81,7 @@ const COVERS = [
     ['cover.html', 1080, 1920, [['cover-douyin-9x16.png', null], ['cover-douyin-3x4.png', { x: 0, y: 240, width: 1080, height: 1440 }]]],
     ['cover-bilibili.html', 1920, 1080, [['cover-bilibili-16x9.png', null], ['cover-bilibili-4x3.png', { x: 240, y: 0, width: 1440, height: 1080 }]]],
     ['cover-update.html', 1080, 1920, [['cover-update-douyin-9x16.png', null], ['cover-update-douyin-3x4.png', { x: 0, y: 240, width: 1080, height: 1440 }]]],
+    ['cover-update-wide.html', 1920, 1080, [['cover-update-16x9.png', null], ['cover-update-4x3.png', { x: 240, y: 0, width: 1440, height: 1080 }]]],
 ];
 async function covers(browser) {
     for (const [html, width, height, shots] of COVERS.filter(([html]) => args.cover === true || html.includes(String(args.cover)))) {
@@ -159,9 +160,11 @@ async function film(browser, size, ff) {
     const length = total / fps, name = args.out ? path.resolve(String(args.out))
         : path.join(outDir, update ? `BetterDownload-${require('../plugin/manifest.json').version}-update${size > 1080 ? '-4k' : ''}.mp4`
             : `BetterDownload-promo${vertical ? '-vertical' : ''}${size > 1080 ? '-4k' : ''}.mp4`);
-    // Music of any length is trimmed to the film and faded out over its last seconds.
+    // Music of any length is trimmed to the film and faded out over its last seconds. The update's own track already
+    // ends on its last chord at 58 s, so its fade only takes the final ring.
+    const fade = update && !args.music ? 1.2 : 2.5;
     run(ff, ['-y', '-loglevel', 'error', '-i', video, '-ss', String(from), '-i', music, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
-        '-af', `afade=t=out:st=${Math.max(0, length - 2.5)}:d=2.5`, '-c:a', 'aac', '-b:a', '256k', '-t', String(length), '-movflags', '+faststart', name]);
+        '-af', `afade=t=out:st=${Math.max(0, length - fade)}:d=${fade}`, '-c:a', 'aac', '-b:a', '256k', '-t', String(length), '-movflags', '+faststart', name]);
     fs.rmSync(tmp, { recursive: true, force: true });
     console.log(name);
 }
