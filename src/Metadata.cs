@@ -17,7 +17,7 @@ namespace NcmBetterDownload {
             return null;
         }
         // Skipped optional details come back as a note; only a failed tag write throws.
-        // lyrics goes to FLAC's LYRICS comment or MP3's USLT frame, where most players look for embedded lyrics.
+        // lyrics goes to FLAC's LYRICS comment, MP3's USLT frame or MP4's ©lyr atom, where most players look for embedded lyrics.
         public static string Embed(string path, string format, byte[] json, byte[] cover, string lyrics, out bool withLyrics) {
             var notes = new List<string>();
             withLyrics = false;
@@ -29,7 +29,7 @@ namespace NcmBetterDownload {
             }
             string mime = cover.Length > 0 ? Mime(cover) : null;
             if (cover.Length > 0 && mime == null) notes.Add("封面格式无法识别，未写入封面");
-            string type = format == ".flac" ? "taglib/flac" : "taglib/mp3";
+            string type = format == ".flac" ? "taglib/flac" : format == ".m4a" ? "taglib/m4a" : "taglib/mp3";
             using (var audio = TagLib.File.Create(path, type, TagLib.ReadStyle.Average)) {
                 string title = Text(info, "musicName"), album = Text(info, "album");
                 if (title.Length > 0) audio.Tag.Title = title;

@@ -1,6 +1,6 @@
 # BetterDownload 发布流程
 
-源码仓库：[xiaoming6680/BetterDownload](https://github.com/xiaoming6680/BetterDownload)。作者：XIAOMING6680。
+源码仓库：[xiaoming6680/NCM-BetterDownload](https://github.com/xiaoming6680/NCM-BetterDownload)。作者：XIAOMING6680。
 
 ## 构建与分发
 
@@ -23,9 +23,10 @@ git push
 
 ## 客户端验收
 
-已知设置页加载环境为 BetterNCM 1.3.4。下载接口对照网易云 3.1.37 前端资源核对，完整下载链路需在发布前验收：
+已知设置页加载环境为 BetterNCM 1.3.4。下载接口对照网易云 3.1.37 和 2.10.13 的前端资源核对：3.x 从 webpack 模块里的 SDK 订阅，2.10.x 用网易云自带的 `legacyNativeCmder` 订阅，事件都是 `storage.onaddid3done`。完整下载链路需在发布前分别在 3.x 和 2.10.x 上验收：
 
 - NCM 内分别为 FLAC 和 MP3 的下载均能转换、播放并显示内嵌封面和中文标签。
+- 3.x 用“臻音全景声”下载的歌转换为 `.m4a`，音频包与原始数据一致，卡片提示多数播放器不支持。
 - 输出位于 `VipSongsDownload/unlock`，保留源文件和歌手子目录，同名输出不覆盖。
 - 验证下载失败、暂停恢复、连续下载、修改下载位置、启停及常用主题兼容性。
 - 普通 FLAC / MP3 不触发转换。
@@ -40,7 +41,7 @@ git push
 ```json
 {
   "name": "BetterDownload",
-  "repo": "xiaoming6680/BetterDownload",
+  "repo": "xiaoming6680/NCM-BetterDownload",
   "branch": "main",
   "subpath": "/plugin",
   "author": "XIAOMING6680"

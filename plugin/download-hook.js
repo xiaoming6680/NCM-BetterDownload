@@ -30,7 +30,20 @@
         const base = normalize(downloadRoot);
         return base ? base + '\\VipSongsDownload' : '';
     }
+    // NetEase 2.10.x ships its own command bridge (legacyNativeCmder) with the same storage.onaddid3done(taskId, code, relativePath)
+    // event; the download directory is storage.path in its NM_SETTING_CUSTOM setting.
+    function findLegacySdk(win) {
+        const cmder = win.legacyNativeCmder;
+        if (!cmder || typeof cmder.appendRegisterCall !== 'function' || typeof cmder.removeRegisterCall !== 'function') return null;
+        return { Bridge: cmder, Storage: { get downloadDir() {
+            try {
+                const setting = JSON.parse(win.localStorage.getItem('NM_SETTING_CUSTOM'));
+                return (setting && setting.storage && setting.storage.path) || '';
+            } catch (_) { return ''; }
+        } } };
+    }
     function findSdk(win) {
+        if (/^2\./.test(String(win.APP_CONF && win.APP_CONF.appver))) return findLegacySdk(win);
         // NetEase 3.x uses webpack 4. Capture only the module cache; do not run client modules.
         const chunks = win.webpackJsonp;
         if (!chunks || !Array.isArray(chunks) || chunks.push === Array.prototype.push) return null;

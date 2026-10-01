@@ -298,7 +298,7 @@ namespace NcmBetterDownload {
         static bool Done(FileInfo file, string target) {
             Receipt receipt;
             if (Receipts.TryGetValue(file.FullName, out receipt) && receipt.signature == Signature(file) && File.Exists(receipt.output)) return true;
-            return File.Exists(Path.ChangeExtension(target, ".flac")) || File.Exists(Path.ChangeExtension(target, ".mp3"));
+            return new [] { ".flac", ".mp3", ".m4a" }.Any(ext => File.Exists(Path.ChangeExtension(target, ext)));
         }
         // Returns true while a search request is listed, so the worker stays until the plugin collects it.
         static bool ServeScan(Control control) {
@@ -418,6 +418,36 @@ namespace NcmBetterDownload {
             }
             throw new IOException("同名文件过多。");
         }
+        // Sample entry types in an MP4's moov, e.g. "mp4a" for AAC or "av3a" for Audio Vivid; empty when there is no readable moov.
+        public static List<string> Mp4Codecs(string path) {
+            var codecs = new List<string>();
+            using (var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var r = new BinaryReader(file)) {
+                while (file.Length - file.Position >= 8) {
+                    long start = file.Position, size = ReadUInt32BE(r);
+                    string type = Encoding.ASCII.GetString(r.ReadBytes(4));
+                    if (size == 1) { if (file.Length - file.Position < 8) break; size = (long)(((ulong)ReadUInt32BE(r) << 32) | ReadUInt32BE(r)); }
+                    else if (size == 0) size = file.Length - start;
+                    if (size < file.Position - start || size > file.Length - start) break;
+                    if (type == "moov") {
+                        long body = size - (file.Position - start);
+                        if (body > 64 * 1024 * 1024) break;
+                        byte[] moov = r.ReadBytes((int)body);
+                        // stsd: version/flags, entry count, then each entry's size and type.
+                        for (int i = 4; i + 20 <= moov.Length; i++)
+                            if (moov[i] == 's' && moov[i + 1] == 't' && moov[i + 2] == 's' && moov[i + 3] == 'd') codecs.Add(Encoding.ASCII.GetString(moov, i + 16, 4));
+                        break;
+                    }
+                    file.Position = start + size;
+                }
+            }
+            return codecs;
+        }
+        static uint ReadUInt32BE(BinaryReader r) {
+            byte[] b = r.ReadBytes(4);
+            if (b.Length != 4) throw new EndOfStreamException();
+            return (uint)(b[0] << 24 | b[1] << 16 | b[2] << 8 | b[3]);
+        }
         static void WriteAudio(FileStream file, long start, long length, byte[] mask, string temp, Func<bool> alive, Action<long, long> progress) {
             file.Position = start;
             using (var output = new FileStream(temp, FileMode.CreateNew, FileAccess.Write, FileShare.None)) {
@@ -462,13 +492,15 @@ namespace NcmBetterDownload {
                     file.Position += coverSpace - coverSize;
                     long audioLength = file.Length - file.Position;
                     if (audioLength < 4) throw new InvalidDataException("NCM 缺少音频数据。");
-                    byte[] head = Read(r, 4);
+                    byte[] head = Read(r, (int)Math.Min(8, audioLength));
                     for (int i = 0; i < head.Length; i++) head[i] ^= mask[i];
                     string format;
-                    if (Encoding.ASCII.GetString(head) == "fLaC") format = ".flac";
+                    if (Encoding.ASCII.GetString(head, 0, 4) == "fLaC") format = ".flac";
                     else if (Encoding.ASCII.GetString(head, 0, 3) == "ID3" || (head[0] == 255 && (head[1] & 0xe0) == 0xe0 && (head[1] & 6) != 0 && (head[2] & 0xf0) != 0xf0)) format = ".mp3";
-                    else throw new InvalidDataException("未识别到 FLAC / MP3 音频，文件可能损坏或格式不受支持。");
-                    long audioStart = file.Position - 4;
+                    // 臻音全景声 downloads are MP4 audio (Audio Vivid); the container is kept as it is, like FLAC and MP3.
+                    else if (head.Length == 8 && Encoding.ASCII.GetString(head, 4, 4) == "ftyp") format = ".m4a";
+                    else throw new InvalidDataException("无法识别的音频格式");
+                    long audioStart = file.Position - head.Length;
                     if (header != null) header(format, cover);
                     Directory.CreateDirectory(Path.GetDirectoryName(target));
                     for (var parent = new DirectoryInfo(Path.GetDirectoryName(target)); parent != null; parent = parent.Parent)
@@ -491,9 +523,11 @@ namespace NcmBetterDownload {
                             // Tags are optional: rewrite clean audio instead of losing the song.
                             File.Delete(temp);
                             WriteAudio(file, audioStart, audioLength, mask, temp, alive, null);
-                            notes.Clear(); notes.Add("封面与歌曲信息写入失败，已保存原始音频"); withLyrics = false;
+                            notes.Clear(); notes.Add("封面与歌曲信息未写入"); withLyrics = false;
                         }
                     }
+                    // The song is saved either way; the note explains why most players will not play it.
+                    if (format == ".m4a" && Mp4Codecs(temp).Contains("av3a")) notes.Add("多数播放器不支持臻音全景声");
                     if (!alive()) throw new OperationCanceledException();
                     // Re-check just before committing: the user may have edited the old file meanwhile.
                     if (replace && previous.Intact()) File.Replace(temp, dest, null);

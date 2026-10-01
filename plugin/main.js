@@ -318,6 +318,8 @@
         .nbd-settings small{display:block;margin-top:1px;font-size:12px;opacity:.6;overflow-wrap:anywhere}
         .nbd-settings .nbd-changed{animation:nbd-fade .5s ease-out}
         .nbd-settings [data-dot],.nbd-settings .nbd-glyph{flex:none;align-self:flex-start;width:14px;height:22px;display:grid;place-items:center}.nbd-settings .nbd-glyph{opacity:.6}
+        /* NetEase 2.10.x core.css sets svg{width:100%;height:100%}, which outranks the SVG size attributes. */
+        .nbd-settings .nbd-glyph svg{width:14px;height:14px}.nbd-settings .nbd-features i svg{width:16px;height:16px}
         .nbd-settings [data-dot]::before{content:"";width:8px;height:8px;border-radius:50%;background:#9aa0a6;box-shadow:0 0 0 4px rgba(154,160,166,.16);transition:background .35s,box-shadow .35s}
         .nbd-settings [data-dot][data-state=on]::before{background:#2fbf71;box-shadow:0 0 0 4px rgba(47,191,113,.18)}
         .nbd-settings [data-dot][data-state=busy]::before{background:#7a8cff;box-shadow:0 0 0 4px rgba(122,140,255,.2);animation:nbd-pulse 1.6s ease-in-out infinite}
@@ -372,7 +374,7 @@
         <div class="nbd-segment" role="radiogroup" aria-label="卡片样式" data-card-style style="--n:2"><span class="nbd-thumb"></span><button role="radio" data-value="standard">标准</button><button role="radio" data-value="compact">简洁</button></div><button data-preview>预览</button></div>
         <div class="nbd-row"><span class="nbd-glyph">${ICON.clock}</span><div class="nbd-copy"><div>停留时间</div><small>鼠标停在卡片上时不会收起</small></div>
         <div class="nbd-segment" role="radiogroup" aria-label="停留时间" data-card-stay style="--n:3"><span class="nbd-thumb"></span><button role="radio" data-value="2000">2 秒</button><button role="radio" data-value="4000">4 秒</button><button role="radio" data-value="6000">6 秒</button></div></div></div>
-        <ul class="nbd-features"><li class="nbd-in" style="--i:6"><i>${ICON.wave}</i><div><b>无损提取</b><small>直接取出 FLAC / MP3 原始音频，不重新编码</small></div></li>
+        <ul class="nbd-features"><li class="nbd-in" style="--i:6"><i>${ICON.wave}</i><div><b>无损提取</b><small>直接取出 FLAC / MP3 / M4A 原始音频，不重新编码</small></div></li>
         <li class="nbd-in" style="--i:7"><i>${ICON.tag}</i><div><b>信息完整</b><small>封面、标题、歌手与专辑写入音频文件</small></div></li>
         <li class="nbd-in" style="--i:8"><i>${ICON.keep}</i><div><b>原文件保留</b><small>输出到 VipSongsDownload\\unlock，不覆盖你已有的文件</small></div></li></ul>
         <footer class="nbd-in" style="--i:9"><span>作者 XIAOMING6680</span><span data-links></span></footer>`;

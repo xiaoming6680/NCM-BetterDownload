@@ -29,8 +29,26 @@ function setup(t) {
     const status = () => JSON.parse(fs.readFileSync(path.join(root, 'status.json')));
     return { root, input, output, state, config, control, save, run, job, copy, status };
 }
+// MP4 audio samples in order, read through stco/co64, stsc and stsz, so chunks moved by a bigger moov are checked too.
+function samples(bytes) {
+    const box = (start, end, type) => { for (let p = start; p + 8 <= end;) { const size = bytes.readUInt32BE(p); if (bytes.toString('latin1', p + 4, p + 8) === type) return [p + 8, p + size]; p += size; } assert.fail('no ' + type); };
+    let [s, e] = box(0, bytes.length, 'moov');
+    for (const type of ['trak', 'mdia', 'minf', 'stbl']) [s, e] = box(s, e, type);
+    const [sz] = box(s, e, 'stsz'), fixed = bytes.readUInt32BE(sz + 4), count = bytes.readUInt32BE(sz + 8);
+    const sizes = Array.from({ length: count }, (_, i) => fixed || bytes.readUInt32BE(sz + 12 + 4 * i));
+    const [co] = box(s, e, 'stco'), chunks = Array.from({ length: bytes.readUInt32BE(co + 4) }, (_, i) => bytes.readUInt32BE(co + 8 + 4 * i));
+    const [sc] = box(s, e, 'stsc'), runs = Array.from({ length: bytes.readUInt32BE(sc + 4) }, (_, i) => [bytes.readUInt32BE(sc + 8 + 12 * i), bytes.readUInt32BE(sc + 12 + 12 * i)]);
+    const out = []; let sample = 0;
+    chunks.forEach((offset, i) => {
+        const perChunk = runs.filter(([first]) => first <= i + 1).pop()[1];
+        for (let n = 0, p = offset; n < perChunk && sample < count; n++) { out.push(bytes.subarray(p, p + sizes[sample])); p += sizes[sample++]; }
+    });
+    assert.equal(sample, count);
+    return Buffer.concat(out);
+}
 // Compare encoded audio frames independently of TagLib; tags may move/change size.
 function frames(bytes, ext) {
+    if (ext === 'm4a') return samples(bytes);
     if (ext === 'flac') {
         assert.equal(bytes.subarray(0, 4).toString(), 'fLaC');
         let p = 4, last = false;
@@ -42,7 +60,7 @@ function frames(bytes, ext) {
     if (bytes.subarray(end - 128, end - 125).toString() === 'TAG') end -= 128;
     return bytes.subarray(start, end);
 }
-for (const ext of ['flac', 'mp3']) test(ext + ': native job preserves audio frames, embeds cover/title/album/artist, no sidecars, receipt reuse', t => {
+for (const ext of ['flac', 'mp3', 'm4a']) test(ext + ': native job preserves audio frames, embeds cover/title/album/artist, no sidecars, receipt reuse', t => {
     const s = setup(t), original = audio(ext), encoded = fixture(original);
     const job = s.job('歌手/歌曲.ncm', encoded);
     assert.equal(s.run().status, 0, JSON.stringify(s.status()));
@@ -91,15 +109,16 @@ test('unreadable cover or tags never cost the audio', t => {
     assert.match(s.status().results['job-1'].warning, /封面格式无法识别/);
     // TagLib cannot parse this stream; the untouched audio is written again without tags.
     assert.deepEqual(fs.readFileSync(path.join(s.output, 'broken.flac')), broken);
-    assert.match(s.status().results['job-2'].warning, /已保存原始音频/);
+    assert.equal(s.status().results['job-2'].warning, '封面与歌曲信息未写入');
     assert.equal(s.status().failed, 0);
     assert.deepEqual(fs.readdirSync(s.output).sort(), ['broken.flac', 'gif.flac']);
 });
 // Made-up lyrics in the shape the plugin hands over: LRC with credits turned into ordinary lines.
 const LRC = '[00:00.00]作词: 测试作者\n[00:01.00]第一句歌词\n[00:02.50]Second line\n';
 const lyricsIn = (bytes, ext) => ext === 'flac' ? bytes.includes(Buffer.from('LYRICS=' + LRC, 'utf8'))
+    : ext === 'm4a' ? bytes.includes(Buffer.from('\xa9lyr', 'latin1')) && bytes.includes(Buffer.from(LRC, 'utf8'))
     : bytes.includes(Buffer.from('USLT')) && (bytes.includes(Buffer.from(LRC, 'utf16le')) || bytes.includes(Buffer.from(LRC, 'utf8')));
-for (const ext of ['flac', 'mp3']) test(ext + ': lyrics are asked for by song ID, then embedded beside the other tags with an .lrc next to the song', t => {
+for (const ext of ['flac', 'mp3', 'm4a']) test(ext + ': lyrics are asked for by song ID, then embedded beside the other tags with an .lrc next to the song', t => {
     const s = setup(t); s.config.lyrics = { enabled: true, file: true }; s.save();
     const job = s.job('歌手/歌曲.ncm', fixture(audio(ext)));
     // First pass: nothing is written yet; the request carries the ID from the NCM's metadata.
@@ -118,6 +137,20 @@ for (const ext of ['flac', 'mp3']) test(ext + ': lyrics are asked for by song ID
     assert.equal(s.status().lyrics, null);
     assert.equal(s.status().activity.lyrics, true);
     assert.equal(s.status().results['job-1'].message, '音频、歌曲信息与歌词已保存');
+});
+// 臻音全景声 arrives as MP4 with an Audio Vivid ("av3a") sample entry; the AAC fixture is relabelled to stand in for it.
+const vivid = () => { const m4a = Buffer.from(audio('m4a')), at = m4a.indexOf('stsd') + 16; assert.equal(m4a.toString('latin1', at, at + 4), 'mp4a'); m4a.write('av3a', at, 'latin1'); return m4a; };
+test('Audio Vivid is kept as .m4a with tags and a note that most players cannot play it; plain AAC gets no note', t => {
+    const s = setup(t), song = s.job('臻音.ncm', fixture(vivid())), aac = s.job('aac.ncm', fixture(audio('m4a')));
+    assert.equal(s.run().status, 0, JSON.stringify(s.status()));
+    const output = song.target.replace(/\.ncm$/, '.m4a'), converted = fs.readFileSync(output);
+    assert.deepEqual(frames(converted, 'm4a'), frames(vivid(), 'm4a'));
+    assert.ok(converted.includes('av3a') && converted.includes(cover) && converted.includes(Buffer.from('合成测试')));
+    assert.equal(s.status().results['job-1'].state, 'success');
+    assert.equal(s.status().results['job-1'].warning, '多数播放器不支持臻音全景声');
+    assert.equal(s.status().results['job-2'].warning, '');
+    assert.deepEqual(frames(fs.readFileSync(aac.target.replace(/\.ncm$/, '.m4a')), 'm4a'), frames(audio('m4a'), 'm4a'));
+    assert.deepEqual(fs.readdirSync(s.output).sort(), ['aac.m4a', '臻音.m4a']);
 });
 test('lyrics that do not arrive in time, or a song without an ID, never hold up the audio', t => {
     const s = setup(t); s.config.lyrics = { enabled: true, file: true, wait: 0 }; s.save();
@@ -173,18 +206,19 @@ test('a running worker waits for the plugin to hand over lyrics, and converts wi
 });
 test('user-requested search lists unconverted NCM downloads only', t => {
     const s = setup(t);
-    for (const name of ['new.ncm', '歌手/second.ncm', 'done.ncm', 'unlock/x/inside.ncm']) {
+    for (const name of ['new.ncm', '歌手/second.ncm', 'done.ncm', 'vivid.ncm', 'unlock/x/inside.ncm']) {
         fs.mkdirSync(path.dirname(path.join(s.input, name)), { recursive: true });
         fs.writeFileSync(path.join(s.input, name), fixture(audio('flac')));
     }
     fs.writeFileSync(path.join(s.input, 'plain.mp3'), audio('mp3'));
     fs.writeFileSync(path.join(s.output, 'done.flac'), 'converted earlier');
+    fs.writeFileSync(path.join(s.output, 'vivid.m4a'), 'converted earlier');
     s.config.scan = { id: 'scan-1', root: s.input }; s.save();
     assert.equal(s.run().status, 0);
     const scan = s.status().scan;
     assert.equal(scan.id, 'scan-1'); assert.equal(scan.error, '');
     assert.deepEqual(scan.files, [path.join(s.input, 'new.ncm'), path.join(s.input, '歌手', 'second.ncm')]);
-    assert.equal(scan.skipped, 1);
+    assert.equal(scan.skipped, 2);
     // Searching converts nothing by itself; the plugin queues the reported files.
     assert.ok(!fs.existsSync(path.join(s.output, 'new.flac')));
     s.config.scan = { id: 'scan-2', root: s.root }; s.save();
@@ -198,6 +232,7 @@ test('malformed/truncated containers, oversized key and unknown audio fail witho
     s.job('unknown.ncm', fixture(Buffer.from('OggS123')));
     assert.equal(s.run().status, 1);
     assert.equal(s.status().failed, 4);
+    assert.equal(s.status().results['job-4'].message, '无法识别的音频格式');
     assert.ok(!fs.existsSync(s.output) || fs.readdirSync(s.output).length === 0);
 });
 test('only queued files are processed; pre-existing directory contents are never scanned', t => {

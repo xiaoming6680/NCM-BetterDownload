@@ -33,3 +33,23 @@ test('SDK discovery inspects only cached exports and removes its own module', ()
     assert.equal(hook.findSdk({ webpackJsonp: chunks }), sdk); assert.deepEqual(Object.keys(loader.c), ['sdk']); assert.deepEqual(Object.keys(loader.m), []);
     assert.equal(hook.findSdk({ webpackJsonp: [] }), null);
 });
+test('NetEase 2.10.x uses its own legacyNativeCmder and reads the download directory from NM_SETTING_CUSTOM', async () => {
+    // Mirrors 2.10.13: listeners live on the command object, which must stay the receiver.
+    const cmder = { listeners: [],
+        appendRegisterCall(name, namespace, cb) { assert.equal(this, cmder); this.listeners.push([namespace + '.on' + name, cb]); },
+        removeRegisterCall(name, namespace, cb) { assert.equal(this, cmder); this.listeners = this.listeners.filter(([, fn]) => fn !== cb); } };
+    let setting = JSON.stringify({ storage: { path: 'D:\\CloudMusic', capacity: 10 } });
+    const chunks = []; chunks.push = () => { throw Error('2.10.x must not be probed through webpack'); };
+    const win = { APP_CONF: { appver: '2.10.13.202675' }, legacyNativeCmder: cmder, webpackJsonp: chunks,
+        localStorage: { getItem: key => key === 'NM_SETTING_CUSTOM' ? setting : null } };
+    const sdk = hook.findSdk(win), jobs = [];
+    assert.equal(sdk.Storage.downloadDir, 'D:\\CloudMusic');
+    const detach = hook.attach(sdk, job => jobs.push(job));
+    assert.equal(cmder.listeners.length, 1); assert.equal(cmder.listeners[0][0], 'storage.onaddid3done');
+    cmder.listeners[0][1]('123-image', 1, 'VipSongsDownload\\歌手 - 歌曲.ncm');
+    await Promise.resolve();
+    assert.deepEqual(jobs[0], { taskId: '123-image', source: 'D:\\CloudMusic\\VipSongsDownload\\歌手 - 歌曲.ncm', target: 'D:\\CloudMusic\\VipSongsDownload\\unlock\\歌手 - 歌曲.ncm' });
+    detach(); assert.equal(cmder.listeners.length, 0);
+    for (const value of [null, '{', '{}', JSON.stringify({ storage: {} })]) { setting = value; assert.equal(sdk.Storage.downloadDir, '', String(value)); }
+    assert.equal(hook.findSdk({ APP_CONF: { appver: '2.10.13' }, webpackJsonp: chunks }), null);
+});

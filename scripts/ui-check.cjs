@@ -26,7 +26,7 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
                 g.fillStyle = 'rgba(20,8,40,.45)'; g.fillRect(0, 214, 300, 86);
                 canvas.toBlob(resolve, 'image/png');
             });
-            window.mock = { files: { 'C:/BetterNCM/plugins_runtime/ncm-better-download/release.json': JSON.stringify({ repository: 'https://github.com/xiaoming6680/BetterDownload', issues: 'https://github.com/xiaoming6680/BetterDownload/issues' }) },
+            window.mock = { files: { 'C:/BetterNCM/plugins_runtime/ncm-better-download/release.json': JSON.stringify({ repository: 'https://github.com/xiaoming6680/NCM-BetterDownload', issues: 'https://github.com/xiaoming6680/NCM-BetterDownload/issues' }) },
                 calls: [], saved: null, config: {}, listener: null, removed: [], alive: true,
                 covers: { [covers + '1.png']: await paint(['#ff8a5c', '#e2466f', '#5b2a86'], 'rgba(255,226,170,.92)'), [covers + '2.png']: await paint(['#34d1c4', '#2f6fd8', '#1b2a6b'], 'rgba(220,245,255,.85)') } };
             window.sdk = { Storage: { downloadDir: 'D:\\CloudMusic' }, Bridge: {
@@ -69,6 +69,13 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
         assert.deepEqual(await settings.getByRole('radio', { checked: true }).allTextContents(), ['每首歌', '标准', '4 秒']);
         assert.equal(await settings.locator('button').count(), 14);
         assert.equal(await settings.locator('.nbd-version').textContent(), 'v' + version);
+        // NetEase 2.10.x core.css stretches every svg to its box; the icons keep their own size.
+        const iconSizes = () => page.evaluate(() => Array.from(document.querySelectorAll('.nbd-settings svg')).map(svg => { const s = getComputedStyle(svg); return Math.round(parseFloat(s.width)) + 'x' + Math.round(parseFloat(s.height)); }));
+        const expectedIcons = ['28x28', ...Array(5).fill('14x14'), ...Array(3).fill('16x16')];
+        assert.deepEqual(await iconSizes(), expectedIcons);
+        await page.evaluate(() => { const style = document.createElement('style'); style.id = 'ncm210-core'; style.textContent = 'svg{width:100%;height:100%;pointer-events:none}'; document.head.appendChild(style); });
+        assert.deepEqual(await iconSizes(), expectedIcons);
+        await page.evaluate(() => document.getElementById('ncm210-core').remove());
         const toggle = page.getByRole('switch', { name: '启用 BetterDownload' });
         assert.equal(await toggle.getAttribute('aria-checked'), 'true');
         // Without downloads nothing runs in the background: no worker, no control writes.
@@ -96,7 +103,7 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
         assert.equal(await text('.detail-text'), '正在整理音频与封面');
         fs.mkdirSync('build', { recursive: true });
         await page.waitForTimeout(450);
-        assert.equal(Math.round((await card.boundingBox()).width), 270);
+        assert.equal(Math.round((await card.boundingBox()).width), 290);
         await card.screenshot({ path: 'build/progress-converting.png' });
         // An idle progress card disappears completely, with no handle to reopen it.
         await hidden();
@@ -105,16 +112,29 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
         assert.equal(await card.isVisible(), false);
         assert.equal(await page.getByRole('button', { name: '展开转换进度' }).count(), 0);
         const output = job.target.replace(/\.ncm$/, '.flac');
-        await page.evaluate(({ job, coverPath, output }) => publish({ id: job.id, state: 'success', path: output, output, percent: 100, format: 'FLAC', cover: coverPath }, { state: 'ready', results: { [job.id]: { state: 'success', output } } }), { job, coverPath, output });
+        // The longest note the worker writes for a single song.
+        const note = '封面格式无法识别，未写入封面';
+        await page.evaluate(({ job, coverPath, output, note }) => publish({ id: job.id, state: 'success', path: output, output, percent: 100, format: 'FLAC', cover: coverPath, warning: note }, { state: 'ready', results: { [job.id]: { state: 'success', output, warning: note } } }), { job, coverPath, output, note });
         const open = page.getByRole('button', { name: '打开文件夹' });
         await open.waitFor({ state: 'visible' });
         await page.waitForTimeout(450);
         assert.ok((await open.boundingBox()).width < 95);
         assert.ok((await card.boundingBox()).height < 135);
+        // A note sits beside the folder button, whole, instead of adding a row.
+        const beside = async () => {
+            const [noteBox, openBox] = [await card.locator('.notice').boundingBox(), await open.boundingBox()];
+            assert.ok(Math.abs(noteBox.y + noteBox.height / 2 - (openBox.y + openBox.height / 2)) < 2 && noteBox.x + noteBox.width <= openBox.x, JSON.stringify([noteBox, openBox]));
+            // Only the note gives way: the button keeps one line and a round total is never cut.
+            assert.ok(openBox.height < 30 && openBox.width > 70, JSON.stringify(openBox));
+            assert.ok(await card.locator('.summary').evaluate(el => !el.textContent || el.scrollWidth <= el.clientWidth), 'round total cut off');
+        };
+        assert.equal(await text('.notice'), note);
+        await beside();
+        assert.ok(await card.locator('.notice').evaluate(el => el.scrollWidth <= el.clientWidth), 'the note is not cut off');
         assert.match(await card.locator('.card').evaluate(el => getComputedStyle(el).backdropFilter), /blur\(28px\)/);
         assert.equal(await text('.label'), 'BetterDownload');
         assert.equal(await text('.state-text'), '已完成');
-        assert.equal(await text('.detail-text'), '原音质已保留 · 音乐已就绪');
+        assert.equal(await text('.detail-text'), '转换完成');
         assert.equal(await page.evaluate(() => control().jobs.length), 0);
         await card.screenshot({ path: 'build/progress-card-preview.png' });
         await page.screenshot({ path: 'build/progress-complete.png' });
@@ -168,6 +188,9 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
         await page.evaluate(({ next, nextOutput, warning }) => publish({ id: next.id, state: 'success', path: nextOutput, output: nextOutput, percent: 100, format: 'FLAC', warning }, { state: 'ready', results: { [next.id]: { state: 'success', output: nextOutput, warning } } }), { next, nextOutput, warning });
         await shadowText('.summary', '本轮 2 首');
         assert.equal(await text('.notice'), warning);
+        // With a round total the note shares the row and may shorten; its tooltip keeps the whole text.
+        await beside();
+        assert.equal(await card.locator('.notice').getAttribute('title'), warning);
         await backdrop('#f5f5f7', '#222');
         await page.waitForTimeout(450);
         await card.screenshot({ path: 'build/progress-card-light.png' });
@@ -208,7 +231,7 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
         await shadowText('.detail-text', '正在获取歌词');
         const wordedOutput = worded.target.replace(/\.ncm$/, '.flac');
         await page.evaluate(({ worded, wordedOutput }) => publish({ id: worded.id, state: 'success', path: wordedOutput, output: wordedOutput, percent: 100, format: 'FLAC', lyrics: true }, { state: 'ready', results: { [worded.id]: { state: 'success', output: wordedOutput } } }), { worded, wordedOutput });
-        await shadowText('.detail-text', '原音质已保留 · 歌词已写入');
+        await shadowText('.detail-text', '转换完成 · 含歌词');
         await page.waitForFunction(() => control().jobs.length === 0);
         // Without the network the song still converts; the plugin passes on a note instead of lyrics.
         await page.evaluate(() => { mock.offline = true; mock.listener('offline', 1, 'VipSongsDownload/歌手/断网.ncm'); });
@@ -269,7 +292,7 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
         await settings.getByRole('button', { name: '预览' }).click();
         await shadowText('.song', '示例歌曲');
         await page.waitForTimeout(450);
-        assert.equal(Math.round((await card.boundingBox()).width), 270);
+        assert.equal(Math.round((await card.boundingBox()).width), 290);
         assert.ok((await card.boundingBox()).height < 60);
         await card.screenshot({ path: 'build/progress-card-compact.png' });
         await shadowText('.state-text', '已完成');
@@ -312,6 +335,6 @@ const DARK = 'radial-gradient(ellipse at 100% 65%, #548198, transparent 43%), ra
         assert.equal(await card.count(), 0);
         assert.equal(await page.evaluate(() => mock.listener), null);
         assert.deepEqual(errors, []);
-        console.log('UI passed: on-demand worker, album art and tint, rounds, search, lyrics, blocked-worker notice, pop-up modes, compact style and preview, stay time, settings motion, runtime cleanup, switch, 270px card, idle disappearance, hover/focus, light/dark, narrow layout, cleanup.');
+        console.log('UI passed: on-demand worker, album art and tint, rounds, search, lyrics, blocked-worker notice, pop-up modes, compact style and preview, stay time, settings motion, runtime cleanup, switch, 290px card with notes beside the folder button, idle disappearance, hover/focus, light/dark, narrow layout, cleanup.');
     } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

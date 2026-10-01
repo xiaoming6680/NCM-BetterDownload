@@ -5,7 +5,7 @@
     const FOLDER = '<svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.6A1.6 1.6 0 0 1 3.6 3h2.5l1.5 1.6h4.8A1.6 1.6 0 0 1 14 6.2v5.2a1.6 1.6 0 0 1-1.6 1.6H3.6A1.6 1.6 0 0 1 2 11.4z"/></svg>';
     root.NBDProgressCard = function ({ openFolder, idleMs = 6000 }) {
         const host = document.createElement('div'); host.id = 'nbd-progress-card';
-        host.style.cssText = 'position:fixed;right:18px;bottom:100px;width:270px;max-width:calc(100vw - 32px);z-index:2147483000;display:none;opacity:0;transform:translateX(22px) scale(.98);transform-origin:100% 50%;transition:transform .42s cubic-bezier(.2,.8,.2,1),opacity .32s;';
+        host.style.cssText = 'position:fixed;right:18px;bottom:100px;width:290px;max-width:calc(100vw - 32px);z-index:2147483000;display:none;opacity:0;transform:translateX(22px) scale(.98);transform-origin:100% 50%;transition:transform .42s cubic-bezier(.2,.8,.2,1),opacity .32s;';
         const shadow = host.attachShadow({ mode: 'open' });
         shadow.innerHTML = `<style>
         :host{font:12px/1.45 "Segoe UI Variable Text","Segoe UI","Microsoft YaHei UI","Microsoft YaHei",sans-serif;color:#f4f6fa;color-scheme:dark;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}[hidden]{display:none!important}
@@ -34,10 +34,11 @@
         .bar{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#f39bc4,#9a8bff 55%,#62b0ff);box-shadow:0 0 10px #9a8bff99;transition:width .25s cubic-bezier(.3,.7,.3,1)}
         .line.waiting .bar{width:36%!important;animation:sweep 1.25s ease-in-out infinite}
         .percent{min-width:30px;text-align:right;font-size:10.5px;font-weight:600;color:#e6ecf5d9;font-variant-numeric:tabular-nums}
-        .summary{flex:1;min-width:0;font-size:11px;color:#e6ecf5cc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.summary:empty{display:none}
-        .open{margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:4px 9px 4px 7px;border:0;border-radius:7px;font:inherit;font-size:11px;font-weight:600;color:#eef2ff;background:#ffffff17;box-shadow:inset 0 0 0 1px #ffffff21;cursor:pointer;transition:background .2s}
+        .summary{flex:none;min-width:0;font-size:11px;color:#e6ecf5cc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.summary:empty{display:none}
+        .open{flex:none;white-space:nowrap;margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:4px 9px 4px 7px;border:0;border-radius:7px;font:inherit;font-size:11px;font-weight:600;color:#eef2ff;background:#ffffff17;box-shadow:inset 0 0 0 1px #ffffff21;cursor:pointer;transition:background .2s}
         .open:hover{background:#ffffff29}.open:active{background:#ffffff1f}.open:focus-visible{outline:2px solid #b3c1ff;outline-offset:2px}
-        .notice{margin-top:8px;font-size:11px;color:#ffcbc3;overflow-wrap:anywhere}.notice:empty{display:none}
+        /* A note shares the bottom row with the folder button; the full text is in its tooltip. */
+        .notice{flex:1 1 auto;min-width:0;font-size:11px;color:#ffcbc3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.notice:empty{display:none}
         .card[data-style=compact]{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;column-gap:10px;align-items:center;padding:9px 12px}
         .card[data-style=compact] .row,.card[data-style=compact] .body,.card[data-style=compact] .head,.card[data-style=compact] .bottom{display:contents}
         .card[data-style=compact] .art{grid-area:1/1;width:30px;height:30px;border-radius:8px}.card[data-style=compact] .art svg{width:17px;height:17px}
@@ -45,15 +46,14 @@
         .card[data-style=compact] .open{grid-area:1/4;width:26px;height:24px;padding:0;justify-content:center}.card[data-style=compact] .open span{display:none}
         .card[data-style=compact] .line{position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:0;background:#ffffff14}
         .card[data-style=compact] .label,.card[data-style=compact] .detail,.card[data-style=compact] .percent,.card[data-style=compact] .summary{display:none}
-        .card[data-style=compact][data-phase=error] .detail{display:flex;grid-area:2/2/3/5;margin-top:3px}.card[data-style=compact] .notice{grid-area:3/1/4/5;margin-top:6px}
+        .card[data-style=compact][data-phase=error] .detail{display:flex;grid-area:2/2/3/5;margin-top:3px}.card[data-style=compact] .notice{grid-area:3/1/4/5;margin-top:6px;white-space:normal;overflow-wrap:anywhere}
         @keyframes pulse{50%{box-shadow:0 0 0 5px #8fb0ff00}}@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(280%)}}
         @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.card{background:#252b37}}
         @media(prefers-reduced-transparency:reduce),(prefers-contrast:more){.card{background:#1f2531;backdrop-filter:none;-webkit-backdrop-filter:none}.card::before,.tint{display:none}}
         @media(prefers-reduced-motion:reduce){:host{transition:none!important}.bar,.art img,.tint{transition:none}.card .state i,.line.waiting .bar{animation:none}}
         </style><section class="card" data-phase="converting" aria-label="音乐转换通知"><div class="tint"></div>
         <div class="row"><div class="art">${MARK}<img alt=""></div><div class="body"><div class="head"><span class="label">BetterDownload</span><span class="state"><i></i><span class="state-text"></span></span></div><div class="song"></div><div class="detail" aria-live="polite"><span class="format"></span><span class="detail-text"></span></div></div></div>
-        <div class="bottom"><div class="line" role="progressbar" aria-label="转换进度" aria-valuemin="0" aria-valuemax="100"><div class="bar"></div></div><span class="percent"></span><span class="summary"></span><button class="open" hidden aria-label="打开文件夹">${FOLDER}<span>打开文件夹</span></button></div>
-        <div class="notice" role="status"></div></section>`;
+        <div class="bottom"><div class="line" role="progressbar" aria-label="转换进度" aria-valuemin="0" aria-valuemax="100"><div class="bar"></div></div><span class="percent"></span><span class="summary"></span><span class="notice" role="status"></span><button class="open" hidden aria-label="打开文件夹">${FOLDER}<span>打开文件夹</span></button></div></section>`;
         document.body.appendChild(host);
         const q = s => shadow.querySelector(s), card = q('.card'), art = q('.art img');
         let timer, hideTimer, hovered = false, focused = false, disposed = false, visible = false, latest = null, identity = '', phase = '', artUrl = '', openError = '', idle = idleMs;
@@ -105,7 +105,7 @@
         window.addEventListener('blur', releaseInteraction);
         q('.open').onclick = async () => {
             try { if (latest && latest.folder) await openFolder(latest.folder); }
-            catch (e) { openError = '无法打开：' + (e.message || e); q('.notice').textContent = openError; }
+            catch (e) { openError = '无法打开：' + (e.message || e); q('.notice').textContent = q('.notice').title = openError; }
             finally { releaseInteraction(); }
         };
         return {
@@ -122,12 +122,12 @@
                 // Messages about waiting on something else are shown as they are, with the sweeping bar.
                 const held = activity.message === '等待客户端释放文件' || activity.message === '正在获取歌词';
                 const waiting = !done && !failed && (percent === 0 || held);
-                const extension = /\.(flac|mp3)$/i.exec(activity.output || '');
+                const extension = /\.(flac|mp3|m4a)$/i.exec(activity.output || '');
                 card.dataset.phase = done ? 'success' : failed ? 'error' : 'converting';
                 q('.state-text').textContent = done ? '已完成' : failed ? '未完成' : '转换中';
-                q('.song').textContent = (activity.path || '').split(/[\\/]/).pop().replace(/\.(ncm|flac|mp3)$/i, '') || '本地音乐';
+                q('.song').textContent = (activity.path || '').split(/[\\/]/).pop().replace(/\.(ncm|flac|mp3|m4a)$/i, '') || '本地音乐';
                 q('.format').textContent = failed ? '' : activity.format || (extension ? extension[1].toUpperCase() : '');
-                q('.detail-text').textContent = done ? (activity.lyrics ? '原音质已保留 · 歌词已写入' : '原音质已保留 · 音乐已就绪') : failed ? activity.message : held ? activity.message
+                q('.detail-text').textContent = done ? (activity.lyrics ? '转换完成 · 含歌词' : '转换完成') : failed ? activity.message : held ? activity.message
                     : round ? '第 ' + round.position + ' 首' + (round.pending > 1 ? ' · 还剩 ' + (round.pending - 1) + ' 首' : '') : '正在整理音频与封面';
                 q('.summary').textContent = done && round ? '本轮 ' + round.converted + ' 首' + (round.failed ? ' · ' + round.failed + ' 首未完成' : '') : '';
                 const line = q('.line');
@@ -135,8 +135,9 @@
                 if (waiting) line.removeAttribute('aria-valuenow'); else line.setAttribute('aria-valuenow', String(percent));
                 line.hidden = done || failed; q('.percent').hidden = done || failed || waiting; q('.percent').textContent = percent + '%';
                 q('.open').hidden = !done || !activity.folder;
-                q('.bottom').hidden = failed || (done && !activity.folder && !round);
-                q('.notice').textContent = openError || (done && activity.warning ? activity.warning : '');
+                const notice = openError || (done && activity.warning ? activity.warning : '');
+                q('.bottom').hidden = failed || (done && !activity.folder && !round && !notice);
+                q('.notice').textContent = q('.notice').title = notice;
                 setArt(activity.art);
             }, hide,
             // compact: one row about half as tall; stay: how long an untouched card remains, in milliseconds.

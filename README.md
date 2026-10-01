@@ -8,10 +8,10 @@
 
 **下载的 VIP 歌曲，自动变成在哪都能播放的音乐文件。**
 
-网易云下载完成后，BetterDownload 在本地把加密的 NCM 还原成原始 FLAC / MP3，<br>
+网易云下载完成后，BetterDownload 在本地把加密的 NCM 还原成原始 FLAC / MP3 / M4A，<br>
 封面和歌曲信息一并写进文件。不用手动操作，原音质和原文件都保留。
 
-[下载](https://github.com/xiaoming6680/BetterDownload/releases) · [更新记录](CHANGELOG.md) · [问题反馈](https://github.com/xiaoming6680/BetterDownload/issues)
+[下载](https://github.com/xiaoming6680/NCM-BetterDownload/releases) · [更新记录](CHANGELOG.md) · [问题反馈](https://github.com/xiaoming6680/NCM-BetterDownload/issues)
 
 </div>
 
@@ -27,7 +27,7 @@ BetterDownload 把这一步交给插件：歌曲下载完，转换就已经做�
 flowchart LR
     A["在网易云下载 VIP 歌曲"] --> B["得到加密的 .ncm"]
     B --> C["BetterDownload<br>在本地自动转换"]
-    C --> D["unlock 文件夹<br>FLAC / MP3 + 封面与歌曲信息"]
+    C --> D["unlock 文件夹<br>FLAC / MP3 / M4A + 封面与歌曲信息"]
 ```
 
 ```text
@@ -35,7 +35,7 @@ D:/CloudMusic/VipSongsDownload/歌手/歌曲.ncm
 → D:/CloudMusic/VipSongsDownload/unlock/歌手/歌曲.flac
 ```
 
-- **原音质**：直接取出 NCM 里的原始音频，不重新编码。原来是 FLAC 就是 FLAC，是 MP3 就是 MP3，不会“升级”，也不会降质。
+- **原音质**：直接取出 NCM 里的原始音频，不重新编码。原来是 FLAC 就是 FLAC，是 MP3 就是 MP3，“臻音全景声”是 M4A，不会“升级”，也不会降质。
 - **信息完整**：封面、标题、歌手、专辑和曲目号写进音频文件，换哪个播放器都能正常显示。
 - **歌词（可选）**：在设置页打开后，把这首歌的歌词一起写进文件，支持的播放器可以跟着音乐滚动。
 - **原文件保留**：结果保存在下载目录的 `VipSongsDownload/unlock`，保留歌手子文件夹；NCM 源文件原样保留，也不会覆盖你已有的同名文件。
@@ -86,14 +86,20 @@ BetterDownload 是一个 BetterNCM 插件。BetterNCM 是网易云音乐 PC 版�
 2. **打开插件商店**：重启网易云，点右上角设置图标下方的 BetterNCM 图标。第一次打开会显示欢迎页，点“开始使用 BetterNCM”。
 3. **安装 BetterDownload**：点插件列表顶部、排序按钮左边的放大镜，搜索 **BetterDownload**，点卡片右侧的下载按钮，再点底部的“重启”。插件默认启用，之后正常下载歌曲即可。
 
-商店里的版本可能比 Releases 晚几天。想马上用最新版，从 [Releases](https://github.com/xiaoming6680/BetterDownload/releases) 下载 `.plugin` 文件，放进 BetterNCM 的插件文件夹（默认 `C:\betterncm\plugins`），再重启网易云。
+商店里的版本可能比 Releases 晚几天。想马上用最新版，从 [Releases](https://github.com/xiaoming6680/NCM-BetterDownload/releases) 下载 `.plugin` 文件，放进 BetterNCM 的插件文件夹（默认 `C:\betterncm\plugins`），再重启网易云。
 
-需要 Windows、BetterNCM 1.3.4 或更新版本、网易云音乐 3.x。转换程序使用 .NET Framework 4.6.2 或更新版本，Windows 10 / 11 已自带。实测网易云 3.1.37 + BetterNCM 1.3.4 可用，更新的网易云还没测过；现在能用的话，建议先别升级网易云。
+需要 Windows、BetterNCM 1.3.3 或更新版本、网易云音乐 3.x 或旧版 2.10.x（2.10.2 起）。转换程序使用 .NET Framework 4.6.2 或更新版本，Windows 10 / 11 已自带。实测网易云 3.1.37 + BetterNCM 1.3.4、网易云 2.10.13 + BetterNCM 1.3.3 可用。另一台电脑上的网易云 3.1.40（2026 年 9 月的最新版）也能正常使用 BetterNCM。
 
 ## 常见问题
 
 **装了 BetterNCM 后网易云打不开？**
 重新运行 BetterNCM 安装器，点“卸载”，网易云就能恢复正常。也可以直接删除网易云安装目录里的 `msimg32.dll`。
+
+**还在用旧版网易云 2.10，能用吗？**
+可以，0.7.0 起支持 2.10.2 及以上，用法和新版一样。BetterNCM 1.3.3 自带的插件商店源可能加载失败，在商店设置里换一个源即可。
+
+**用“臻音全景声”下载的歌，转出来的 M4A 放不了？**
+臻音全景声是三维菁彩声（Audio Vivid）格式，多数播放器和车机还不支持，卡片上也会提示。插件照样把它原样取出，封面、歌曲信息和歌词都在。想在别的设备上播放，在网易云“设置 → 音质与下载 → 音质下载设置”里改成“超清母带”或更低一档再下载。
 
 **下载完成后没有出现卡片？**
 这首歌可能本来就是普通 FLAC / MP3，不需要解锁；也可能弹出时机被设成了“仅出错”或“不显示”。
@@ -111,7 +117,7 @@ BetterDownload 是一个 BetterNCM 插件。BetterNCM 是网易云音乐 PC 版�
 音频会照常保存，卡片上会说明哪一部分没写入，例如封面格式无法识别。
 
 **写入的歌词能在哪些播放器显示？**
-歌词写在 FLAC 的 `LYRICS` 标签和 MP3 的 `USLT` 帧里，带时间轴。MusicBee、Poweramp、装了歌词插件的 foobar2000 和不少安卓本地播放器能跟着音乐滚动；Apple Music、旧版 Windows Media Player 只显示 MP3 的歌词，而且会连时间一起显示；Windows 11 自带的媒体播放器和 VLC 不显示。车机差异很大，只认 `.lrc` 的设备可以打开“同时保存 .lrc 文件”。
+歌词写在 FLAC 的 `LYRICS` 标签、MP3 的 `USLT` 帧和 M4A 的 `©lyr` 里，带时间轴。MusicBee、Poweramp、装了歌词插件的 foobar2000 和不少安卓本地播放器能跟着音乐滚动；Apple Music、旧版 Windows Media Player 只显示 MP3 的歌词，而且会连时间一起显示；Windows 11 自带的媒体播放器和 VLC 不显示。车机差异很大，只认 `.lrc` 的设备可以打开“同时保存 .lrc 文件”。
 
 **为什么有的歌没有歌词？**
 纯音乐和网易云上没有歌词的歌会跳过。歌词获取失败（比如断网）时歌曲照常转换，卡片上会注明“歌词获取失败”。之前已经转换过的歌不会补写歌词。
