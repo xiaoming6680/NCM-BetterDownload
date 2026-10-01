@@ -152,6 +152,7 @@ node promo/render.cjs --vertical  # 竖屏视频
 node promo/render.cjs --update    # 0.6 更新视频（竖屏）
 node promo/render.cjs --cover     # B站和抖音封面（--cover update 只渲染 0.6 的）
 node promo/render.cjs --preview   # 商店预览图和 README 封面
+node promo/render.cjs --douyin    # 0.7 抖音图文（3:4）
 ```
 
 | 文件 | 作用 |

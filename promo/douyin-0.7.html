@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>BetterDownload 0.7 图文</title>
+<style>
+/* 1080 × 1440 (3:4) images for a Douyin photo post, written for someone who has never heard of BetterNCM:
+   what it is, what it does, what 0.7 adds, then every install step from GitHub, then feedback and the disclaimer.
+   The copy uses line breaks and spaces instead of commas and full stops. ?render&n=2 shows only the second image. */
+@font-face{font-family:PF;src:local("PingFang SC Regular"),local("PingFangSC-Regular");font-weight:400}
+@font-face{font-family:PF;src:local("PingFang SC Medium"),local("PingFangSC-Medium");font-weight:500}
+@font-face{font-family:PF;src:local("PingFang SC Semibold"),local("PingFangSC-Semibold"),local("PingFang SC Bold");font-weight:600}
+@font-face{font-family:PF;src:local("PingFang SC Bold"),local("PingFangSC-Semibold");font-weight:700}
+@font-face{font-family:PF;src:local("PingFang SC Heavy"),local("PingFang SC Bold");font-weight:800}
+:root{
+  --font:PF,"Noto Sans SC","Microsoft YaHei UI",sans-serif;
+  --ui:"Segoe UI Variable Text","Segoe UI","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+  --num:"Segoe UI Variable Display","Segoe UI",PF,sans-serif;
+  --brand:linear-gradient(135deg,#f39bc4,#9a8bff 52%,#5eaefc);
+  --text-grad:linear-gradient(90deg,#f7a6cf,#a796ff 50%,#68b4ff);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:#1c1c1e;font-family:var(--font);-webkit-font-smoothing:antialiased;font-kerning:normal}
+#deck{display:flex;flex-wrap:wrap;gap:40px;padding:40px;zoom:.5}
+body.render #deck{padding:0;gap:0;zoom:1}
+body.render .slide:not(.on){display:none}
+.slide{position:relative;flex:none;width:1080px;height:1440px;overflow:hidden;background:#000;color:#f5f5f7}
+.col{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:106px 90px 0;text-align:center}
+.blob{position:absolute;border-radius:50%;pointer-events:none}
+
+.k{font-size:32px;font-weight:600;line-height:1.3;color:#86868b;letter-spacing:.02em}
+.h{font-size:100px;font-weight:700;line-height:1.16;letter-spacing:-.01em;white-space:nowrap}
+.hs{font-size:86px;margin-top:20px}
+.g{background:var(--text-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.s{font-size:35px;font-weight:500;line-height:1.6;color:#a1a1a6}
+.s b{font-weight:600;color:#e8e8ed}
+.f{font-size:26px;font-weight:500;line-height:1.65;color:#6e6e73}
+.f b{font-weight:600;color:#a1a1a6}
+.sp{display:inline-block;width:.6em}
+
+/* Brand mark, as in plugin/progress-card.js */
+.icon{position:relative;flex:none;display:grid;place-items:center;background:var(--brand);overflow:hidden;box-shadow:inset 0 2px 1px rgba(255,255,255,.55),inset 0 0 0 1.5px rgba(255,255,255,.2),0 16px 36px -12px rgba(122,104,255,.95)}
+.icon::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 70% at 28% -4%,rgba(255,255,255,.4),transparent 58%)}
+.icon svg{position:relative;width:57%;height:57%}
+.brandrow{display:flex;align-items:center;gap:22px;font-size:50px;font-weight:600;letter-spacing:-.01em}
+.brandrow .icon{width:80px;height:80px;border-radius:19px}
+.ver{font:700 30px/1 var(--num);padding:9px 16px 10px;border-radius:999px;color:#fff;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1.5px rgba(190,180,255,.4)}
+.pill{display:inline-flex;align-items:center;gap:14px;height:96px;padding:0 50px;border-radius:48px;font-size:44px;font-weight:700;color:#fff;background:var(--brand);box-shadow:0 24px 60px -22px rgba(154,139,255,.95),inset 0 2px 0 rgba(255,255,255,.4);white-space:nowrap}
+
+/* Real progress cards from plugin/progress-card.js sit in .slot elements and are zoomed there. */
+.slot{position:relative;text-align:left}
+.slot>div{position:relative!important;right:auto!important;bottom:auto!important;transform:none!important;opacity:1!important;transition:none!important;display:block!important}
+
+.panel{background:rgba(255,255,255,.055);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)}
+
+/* 2: what it does */
+/* One strip on the feature grid's columns: before on the left, after on the right, the arrow between. */
+.flow{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:24px;width:900px;margin-top:54px;border-radius:36px;overflow:hidden;background:rgba(255,255,255,.055);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)}
+.file{height:156px;display:flex;align-items:center;gap:22px;padding:0 34px;text-align:left}
+.file.out{margin-left:-24px;padding-left:58px;background:linear-gradient(90deg,rgba(154,139,255,0),rgba(243,155,196,.13) 34%,rgba(154,139,255,.17) 66%,rgba(94,174,252,.17))}
+.file .doc{flex:none;width:68px;height:84px}
+.file b{display:block;font:700 42px/1.1 var(--num);letter-spacing:-.01em;white-space:nowrap}
+.file small{display:block;margin-top:8px;font-size:25px;font-weight:500;color:#86868b;white-space:nowrap}
+.file.out small{color:#c7c7cc}
+.flow .arrow{position:absolute;left:50%;top:50%;width:52px;height:40px;margin:-20px 0 0 -26px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:900px;margin-top:36px}
+.feat{height:206px;border-radius:36px;padding:34px 34px 0;text-align:left}
+.feat h3{display:flex;align-items:center;gap:16px;font-size:40px;font-weight:700;letter-spacing:-.01em}
+.feat svg{flex:none;display:block;width:46px;height:46px}
+.feat p{margin-top:14px;font-size:26px;font-weight:500;line-height:1.5;color:#a1a1a6}
+
+/* 3: what's new */
+.big{font:700 250px/1 var(--num);letter-spacing:-.045em;margin:-4px 0 18px}
+.bento{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:900px;margin-top:46px}
+.tile{position:relative;height:410px;border-radius:40px;overflow:hidden;display:flex;flex-direction:column;padding:34px;text-align:left}
+.tile .lab{display:flex;align-items:center;gap:12px;font-size:28px;font-weight:600;color:#a1a1a6}
+.tile .lab i{font-style:normal;font:700 20px/1 var(--ui);letter-spacing:.06em;padding:6px 10px;border-radius:8px;color:#fff;background:var(--brand)}
+.tile .num{margin-top:24px;font:700 128px/1 var(--num);letter-spacing:-.035em;white-space:nowrap}
+.tile .num small{font-size:64px;letter-spacing:-.02em;color:#86868b;margin-left:4px}
+.tile h3{margin-top:auto;font-size:38px;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.tile p{margin-top:8px;font-size:25px;font-weight:500;line-height:1.5;color:#a1a1a6}
+.tile.wide{grid-column:1/3;height:280px;flex-direction:row;align-items:center;gap:30px}
+.tile.wide .txt{flex:1;display:flex;flex-direction:column;height:100%}
+
+/* 4: meeting BetterNCM */
+.chain{display:flex;align-items:flex-start;justify-content:center;gap:10px;margin-top:56px}
+.link{width:250px;text-align:center}
+.link .tile2{position:relative;width:156px;height:156px;margin:0 auto;border-radius:38px;display:grid;place-items:center}
+.link .tile2 svg{width:84px;height:84px}
+.link b{display:block;margin-top:20px;font-size:32px;font-weight:700;white-space:nowrap}
+.link small{display:block;margin-top:4px;font-size:25px;font-weight:500;color:#86868b;white-space:nowrap}
+.chev{flex:none;width:40px;height:156px;display:grid;place-items:center;color:#48484e}
+.chev svg{width:34px;height:34px}
+.app-tile{background:linear-gradient(160deg,#41444e,#1d1f25);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.08),0 30px 60px -30px #000}
+.bncm-tile{color:#fff;background:radial-gradient(120% 120% at 30% 8%,#5a4db0,#221d47 72%);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 0 0 1px rgba(190,180,255,.32),0 34px 70px -30px rgba(122,104,255,.95)}
+.link .icon{border-radius:38px}
+.plan{width:900px;margin-top:52px;border-radius:36px;padding:14px 36px;text-align:left}
+.plan div{display:flex;align-items:center;gap:20px;height:100px}
+.plan div+div{border-top:1px solid rgba(255,255,255,.08)}
+.plan .n,.cap .n{flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font:700 26px/1 var(--num);color:#fff;background:var(--brand);box-shadow:0 10px 24px -10px rgba(154,139,255,.95)}
+.plan b{font-size:34px;font-weight:700;white-space:nowrap}
+.plan small{margin-left:auto;font-size:26px;font-weight:500;color:#86868b;white-space:nowrap}
+
+/* 5–7: steps, each a caption over a picture of the real screen */
+.how{display:flex;flex-direction:column;width:900px;margin-top:34px;text-align:left}
+.cap{display:flex;align-items:center;gap:16px;font-size:31px;font-weight:600;line-height:1.4;color:#e8e8ed}
+.cap b{font-family:var(--ui);font-weight:700;color:#fff}
+.cap em{font-style:normal;font-weight:500;color:#86868b}
+.shot{position:relative;margin:16px 0 30px;border-radius:22px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 40px 80px -40px #000}
+.cursor{position:absolute;z-index:10;width:46px;height:46px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
+.ring{position:absolute;z-index:9;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;border:2.5px solid rgba(255,255,255,.85);box-shadow:0 0 18px rgba(255,255,255,.35)}
+.this{flex:none;margin-left:14px;font:700 18px/1 var(--font);padding:7px 12px;border-radius:999px;color:#fff;background:var(--brand);white-space:nowrap}
+
+/* A GitHub release page in its dark theme, inside a browser */
+.gh{background:#0d1117;font-family:"Segoe UI",var(--font);color:#f0f6fc}
+.gh .url{display:flex;align-items:center;height:64px;padding:0 18px;background:#1f1f1f;border-bottom:1px solid #2b2b2b}
+.gh .url span{flex:1;display:flex;align-items:center;gap:12px;height:42px;padding:0 18px;border-radius:21px;background:#2c2c2c;font:500 21px/1 var(--ui);color:#e8e8e8;white-space:nowrap}
+.gh .url svg{flex:none;width:18px;height:18px}
+.gh .box{margin:20px 22px 22px;border:1.5px solid #3d444d;border-radius:12px;overflow:hidden}
+.gh .top{display:flex;align-items:center;gap:14px;padding:16px 22px 14px}
+.gh .top h4{font-size:36px;font-weight:600}
+.gh .latest{font-size:17px;font-weight:500;line-height:24px;padding:0 10px;border-radius:999px;color:#3fb950;border:1.5px solid #238636}
+.gh .notes{position:relative;padding:0 22px 16px;font-size:18px;line-height:1.6;color:#d1d7e0;-webkit-mask-image:linear-gradient(#000 30%,transparent)}
+.gh .more{display:flex;align-items:center;gap:12px;padding:8px 22px 12px;font:600 20px/1 var(--font);color:#a796ff}
+.gh .more::before,.gh .more::after{content:"";flex:1;height:1.5px;background:repeating-linear-gradient(90deg,#a796ff 0 8px,transparent 8px 14px);opacity:.6}
+.gh .assets{padding:12px 22px 8px;border-top:1.5px solid #3d444d}
+.gh .assets h5{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:600;margin-bottom:6px}
+.gh .assets h5 i{font-style:normal;font-size:15px;font-weight:600;line-height:22px;padding:0 8px;border-radius:999px;background:#2f353d;color:#d1d7e0}
+.gh .row{position:relative;display:flex;align-items:center;gap:14px;height:52px;padding:0 12px;border-top:1px solid #3d444d;font-size:21px}
+.gh .row a{color:#4493f8;font-weight:600}
+.gh .row .sz{margin-left:auto;color:#9198a1;font-size:19px}
+.gh .row svg{flex:none;width:22px;height:22px}
+.gh .row.hi{border-radius:10px;border-top-color:transparent;background:rgba(56,139,253,.15);box-shadow:inset 0 0 0 2px #4493f8}
+.gh .row.hi+.row{border-top-color:transparent}
+.gh .row.dim{opacity:.5}
+.gh.lg .url span{font-size:23px}
+.gh.lg .top{padding:22px 24px 18px}.gh.lg .top h4{font-size:44px}.gh.lg .latest{font-size:19px;line-height:28px;padding:0 12px}
+.gh.lg .assets{padding:16px 24px 12px}.gh.lg .assets h5{font-size:28px;margin-bottom:10px}
+.gh.lg .row{height:66px;font-size:25px;gap:16px}.gh.lg .row .sz{font-size:22px}.gh.lg .row svg{width:26px;height:26px}.gh.lg .this{font-size:20px}
+.exe{display:flex;align-items:center;gap:22px;height:150px;margin-top:16px;padding:0 34px;border-radius:30px;text-align:left}
+.exe svg{flex:none;width:64px;height:64px}
+.exe b{display:block;font:700 30px/1.2 var(--ui)}
+.exe small{display:block;margin-top:6px;font-size:23px;font-weight:500;color:#86868b}
+/* BetterNCM Installer 1.2.0, measured from a screenshot at 150% (600 × 464); buttons as on a PC without BetterNCM */
+.desk{display:flex;justify-content:center;padding:30px 0;background:radial-gradient(80% 120% at 20% 0,#26314a,#14161c 70%)}
+.inw{position:relative;width:600px;height:464px;zoom:1.3;border-radius:12px;overflow:hidden;background:#202020;box-shadow:0 0 0 1px rgba(255,255,255,.16),0 30px 60px -20px #000;font-family:"Segoe UI","Microsoft YaHei UI",sans-serif;color:#fff;text-align:left}
+.inw .tt{height:46px;display:flex;align-items:center;padding-left:14px;font-size:18px}
+.inw .tt .wb{margin-left:auto;display:flex}
+.inw .tt .wb i{width:48px;height:46px;display:grid;place-items:center}
+.inw .tt .wb svg{width:15px;height:15px}
+.inw .bd{padding:14px 18px 0}
+.inw h6{font-size:27px;font-weight:700;line-height:1.3}
+.inw .ln{font-size:21px;line-height:35px;color:#c9c9c9;white-space:nowrap}
+.inw .ln b{font-weight:700;color:#fff}
+.inw .chk{position:absolute;left:16px;top:280px;display:flex;align-items:center;gap:8px;font-size:21px}
+.inw .chk i{width:25px;height:25px;border-radius:4px;background:#3a3a3a;box-shadow:inset 0 0 0 1px #4a4a4a}
+.inw .rows{position:absolute;left:14px;right:14px;top:316px;display:grid;gap:9px}
+.inw .r{display:grid;gap:9px}
+.inw .r span{height:46px;border-radius:5px;display:grid;place-items:center;font-size:20px;color:#9d9d9d;background:#3b3b3b;box-shadow:inset 0 0 0 1px #444}
+.inw .r span.on{color:#fff;background:#2c2c2c;box-shadow:inset 0 0 0 1px #4a4a4a}
+.inw .r span#t-setup{background:#34304a;box-shadow:inset 0 0 0 1.5px #b9adff,0 0 0 3px rgba(154,139,255,.45),0 0 22px rgba(154,139,255,.55)}
+.inw .prog{position:absolute;left:14px;right:14px;top:426px;height:26px;border-radius:6px;background:#2c2c2c;box-shadow:inset 0 0 0 1px #444}
+/* The client's title bar: BetterNCM puts its button under the settings button */
+.ncmbar{position:relative;height:176px;background:linear-gradient(#1c1e24,#15171c);font-family:var(--ui)}
+.ncmbar .tb{position:absolute;left:30px;right:26px;top:30px;display:flex;align-items:flex-start;gap:24px}
+.ncmbar .srch{width:230px;height:44px;border-radius:22px;background:#24272e;margin-right:auto}
+.ncmbar .ava{flex:none;width:44px;height:44px;border-radius:50%;background:#2c3038}
+.ncmbar .uname{flex:none;width:80px;height:14px;margin-top:15px;border-radius:7px;background:#2c3038}
+.ncmbar .tb>svg{flex:none;width:36px;height:36px;margin-top:4px}
+.ncmbar .sep{flex:none;width:1.5px;height:36px;margin-top:4px;background:#2c3038}
+.ncmbar .gear{position:relative;flex:none;width:36px;height:44px}
+.ncmbar .gear>svg{width:36px;height:36px;margin-top:4px}
+.ncmbar .bn{position:absolute;left:50%;top:56px;width:58px;height:58px;margin-left:-29px;border-radius:15px;display:grid;place-items:center;color:#fff;background:rgba(154,139,255,.3);box-shadow:0 0 0 4px rgba(154,139,255,.5),0 0 34px rgba(154,139,255,.65)}
+.ncmbar .bn svg{width:40px;height:40px}
+.tip{position:absolute;z-index:11;padding:10px 18px;border-radius:12px;background:#f5f5f7;color:#0b0b0f;font:700 20px/1 var(--ui);white-space:nowrap}
+.tip::after{content:"";position:absolute;right:-9px;top:50%;margin-top:-9px;border:9px solid transparent;border-right:0;border-left-color:#f5f5f7}
+/* BetterNCM 1.3.4's manager header, as the promo film draws it */
+.mgrh{position:relative;height:196px;background:linear-gradient(160deg,#2e3648,#212838 55%,#1b202c);font-family:var(--ui);color:#e9eaee;text-align:left}
+.mgrh .hd{display:flex;align-items:center;gap:20px;padding:24px 26px}
+.mgrh .logo{flex:none;width:64px;height:64px;border-radius:16px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#f590b5,#b29cf2 55%,#86b8f3)}
+.mgrh .logo svg{width:48px;height:48px}
+.mgrh h4{font-size:26px;font-weight:700}.mgrh h4 small{font-size:21px;font-weight:600;opacity:.8}
+.mgrh .btns{display:flex;gap:8px;margin-top:9px}
+.mgrh .btns span{font-size:16px;line-height:32px;padding:0 12px;border-radius:9px;border:1px solid #ffffff30;background:#ffffff08;color:#e3e6ec;white-space:nowrap}
+.mgrh .btns span.hi{border-color:#c4baff;background:rgba(154,139,255,.32);color:#fff;box-shadow:0 0 0 3px rgba(154,139,255,.4)}
+.mgrh .side{position:absolute;left:0;top:130px;bottom:0;width:210px;border-right:1px solid #ffffff17;border-top:1px solid #ffffff17;padding:10px 14px}
+.mgrh .side div{height:36px;border-radius:11px;display:flex;align-items:center;padding:0 14px;font-size:16px;background:#ffffff14}
+.mgrh .main{position:absolute;left:210px;right:0;top:130px;bottom:0;border-top:1px solid #ffffff17}
+/* Windows 11 File Explorer, dark */
+.exp{background:#191919;font-family:"Segoe UI","Microsoft YaHei UI",sans-serif;color:#fff;text-align:left}
+.exp .tabs{height:48px;background:#202020;display:flex;align-items:flex-end;padding-left:12px}
+.exp .tab{height:40px;display:flex;align-items:center;gap:10px;padding:0 20px 0 14px;border-radius:9px 9px 0 0;background:#2b2b2b;font-size:16px}
+.exp .tab svg,.exp .addr svg{width:20px;height:20px}
+.exp .nav{height:58px;display:flex;align-items:center;gap:16px;padding:0 16px;background:#2b2b2b;border-bottom:1px solid #3a3a3a}
+.exp .nav>svg{flex:none;width:18px;height:18px}
+.exp .addr{flex:1;height:36px;border-radius:5px;background:#202020;display:flex;align-items:center;gap:10px;padding:0 12px;font-size:17px;color:#e6e6e6;white-space:nowrap}
+.exp .addr i{font-style:normal;color:#8a8a8a}
+.exp .find{flex:none;width:170px;height:36px;border-radius:5px;background:#202020;font-size:16px;color:#8a8a8a;display:flex;align-items:center;padding:0 12px}
+.exp .th,.exp .tr{display:grid;grid-template-columns:1fr 190px 130px 90px;align-items:center}
+.exp .th{height:40px;padding:0 24px;font-size:15px;color:#bdbdbd;border-bottom:1px solid #2d2d2d}
+.exp .tr{height:48px;margin:4px 10px;padding:0 14px;border-radius:5px;font-size:17px;color:#e6e6e6}
+.exp .tr .nm{display:flex;align-items:center;gap:12px;color:#fff}
+.exp .tr svg{width:20px;height:24px}
+.exp .tr.sel{background:#2c3a49;box-shadow:inset 0 0 0 1px #4f84ba}
+.exp .tr span:not(.nm):not(.this){color:#bdbdbd}
+
+/* 8: in use, questions */
+.where{display:inline-flex;align-items:center;gap:14px;margin-top:30px;height:64px;padding:0 26px;border-radius:20px;font:600 24px/1 var(--ui);color:#e8e8ed;white-space:nowrap}
+.where svg{width:28px;height:28px}
+.where i{font-style:normal;color:#6e6e73}
+.faq{width:900px;margin-top:44px;border-radius:36px;padding:8px 36px;text-align:left}
+.faq h4{padding:24px 0 6px;font-size:26px;font-weight:600;color:#86868b}
+.faq .q{padding:22px 0}
+.faq .q+.q{border-top:1px solid rgba(255,255,255,.08)}
+.faq b{display:block;font-size:31px;font-weight:700}
+.faq span{display:block;margin-top:6px;font-size:25px;font-weight:500;line-height:1.5;color:#a1a1a6}
+
+/* 9: feedback, disclaimer */
+.fb{width:900px;margin-top:42px;border-radius:36px;padding:30px 36px;text-align:left;background:linear-gradient(160deg,rgba(243,155,196,.13),rgba(94,174,252,.08));box-shadow:inset 0 0 0 1.5px rgba(190,180,255,.35)}
+.fb h4{font-size:36px;font-weight:700}
+.fb p{margin-top:10px;font-size:27px;font-weight:500;line-height:1.55;color:#c7c7cc}
+.fb code{display:inline-block;margin-top:12px;font:600 22px/1 var(--ui);padding:12px 16px;border-radius:12px;color:#fff;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.legal{width:900px;margin-top:40px;text-align:left}
+.legal h4{font-size:28px;font-weight:700;color:#e8e8ed;padding-bottom:8px}
+.legal div{padding:16px 0;border-top:1px solid rgba(255,255,255,.1);font-size:23px;font-weight:500;line-height:1.55;color:#98989d}
+.legal div b{display:block;margin-bottom:2px;font-size:26px;font-weight:600;color:#e8e8ed}
+.legal div.paid b{color:#ffb3c8}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="fg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7a6cf"/><stop offset=".5" stop-color="#a796ff"/><stop offset="1" stop-color="#68b4ff"/></linearGradient>
+  <linearGradient id="dg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f39bc4"/><stop offset=".52" stop-color="#9a8bff"/><stop offset="1" stop-color="#5eaefc"/></linearGradient>
+  <symbol id="cur" viewBox="0 0 24 24"><path d="M4.2 2.6v17.1l4.3-4.1 2.9 6.6 2.9-1.3-2.9-6.5h6.1z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></symbol>
+  <symbol id="pkg" viewBox="0 0 16 16"><path fill="#9198a1" d="M8.88.39a1.75 1.75 0 0 0-1.76 0l-5.25 3.05A1.75 1.75 0 0 0 1 4.95v6.1c0 .62.33 1.2.87 1.51l5.25 3.05c.54.31 1.22.31 1.76 0l5.25-3.05c.54-.31.87-.89.87-1.51v-6.1c0-.62-.33-1.2-.87-1.51ZM7.88 1.69a.25.25 0 0 1 .25 0l4.63 2.69L8 7.13 3.25 4.38ZM2.5 5.68l4.75 2.75v5.5l-4.63-2.68a.25.25 0 0 1-.12-.22Zm6.25 8.25v-5.5l4.75-2.75v5.37a.25.25 0 0 1-.12.22Z"/></symbol>
+  <symbol id="zip" viewBox="0 0 16 16"><path fill="#9198a1" d="M3.5 1.75v11.5c0 .09.05.2.13.27.07.08.18.13.27.13h8.2c.1 0 .2-.05.28-.13a.4.4 0 0 0 .12-.27V4.66a.25.25 0 0 0-.07-.18L9.52 1.57a.25.25 0 0 0-.18-.07H7v1.25h1.5V4.5H7v1.25h1.5V7.5H7v.75H5.5V7.5H7V5.75H5.5V4.5H7V2.75H5.5V1.5h-1.6a.4.4 0 0 0-.4.25ZM2 1.75C2 .78 2.78 0 3.75 0h5.59c.46 0 .9.18 1.24.51l2.91 2.91c.33.33.51.78.51 1.24v8.59A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25Zm4 8.75a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z"/></symbol>
+  <symbol id="doc" viewBox="0 0 20 24"><path d="M2 1h11l6 6v16H2z" fill="#f3f3f3" stroke="#bdbdbd"/><path d="M13 1v6h6" fill="#dcdcdc" stroke="#bdbdbd"/></symbol>
+  <symbol id="folder" viewBox="0 0 20 20"><path d="M1.5 4.5A1.5 1.5 0 0 1 3 3h4.2l1.8 2H17a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 17 17H3a1.5 1.5 0 0 1-1.5-1.5z" fill="#f2c94c"/><path d="M1.5 7h17v8.5A1.5 1.5 0 0 1 17 17H3a1.5 1.5 0 0 1-1.5-1.5z" fill="#f7d774"/></symbol>
+</defs></svg>
+<main id="deck">
+
+<!-- 1 · Cover -->
+<section class="slide" id="s1">
+  <div class="blob" style="left:-330px;top:560px;width:1150px;height:1000px;background:radial-gradient(closest-side,rgba(217,74,130,.62),rgba(217,74,130,0))"></div>
+  <div class="blob" style="left:400px;top:520px;width:1000px;height:900px;background:radial-gradient(closest-side,rgba(255,176,122,.42),rgba(255,176,122,0))"></div>
+  <div class="blob" style="left:120px;top:880px;width:900px;height:700px;background:radial-gradient(closest-side,rgba(122,104,255,.4),rgba(122,104,255,0))"></div>
+  <div class="col">
+    <div class="k">网易云音乐电脑版 · 免费开源插件</div>
+    <div class="h" style="margin-top:28px">下载的 VIP 歌曲<br><span class="g">自动解锁</span></div>
+    <div class="s" style="margin-top:34px">加密的 .ncm 下载完就变成 FLAC / MP3<br>车机 手机 任何播放器都能听</div>
+    <div class="slot" id="card1" style="margin-top:76px"></div>
+    <div class="pill" style="margin-top:96px">附零基础安装教程</div>
+    <div class="brandrow" style="margin-top:52px"><span class="icon" data-mark></span>BetterDownload<span class="ver">0.7</span></div>
+  </div>
+</section>
+
+<!-- 2 · What it does -->
+<section class="slide" id="s2">
+  <div class="col">
+    <div class="k">它能做什么</div>
+    <div class="h" style="margin-top:24px">下载完<br><span class="g">就已经转好了</span></div>
+    <div class="s" style="margin-top:30px">网易云下载的 VIP 歌曲是加密的 .ncm<br>BetterDownload 在下载完成时自动把它还原</div>
+    <div class="flow">
+      <div class="file"><svg class="doc" viewBox="0 0 76 94" fill="none"><path d="M8 4h40l24 24v58a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z" fill="#2c2c30" stroke="#48484e" stroke-width="2"/><path d="M48 4v20a4 4 0 0 0 4 4h20" stroke="#48484e" stroke-width="2"/><rect x="25" y="51" width="26" height="21" rx="4" fill="#86868b"/><path d="M30 51v-6a8 8 0 0 1 16 0v6" stroke="#86868b" stroke-width="4"/></svg><div><b>.ncm</b><small>只能在网易云里播放</small></div></div>
+      <div class="file out"><svg class="doc" viewBox="0 0 76 94" fill="none"><path d="M8 4h40l24 24v58a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z" fill="url(#dg)"/><path d="M48 4v20a4 4 0 0 0 4 4h20" stroke="#fff" stroke-opacity=".55" stroke-width="2"/><path d="M33 72V48l20-4v22" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="28" cy="72" r="6" fill="#fff"/><circle cx="48" cy="67" r="6" fill="#fff"/></svg><div><b>FLAC · MP3</b><small>哪都能播放</small></div></div>
+      <svg class="arrow" viewBox="0 0 52 40" fill="none" stroke="#86868b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h42M32 6l14 14-14 14"/></svg>
+    </div>
+    <div class="grid">
+      <div class="feat panel"><h3><svg viewBox="0 0 54 54" fill="none" stroke="url(#fg)" stroke-width="4" stroke-linecap="round"><path d="M5 27v0M14 18v18M23 9v36M32 16v22M41 21v12M50 26v2"/></svg>原音质</h3><p>直接取出原始音频<br>不重新编码 不降质</p></div>
+      <div class="feat panel"><h3><svg viewBox="0 0 54 54" fill="none" stroke="url(#fg)" stroke-width="4" stroke-linejoin="round"><rect x="5" y="5" width="44" height="44" rx="10"/><circle cx="20" cy="20" r="5"/><path d="m5 40 13-12 10 9 8-6 13 11" stroke-linecap="round"/></svg>信息完整</h3><p>封面 歌名 歌手 专辑<br>都写进文件 歌词可选</p></div>
+      <div class="feat panel"><h3><svg viewBox="0 0 54 54" fill="none" stroke="url(#fg)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="44" height="30" rx="5"/><path d="M19 47h16M27 38v9"/><path d="m20 23 5 5 10-10"/></svg>完全本地</h3><p>在你的电脑上转换<br>不上传任何文件</p></div>
+      <div class="feat panel"><h3><svg viewBox="0 0 54 54" fill="none" stroke="url(#fg)" stroke-width="4" stroke-linejoin="round"><path d="M5 14a5 5 0 0 1 5-5h11l5 6h18a5 5 0 0 1 5 5v21a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5z"/><path d="m20 31 5 5 10-10" stroke-linecap="round"/></svg>原文件保留</h3><p>存进 unlock 文件夹<br>不覆盖你已有的文件</p></div>
+    </div>
+    <div class="f" style="margin-top:44px">以前下载的歌 也能在设置页一键转换</div>
+  </div>
+</section>
+
+<!-- 3 · What 0.7 adds -->
+<section class="slide" id="s3">
+  <div class="blob" style="left:40px;top:-240px;width:1000px;height:760px;background:radial-gradient(closest-side,rgba(154,139,255,.34),rgba(154,139,255,0))"></div>
+  <div class="col">
+    <div class="k">BetterDownload 更新</div>
+    <div class="big g">0.7</div>
+    <div class="h" style="font-size:66px">旧版也能用<span class="sp"></span>全景声也能转</div>
+    <div class="bento">
+      <div class="tile panel">
+        <div class="lab"><i>新增</i>支持旧版网易云</div>
+        <div class="num g">2.10<small>.x</small></div>
+        <h3>停在旧版也能用</h3>
+        <p>网易云 2.10.2 起<br>BetterNCM 1.3.3 起</p>
+      </div>
+      <div class="tile panel">
+        <div class="lab"><i>新增</i>臻音全景声</div>
+        <div class="num g">.m4a</div>
+        <h3>这一档也能解锁</h3>
+        <p>Audio Vivid 原样取出<br>封面 信息 歌词一并写入</p>
+      </div>
+      <div class="tile panel wide">
+        <div class="txt">
+          <div class="lab">进度卡片</div>
+          <h3>话更少 一眼看懂</h3>
+          <p>完成时只说「转换完成」<br>提示放在按钮左边</p>
+        </div>
+        <div class="slot" id="card3"></div>
+      </div>
+    </div>
+    <div class="f" style="margin-top:34px">臻音全景声多数播放器还不支持 卡片会提示<br><b>老用户</b> 按第 7 8 张下载新版 直接覆盖 设置会保留</div>
+  </div>
+</section>
+
+<!-- 4 · Meeting BetterNCM -->
+<section class="slide" id="s4">
+  <div class="col">
+    <div class="k">开始之前</div>
+    <div class="h hs">先认识 BetterNCM</div>
+    <div class="s" style="margin-top:28px">它是网易云电脑版的插件管理器 开源免费<br>装上它 网易云才能装 BetterDownload</div>
+    <div class="chain">
+      <div class="link"><div class="tile2 app-tile"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5.5l11-2V16"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></div><b>网易云音乐</b><small>电脑版 你已经有了</small></div>
+      <div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg></div>
+      <div class="link"><div class="tile2 bncm-tile" data-bncm></div><b>BetterNCM</b><small>插件管理器 先装它</small></div>
+      <div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg></div>
+      <div class="link"><div class="tile2 icon" data-mark></div><b>BetterDownload</b><small>再装这个插件</small></div>
+    </div>
+    <div class="plan panel">
+      <div><span class="n">1</span><b>安装 BetterNCM</b><small>只需装一次</small></div>
+      <div><span class="n">2</span><b>下载 BetterDownload</b><small>一个 .plugin 文件</small></div>
+      <div><span class="n">3</span><b>放进插件文件夹</b><small>重启网易云就好</small></div>
+    </div>
+    <div class="f" style="margin-top:40px">需要 Windows 电脑版网易云 3.x 或 2.10.2 起<br>已经装过 BetterNCM 的 直接看第 7 张</div>
+  </div>
+</section>
+
+<!-- 5 · Step 1a: getting the installer -->
+<section class="slide" id="s5">
+  <div class="col">
+    <div class="k">第 1 步 · 安装 BetterNCM</div>
+    <div class="h hs">下载安装器</div>
+    <div class="how" style="margin-top:58px">
+      <div class="cap"><span class="n">1</span>用电脑浏览器打开这个地址</div>
+      <div class="shot gh lg">
+        <div class="url"><span><svg viewBox="0 0 16 16" fill="#bdbdbd"><path d="M4 7V5a4 4 0 1 1 8 0v2h.5A1.5 1.5 0 0 1 14 8.5v5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5v-5A1.5 1.5 0 0 1 3.5 7Zm1.5 0h5V5a2.5 2.5 0 0 0-5 0Z"/></svg>github.com/std-microblock/BetterNCM-Installer/releases</span></div>
+        <div class="box">
+          <div class="top"><h4>1.2.0</h4><span class="latest">Latest</span></div>
+          <div class="assets">
+            <h5>▾ Assets <i>3</i></h5>
+            <div class="row hi"><svg><use href="#pkg"/></svg><a id="t-inst">betterncm_installer.exe</a><span class="this">点它下载</span><span class="sz">658 KB</span></div>
+            <div class="row dim"><svg><use href="#zip"/></svg><a>Source code (zip)</a></div>
+            <div class="row dim"><svg><use href="#zip"/></svg><a>Source code (tar.gz)</a></div>
+          </div>
+        </div>
+        <svg class="cursor" data-at="#t-inst" data-fx=".55" data-fy=".7"><use href="#cur"/></svg>
+      </div>
+      <div class="cap"><span class="n">2</span>下载好后 双击运行它</div>
+      <div class="exe panel"><svg viewBox="0 0 48 48" fill="none"><rect x="4" y="8" width="40" height="32" rx="5" fill="#2f3542" stroke="#5b6475" stroke-width="1.5"/><path d="M4 13a5 5 0 0 1 5-5h30a5 5 0 0 1 5 5v4H4z" fill="#5b6475"/><circle cx="10" cy="12.5" r="1.6" fill="#e5e5ea"/><circle cx="15.5" cy="12.5" r="1.6" fill="#e5e5ea"/><path d="M24 22v10m-4.5-4.5L24 32l4.5-4.5" stroke="#a796ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>betterncm_installer.exe</b><small>应用程序 · 658 KB</small></div></div>
+    </div>
+    <div class="f" style="margin-top:56px">下面两个 Source code 是源代码 不用下载</div>
+  </div>
+</section>
+
+<!-- 6 · Step 1b: the installer -->
+<section class="slide" id="s6">
+  <div class="col">
+    <div class="k">第 1 步 · 安装 BetterNCM</div>
+    <div class="h hs">点「安装」</div>
+    <div class="s" style="margin-top:22px">安装器会自动找到你电脑上的网易云</div>
+    <div class="how" style="margin-top:40px">
+      <div class="shot desk" style="margin:0">
+        <div class="inw">
+          <div class="tt">BetterNCM Installer<span class="wb"><i><svg viewBox="0 0 14 14" stroke="#fff" stroke-width="1.1"><path d="M1.5 7h11"/></svg></i><i><svg viewBox="0 0 14 14" stroke="#fff" stroke-width="1.1"><path d="m1.5 1.5 11 11m0-11-11 11"/></svg></i></span></div>
+          <div class="bd">
+            <h6>BetterNCM Installer</h6>
+            <div class="ln">BetterNCM Installer 版本: <b>1.2.0</b></div>
+            <div class="ln">适配 BetterNCM 版本: <b>获取中...</b></div>
+            <div class="ln">网易云版本: <b>3.1.37 (x64)</b></div>
+          </div>
+          <div class="chk"><i></i>测试通道</div>
+          <div class="rows">
+            <div class="r" style="grid-template-columns:repeat(4,1fr)"><span class="on" id="t-setup">安装</span><span>重装/更新</span><span>卸载</span><span>卸载老版本</span></div>
+            <div class="r" style="grid-template-columns:repeat(3,1fr)"><span class="on">修改数据地址</span><span class="on">重置数据地址</span><span class="on">手动指定网易云</span></div>
+          </div>
+          <div class="prog"></div>
+        </div>
+        <svg class="cursor" data-at="#t-setup" data-fx=".78" data-fy=".55"><use href="#cur"/></svg>
+      </div>
+      <div class="cap" style="margin-top:36px"><span class="n"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></span>装好后 重启网易云 第 1 步就完成了</div>
+    </div>
+    <div class="f" style="margin-top:40px">识别不到网易云时 点「手动指定网易云」<br>装了以后网易云打不开 再运行安装器点「卸载」就能恢复</div>
+  </div>
+</section>
+
+<!-- 7 · Step 2: the plugin file -->
+<section class="slide" id="s7">
+  <div class="col">
+    <div class="k">第 2 步</div>
+    <div class="h hs" style="font-size:80px">下载 <span class="g">BetterDownload</span></div>
+    <div class="s" style="margin-top:24px">插件商店里还是旧版<br>最新的 0.7 在 GitHub 下载</div>
+    <div class="how" style="margin-top:30px">
+      <div class="cap"><span class="n">1</span>打开下载页 往下翻到 Assets</div>
+      <div class="shot gh">
+        <div class="url"><span><svg viewBox="0 0 16 16" fill="#bdbdbd"><path d="M4 7V5a4 4 0 1 1 8 0v2h.5A1.5 1.5 0 0 1 14 8.5v5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5v-5A1.5 1.5 0 0 1 3.5 7Zm1.5 0h5V5a2.5 2.5 0 0 0-5 0Z"/></svg>github.com/xiaoming6680/NCM-BetterDownload/releases</span></div>
+        <div class="box">
+          <div class="top"><h4>BetterDownload 0.7.0</h4><span class="latest">Latest</span></div>
+          <div class="notes">这一版让停在旧版网易云 2.10 的用户也能用上 BetterDownload 并修好了用“臻音全景声”下载的歌解锁不了的问题<br>支持旧版网易云 2.10.x</div>
+          <div class="more">往下翻</div>
+          <div class="assets">
+            <h5>▾ Assets <i>6</i></h5>
+            <div class="row dim"><svg><use href="#pkg"/></svg><a>BetterDownload-0.7.0-source.zip</a><span class="sz">647 KB</span></div>
+            <div class="row hi"><svg><use href="#pkg"/></svg><a id="t-plugin">BetterDownload-0.7.0.plugin</a><span class="this">就是它</span><span class="sz">310 KB</span></div>
+            <div class="row dim"><svg><use href="#pkg"/></svg><a>build-info.json</a><span class="sz">226 Bytes</span></div>
+            <div class="row dim"><svg><use href="#pkg"/></svg><a>SHA256SUMS.txt</a><span class="sz">454 Bytes</span></div>
+            <div class="row dim"><svg><use href="#zip"/></svg><a>Source code (zip)</a></div>
+            <div class="row dim"><svg><use href="#zip"/></svg><a>Source code (tar.gz)</a></div>
+          </div>
+        </div>
+        <svg class="cursor" data-at="#t-plugin" data-fx=".6" data-fy=".7"><use href="#cur"/></svg>
+      </div>
+    </div>
+    <div class="f" style="margin-top:4px">只要 <b>.plugin</b> 这一个文件<br>不用解压 也不用双击 下一步直接放进文件夹</div>
+  </div>
+</section>
+
+<!-- 8 · Step 3: the plugins folder -->
+<section class="slide" id="s8">
+  <div class="col">
+    <div class="k">第 3 步</div>
+    <div class="h hs">放进插件文件夹</div>
+    <div class="how">
+      <div class="cap"><span class="n">1</span>点网易云右上角设置下方的新图标</div>
+      <div class="shot ncmbar">
+        <div class="tb"><span class="srch"></span><span class="ava"></span><span class="uname"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+          <span class="gear"><svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3.3 19.5 7.6v8.8L12 20.7l-7.5-4.3V7.6z"/><circle cx="12" cy="12" r="2.8"/></svg><span class="bn" id="t-bn" data-bncm></span></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linejoin="round"><path d="M9 4.5 4.5 7l1.7 3.4L8 9.6v9.9h8V9.6l1.8.8L19.5 7 15 4.5a3 3 0 0 1-6 0z"/></svg>
+          <span class="sep"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round"><path d="M6 12h12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.7" stroke-linecap="round"><path d="m7 7 10 10M17 7 7 17"/></svg></div>
+        <div class="tip" id="t-tip">BetterNCM</div>
+        <svg class="cursor" data-at="#t-bn" data-fx=".6" data-fy=".6"><use href="#cur"/></svg>
+      </div>
+      <div class="cap"><span class="n">2</span>点「打开插件文件夹」</div>
+      <div class="shot mgrh">
+        <div class="hd"><span class="logo" data-bncm></span><div><h4>BetterNCM <small>1.3.4</small></h4><div class="btns"><span class="hi" id="t-open">打开插件文件夹</span><span>打开控制台</span><span>重载网易云</span><span>重启并重载插件</span><span>已是最新版本</span></div></div></div>
+        <div class="side"><div>PluginMarket</div></div><div class="main"></div>
+        <svg class="cursor" data-at="#t-open" data-fx=".62" data-fy=".62"><use href="#cur"/></svg>
+      </div>
+      <div class="cap"><span class="n">3</span>把下载的 <b>.plugin</b> 拖进去 再重启网易云</div>
+      <div class="shot exp">
+        <div class="tabs"><div class="tab"><svg><use href="#folder"/></svg>plugins</div></div>
+        <div class="nav"><svg viewBox="0 0 16 16" fill="none" stroke="#bdbdbd" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8H3m4-4L3 8l4 4"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="#6a6a6a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="#bdbdbd" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3M4 7l4-4 4 4"/></svg>
+          <div class="addr"><svg><use href="#folder"/></svg>此电脑 <i>›</i> 本地磁盘 (C:) <i>›</i> betterncm <i>›</i> plugins</div><div class="find">搜索 plugins</div></div>
+        <div class="th"><span>名称</span><span>修改日期</span><span>类型</span><span>大小</span></div>
+        <div class="tr sel" id="t-file"><span class="nm"><svg><use href="#doc"/></svg>BetterDownload-0.7.0.plugin<span class="this" style="margin-left:4px">刚放进来</span></span><span>2026/10/1 20:30</span><span>PLUGIN 文件</span><span>310 KB</span></div>
+        <div class="tr"><span class="nm"><svg><use href="#doc"/></svg>PluginMarket.plugin</span><span>2026/10/1 20:12</span><span>PLUGIN 文件</span><span>57 KB</span></div>
+        <svg class="cursor" data-at="#t-file" data-fx=".2" data-fy=".62"><use href="#cur"/></svg>
+      </div>
+    </div>
+    <div class="f" style="margin-top:0">插件文件夹默认在 C:\betterncm\plugins<br>装过旧版的直接覆盖 设置会保留</div>
+  </div>
+</section>
+
+<!-- 9 · In use, and the usual questions -->
+<section class="slide" id="s9">
+  <div class="blob" style="left:-200px;top:280px;width:900px;height:700px;background:radial-gradient(closest-side,rgba(44,123,229,.45),rgba(44,123,229,0))"></div>
+  <div class="blob" style="left:420px;top:240px;width:820px;height:700px;background:radial-gradient(closest-side,rgba(155,231,255,.2),rgba(155,231,255,0))"></div>
+  <div class="col">
+    <div class="k">装好了</div>
+    <div class="h hs">之后照常下载</div>
+    <div class="s" style="margin-top:22px">右下角会弹出卡片 告诉你转好了</div>
+    <div class="slot" id="card8" style="margin-top:44px"></div>
+    <div class="where panel"><svg><use href="#folder"/></svg>下载目录 <i>›</i> VipSongsDownload <i>›</i> unlock</div>
+    <div class="faq panel">
+      <h4>常见问题</h4>
+      <div class="q"><b>装了 BetterNCM 网易云打不开</b><span>重新运行 BetterNCM 安装器 点「卸载」就能恢复</span></div>
+      <div class="q"><b>下载完没有弹出卡片</b><span>这首歌可能本来就没加密 不需要转换</span></div>
+      <div class="q"><b>提示转换程序没有运行</b><span>安全软件拦截了 worker.exe 按提示加入信任即可</span></div>
+    </div>
+    <div class="f" style="margin-top:28px">设置在 BetterNCM 面板左侧的 BetterDownload 里</div>
+  </div>
+</section>
+
+<!-- 10 · Feedback and the disclaimer -->
+<section class="slide" id="s10">
+  <div class="col" style="padding-top:96px">
+    <div class="icon" data-mark style="width:112px;height:112px;border-radius:27px"></div>
+    <div class="h" style="margin-top:26px;font-size:68px;font-weight:600">BetterDownload</div>
+    <div class="k" style="margin-top:10px">免费 · 开源 · GPL-3.0 · 作者 XIAOMING6680</div>
+    <div class="fb">
+      <h4>遇到问题 欢迎反馈</h4>
+      <p>评论区直接留言 或在 GitHub 提 Issue</p>
+      <code>github.com/xiaoming6680/NCM-BetterDownload/issues</code>
+    </div>
+    <div class="legal">
+      <h4>免责声明</h4>
+      <div><b>非官方工具</b>个人开发 与网易公司及网易云音乐没有任何关联 也未获其授权或认可</div>
+      <div><b>仅供个人使用</b>只处理你用自己账号合法下载的歌曲 转换后的文件仅供个人欣赏<br>请勿分享 传播或商用 歌曲版权归原权利人所有</div>
+      <div><b>风险自负</b>BetterNCM 和插件属于第三方修改 可能违反网易云的用户协议<br>也可能随客户端更新失效 由此产生的后果自行承担</div>
+      <div><b>不提供担保</b>按现状提供 使用或无法使用造成的任何损失 作者均不承担责任</div>
+      <div class="paid"><b>永久免费</b>如果你为它付了钱 请立即退款并举报卖家</div>
+    </div>
+  </div>
+</section>
+
+</main>
+<script src="../plugin/progress-card.js"></script>
+<script>
+'use strict';
+const params = new URLSearchParams(location.search);
+if (params.has('render')) {
+  document.body.classList.add('render');
+  document.getElementById('s' + (params.get('n') || 1)).classList.add('on');
+}
+const MARK = NBDProgressCard.mark.replace(/ width="22" height="22"/, '');
+document.querySelectorAll('[data-mark]').forEach(el => el.innerHTML = MARK);
+// BetterNCM's own mark, as in the promo film.
+const BNCM = '<svg viewBox="0 0 29 29" fill="none" style="width:100%;height:100%"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3707 22.342C16.9214 22.342 19.3998 21.0048 20.6842 18.9345C22.2492 16.4133 21.8458 13.1462 19.7247 11.1649C18.8879 10.3829 17.7719 9.89053 16.5779 9.77494L16.5289 9.58894L16.517 9.54384C16.4653 9.34756 16.4077 9.12931 16.3596 8.9496C16.2977 8.72364 16.2901 8.51814 16.3377 8.35497C16.351 8.30693 16.3724 8.26316 16.4019 8.20846C16.5123 8.00343 16.7197 7.85739 16.9561 7.81838C17.0603 7.80078 17.1697 7.80601 17.2729 7.83313C17.379 7.86167 17.4837 7.91305 17.575 7.98155C17.6341 8.02647 17.6857 8.07986 17.74 8.1361L17.741 8.1371C17.7462 8.14245 17.7514 8.14782 17.7566 8.15318C17.7851 8.18261 17.8136 8.21201 17.8438 8.23938C18.0126 8.39778 18.2334 8.48484 18.4646 8.48484C18.9669 8.48484 19.3755 8.07573 19.3755 7.5734C19.3755 7.42831 19.3417 7.28893 19.2756 7.15906C19.2699 7.14764 19.2637 7.1367 19.2575 7.12624L19.2461 7.10531C19.1605 6.96165 19.0382 6.82369 18.8608 6.67147C18.5892 6.43838 18.26 6.25571 17.9099 6.14392C17.7453 6.09111 17.5759 6.05449 17.4075 6.03546C17.0336 5.99264 16.6469 6.03213 16.2892 6.14963C14.8754 6.61676 14.197 7.93398 14.6019 9.4272L14.7256 9.89481C14.4487 9.9576 14.1752 10.0413 13.9112 10.1431C12.5464 10.6683 11.4632 11.8361 11.0841 13.1905C10.949 13.6728 10.9028 14.1728 10.9466 14.6765C11.0417 15.7683 11.624 16.7849 12.5045 17.3971C13.3346 17.9736 14.3283 18.1434 15.3031 17.8747C15.9933 17.6839 16.6069 17.2739 17.0308 16.7202C17.7006 15.8449 17.9004 14.697 17.594 13.4868C17.4861 13.0607 17.3511 12.589 17.2201 12.1315L17.213 12.1068C17.1759 11.9779 17.1388 11.8485 17.1021 11.7201C17.6259 11.8732 18.1006 12.1401 18.4817 12.4964C19.9449 13.8631 20.2265 16.2178 19.1367 17.9741C18.1768 19.5211 16.3058 20.521 14.3707 20.521C11.106 20.521 8.45012 17.8652 8.45012 14.6004C8.45012 14.3107 8.47248 14.0177 8.51672 13.729C8.55239 13.4978 8.60234 13.2661 8.66561 13.0401C8.72793 12.818 8.80451 12.5973 8.89204 12.3846C8.98052 12.1725 9.08137 11.9641 9.19269 11.7662C9.3021 11.5702 9.42578 11.3766 9.5604 11.1906C9.68979 11.0108 9.83488 10.8329 9.99043 10.6626C10.1436 10.4961 10.3082 10.3363 10.479 10.1883C10.6507 10.0394 10.8324 9.89957 11.0189 9.77303C11.2058 9.64554 11.4033 9.52757 11.6059 9.42149C11.7167 9.36393 11.83 9.30922 11.9418 9.25975C12.0031 9.23264 12.065 9.20647 12.1268 9.18174C12.3528 9.09183 12.5302 8.91915 12.6263 8.69557C12.7224 8.47199 12.7257 8.22463 12.6358 7.99867C12.5454 7.77224 12.3727 7.5948 12.1487 7.49871C11.9256 7.40262 11.6782 7.39976 11.4523 7.49015C11.37 7.5225 11.2881 7.55722 11.2044 7.59385C11.0536 7.66092 10.9047 7.73275 10.763 7.80696C10.4999 7.94397 10.2411 8.09904 9.99376 8.26744C9.7483 8.43441 9.51045 8.61708 9.28687 8.81117C9.06187 9.00573 8.84685 9.21456 8.64848 9.43196C8.44774 9.6503 8.25793 9.88292 8.0843 10.1227C7.90972 10.3643 7.74751 10.6179 7.6029 10.8767C7.4559 11.1388 7.32366 11.4118 7.20949 11.6877C7.0939 11.967 6.99352 12.2562 6.9117 12.5483C6.82941 12.8418 6.76376 13.1462 6.71619 13.4526C6.65816 13.8327 6.62866 14.2189 6.62866 14.6004C6.62866 18.8694 10.1017 22.342 14.3707 22.342ZM15.1929 11.6583C15.2781 11.9694 15.3699 12.291 15.4617 12.6107C15.5911 13.0602 15.7243 13.5245 15.8285 13.9355C15.9464 14.4017 15.9997 15.0715 15.5844 15.6142H15.584C15.4003 15.8549 15.1282 16.0348 14.8181 16.1204C14.2501 16.2769 13.811 16.0885 13.5437 15.903C13.1027 15.5962 12.8102 15.0791 12.7612 14.5201C12.7364 14.2352 12.7621 13.9536 12.8377 13.6834C13.0647 12.8718 13.7268 12.1673 14.5655 11.8443C14.77 11.7658 14.9808 11.703 15.1929 11.6583Z" fill="currentColor"/></svg>';
+document.querySelectorAll('[data-bncm]').forEach(el => el.innerHTML = BNCM);
+document.querySelectorAll('.bncm-tile[data-bncm] svg').forEach(el => { el.style.width = '104px'; el.style.height = '104px'; });
+
+// Illustrative album covers (sky, sun, horizon), drawn the way scripts/ui-check.cjs draws its own.
+function paint([top, mid, sun, ground]) {
+  const c = document.createElement('canvas'); c.width = c.height = 300;
+  const g = c.getContext('2d'), sky = g.createLinearGradient(0, 0, 120, 300);
+  sky.addColorStop(0, top); sky.addColorStop(1, mid);
+  g.fillStyle = sky; g.fillRect(0, 0, 300, 300);
+  const halo = g.createRadialGradient(198, 104, 0, 198, 104, 130);
+  halo.addColorStop(0, sun + 'aa'); halo.addColorStop(1, sun + '00');
+  g.fillStyle = halo; g.fillRect(0, 0, 300, 300);
+  g.fillStyle = sun; g.beginPath(); g.arc(198, 104, 46, 0, Math.PI * 2); g.fill();
+  g.fillStyle = ground; g.fillRect(0, 208, 300, 92);
+  return c.toDataURL('image/png');
+}
+const ART = { night: paint(['#ffb07a', '#d94a82', '#ffe3ad', '#5a1e4a']), sea: paint(['#9be7ff', '#2c7be5', '#e0f7ff', '#0b2e6b']) };
+
+// Each card is the plugin's own component, fed one activity, then taken out of its fixed corner.
+const loads = [];
+function card(slot, zoom, activity) {
+  const api = NBDProgressCard({ openFolder: async () => {} });
+  const host = document.body.lastElementChild;
+  api.configure({ compact: false, stay: 864e5 });
+  api.update(activity);
+  host.style.zoom = zoom; host.style.width = '290px';
+  document.getElementById(slot).appendChild(host);
+  const img = host.shadowRoot.querySelector('.art img');
+  if (activity.art) loads.push(new Promise(r => img.complete && img.naturalWidth ? r() : img.addEventListener('load', r, { once: true })));
+}
+const folder = 'D:\\CloudMusic\\VipSongsDownload\\unlock\\林间';
+card('card1', 2.76, { id: 'a', state: 'success', path: folder + '\\林间 - 夜间来信.flac', output: folder + '\\林间 - 夜间来信.flac', format: 'FLAC', lyrics: true, folder, art: ART.night });
+card('card3', 1.66, { id: 'b', state: 'success', path: folder + '\\林间 - 远航.m4a', output: folder + '\\林间 - 远航.m4a', format: 'M4A', lyrics: true, folder, art: ART.sea, warning: '多数播放器不支持臻音全景声' });
+card('card8', 2.3, { id: 'c', state: 'success', path: folder + '\\林间 - 远航.flac', output: folder + '\\林间 - 远航.flac', format: 'FLAC', lyrics: false, folder, art: ART.sea });
+
+// Cursors and rings sit on what they point at; positions are in the picture's own coordinates.
+function place() {
+  const z = parseFloat(getComputedStyle(document.getElementById('deck')).zoom) || 1;
+  const rel = (el, box) => { const a = el.getBoundingClientRect(), b = box.getBoundingClientRect(); return [(a.left - b.left) / z, (a.top - b.top) / z, a.width / z, a.height / z]; };
+  document.querySelectorAll('[data-at]').forEach(el => {
+    const box = el.closest('.shot'), [x, y, w, h] = rel(box.querySelector(el.dataset.at), box);
+    el.style.left = x + w * Number(el.dataset.fx) + 'px'; el.style.top = y + h * Number(el.dataset.fy) + 'px';
+  });
+  const bar = document.querySelector('.ncmbar'), [bx, by, bw, bh] = rel(document.getElementById('t-bn'), bar), tip = document.getElementById('t-tip');
+  tip.style.left = bx - tip.offsetWidth - 22 + 'px'; tip.style.top = by + bh / 2 - tip.offsetHeight / 2 + 'px';
+}
+window.READY = Promise.all([document.fonts.ready, ...loads]).then(() => new Promise(r => requestAnimationFrame(() => { place(); requestAnimationFrame(r); })));
+</script>
+</body>
+</html>

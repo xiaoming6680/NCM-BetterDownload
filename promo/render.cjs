@@ -8,6 +8,7 @@
 //   node promo/render.cjs --update             the vertical 0.6 update video with its own soundtrack (also works with --stills)
 //   node promo/render.cjs --cover              cover images for Douyin and Bilibili; --cover update renders only the 0.6 ones
 //   node promo/render.cjs --preview            plugin/preview.jpg for the store and docs/images/cover.jpg for the README
+//   node promo/render.cjs --douyin             the 3:4 images of the 0.7 Douyin photo post, at twice 1080 × 1440
 //   options: --size 1080|2160  --fps 60  --workers 6  --from 0 --to 85
 //
 // Needs Playwright (npm install --no-save playwright), Microsoft Edge or Chrome, and ffmpeg
@@ -116,6 +117,20 @@ async function previews(browser) {
     }
 }
 
+// Each image is one section of the page; ?render&n=N shows only that one.
+async function douyin(browser) {
+    for (let n = 1, count = 1; n <= count; n++) {
+        const page = await browser.newPage({ viewport: { width: 1080, height: 1440 }, deviceScaleFactor: 2 });
+        page.on('pageerror', e => console.error('页面错误：', e.message));
+        await page.goto(pathToFileURL(path.join(__dirname, 'douyin-0.7.html')).href + '?render&n=' + n);
+        count = await page.evaluate(() => window.READY.then(() => document.querySelectorAll('.slide').length));
+        const file = path.join(outDir, `douyin-0.7-${n}.png`);
+        await page.screenshot({ path: file });
+        console.log(file);
+        await page.close();
+    }
+}
+
 async function film(browser, size, ff) {
     const probe = await openPage(browser, size);
     const duration = await probe.page.evaluate(() => window.PROMO.duration);
@@ -176,6 +191,7 @@ async function film(browser, size, ff) {
     try {
         if (args.cover) await covers(browser);
         else if (args.preview) await previews(browser);
+        else if (args.douyin) await douyin(browser);
         else if (args.stills) await stills(browser, size);
         else await film(browser, size, findFfmpeg());
     } finally {
