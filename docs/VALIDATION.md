@@ -37,7 +37,8 @@
   - 用最终的 `worker.exe` 转换作者下载目录里 4 首真实 NCM 的副本：3 首 FLAC 音频帧一致，臻音全景声 M4A 的音频包一致。
 - README 图片按 0.7.0 重新截取：4 张卡片图直接用插件的 `progress-card.js`（290px，示意封面与原图相同），设置页用界面回归的模拟环境（v0.7.0，功能说明含 M4A）。
 - 宣传片源文件 `promo/index.html` 里复刻的卡片同步为 290px 和新文案；W、G 两个镜头的卡片按新宽度左移，离窗口右边缘仍为 18px，W 镜头推近后仍居中；逐 0.25 秒检查横屏、竖屏和 0.6 更新视频的时间轴，停留画面中的卡片都在画面内。视频未重新渲染。
-- 构建：`worker.exe` SHA256 为 `30fa63cbb0bae14b5394a61f85a3b9eafc26381ed1741586d9f867b4b43c19dd`，Actions 核对待推送后补充。
+- 构建：`worker.exe` SHA256 为 `30fa63cbb0bae14b5394a61f85a3b9eafc26381ed1741586d9f867b4b43c19dd`。GitHub Actions [构建 36851655970](https://github.com/xiaoming6680/NCM-BetterDownload/actions/runs/36851655970) 和标签 v0.7.0 的 [构建 36851865626](https://github.com/xiaoming6680/NCM-BetterDownload/actions/runs/36851865626) 通过：仓库中的 `worker.exe` 与提交 `0513737` 的确定性构建一致，测试与脚本语法检查通过。
+- 发布包 `BetterDownload-0.7.0.plugin` SHA256 为 `2443c3abc7aa766fc8cbbb1e611154a3140c175ca73f25d10f4ef471a6191751`，其中文件与仓库 `plugin/` 逐一相同，只有两份许可证的换行符不同。据此发布 v0.7.0 正式版。
 
 ## 0.6.0 自动化验证
 

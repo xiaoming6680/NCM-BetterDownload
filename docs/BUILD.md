@@ -9,7 +9,7 @@
 | worker.exe（0.7.0） | `30fa63cbb0bae14b5394a61f85a3b9eafc26381ed1741586d9f867b4b43c19dd` |
 | TagLibSharp.dll | `b1833a41ab1e933f7b006e5db15300b7223bfccc2c3b6689d49a9171dd27de1d` |
 
-0.7.0 的 `worker.exe` 为本地确定性构建，推送后由 Actions 核对，结果待补充。
+仓库中的这两个文件与 GitHub Actions 的构建逐字节一致：提交 `0513737` 的 [Actions run 36851655970](https://github.com/xiaoming6680/NCM-BetterDownload/actions/runs/36851655970)，以及标签 v0.7.0 的 [Actions run 36851865626](https://github.com/xiaoming6680/NCM-BetterDownload/actions/runs/36851865626)（artifact `11156345563`），编出的 `worker.exe` 与上表哈希相同。
 
 0.6.0 的 `worker.exe` SHA256 为 `4025e222c11579d701e7bd823b10432a10dd67c08b311d0daa532eac8e6e0d27`，与提交 `8ae319a` 的 [Actions run 36270856097](https://github.com/xiaoming6680/NCM-BetterDownload/actions/runs/36270856097) 构建逐字节一致。
 
